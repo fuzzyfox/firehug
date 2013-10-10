@@ -14,119 +14,128 @@ var client = shared.redisClient;
 var converter = new Showdown.converter();
 
 var getObjSize = function (obj) {
-  return Object.keys(obj).length;
+	return Object.keys(obj).length;
 };
 
 var setType = function (opts, cell) {
-  var value = cell.value || '';
+	var value = cell.value || '';
 
-  switch (cell.col) {
-    case '1':
-      opts.startTime = value;
-      break;
+	switch (cell.col) {
+		case '1':
+			opts.startTime = value;
+			break;
 
-    case '2':
-      opts.endTime = value;
-      break;
+		case '2':
+			opts.endTime = value;
+			break;
 
-    case '3':
-      opts.location = value;
-      break;
+		case '3':
+			opts.location = value;
+			break;
 
-    case '4':
-      opts.name = value;
-      break;
+		case '4':
+			opts.name = value;
+			break;
 
-    case '5':
-      var html = converter.makeHtml(value);
-      html = html.replace('<a ', '<a target="_blank" ');
-      opts.description = html;
-      break;
+		case '5':
+			var html = converter.makeHtml(value);
+			html = html.replace('<a ', '<a target="_blank" ');
+			opts.description = html;
+			break;
 
-    case '6':
-      opts.link = value;
-      break;
+		case '6':
+			opts.format = value;
+			break;
 
-    case '7':
-      var html = converter.makeHtml(value);
-      html = html.replace('<a ', '<a target="_blank" ');
-      opts.speaker = html;
-      break;
-  }
+		case '7':
+			var html = converter.makeHtml(value);
+			html = html.replace('<a ', '<a target="_blank" ');
+			opts.speaker = html;
+			break;
 
-  return opts;
+		case '8':
+			opts.link = value;
+			break;
+
+		case '9':
+			opts.tags = value.replace(/\s+/g, '').split(',');
+			break;
+
+	}
+
+	return opts;
 };
 
 var readWorksheet = function (worksheet, next) {
-  var title = worksheet.title.toLowerCase();
+	var title = worksheet.title.toLowerCase();
 
-  worksheet.cells({
-    range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
+	worksheet.cells({
+		range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
 
-  }, function (err, cells) {
-    if (err) {
-      next(err);
-      return;
-    }
-    var rowCount = 1;
-    var count = 1;
+	}, function (err, cells) {
+		if (err) {
+			next(err);
+			return;
+		}
+		var rowCount = 1;
+		var count = 1;
 
-    for (var cell in cells) {
-      var count = 1;
-      var events = {};
+		for (var cell in cells) {
+			var count = 1;
+			var events = {};
 
-      for (var ev in cells[cell]) {
-        var row = cells[cell][ev];
-        var opts = {};
+			for (var ev in cells[cell]) {
+				var row = cells[cell][ev];
+				var opts = {};
 
-        if (row && count > 1) {
-          for (var c in row) {
-            opts = setType(opts, row[c]);
-          }
+				if (row && count > 1) {
+					for (var c in row) {
+						opts = setType(opts, row[c]);
+					}
 
-          opts.id = title.split('-')[0].toLowerCase();
-        }
+					opts.id = title.split('-')[0].toLowerCase();
+				}
 
-        if (getObjSize(opts)) {
-          var countVal = rowCount;
+				if (getObjSize(opts)) {
+					var countVal = rowCount;
 
-          if (parseInt(rowCount, 10) < 10) {
-            countVal = '0' + countVal;
-          }
-          events[countVal] = opts;
-          rowCount ++;
-        }
+					if (parseInt(rowCount, 10) < 10) {
+						countVal = '0' + countVal;
+					}
+					events[countVal] = opts;
+					rowCount ++;
+				}
 
-        count ++;
-      }
+				count ++;
+			}
 
-      client.set('schedule:' + title, JSON.stringify(events),
-        function (err) {
-        if (err) {
-          console.log('Could not save schedule ', title, events);
-          next(err);
-          return;
-        }
-        client.sadd('schedules', title);
+			client.set('schedule:' + title, JSON.stringify(events),
+				function (err) {
+					if (err) {
+						console.log('Could not save schedule ', title, events);
+						next(err);
+						return;
+					}
+					client.sadd('schedules', title);
 
-        console.log('%s: %d - Saved schedule', title, count);
-        next(null);
-      });
-    }
-  });
+					console.log('%s: %d - Saved schedule', title, count);
+					next(null);
+				});
+		}
+	});
 };
 
 GoogleSpreadsheet({
-  key: nconf.get('googleKey')
+	key: nconf.get('googleKey')
 }, function (err, spreadsheets) {
-  if (err) {
-    throw new Error('Error reading spreadsheets data: ' + err);
-  }
-  async.each(spreadsheets.worksheets, readWorksheet, function(err) {
-    if (err) {
-      throw err;
-    }
-    console.log('getSchedule success');
-    process.exit();
-  });
+	if (err) {
+		throw new Error('Error reading spreadsheets data: ' + err);
+	}
+	async.each(spreadsheets.worksheets, readWorksheet, function(err) {
+		if (err) {
+			throw err;
+		}
+		console.log('getSchedule success');
+		process.exit();
+	});
 });

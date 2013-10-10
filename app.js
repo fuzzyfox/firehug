@@ -142,7 +142,7 @@ function getDay(user) {
 
 function isActiveDay(user) {
   var day = getDay(user);
-  return day >= 4 && day <= 6;
+  return day >= 5 && day <= 6;
 }
 
 function getPayload(session) {

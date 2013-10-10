@@ -9,7 +9,30 @@ html, body
 	min-height 100%
 
 body
-	background url('/img/background.png') no-repeat, url('/img/back-repeat.jpg') repeat-x 0 0, url('/img/back-repeat-bottom.jpg') repeat, #f5f1e8
+	background #fff
+	border-top 16px solid rgb(0, 40, 58)
+	position relative
+
+body:before
+	left 50%
+	width 50%
+	background none repeat scroll 0% 0% rgb(39, 157, 212)
+
+body:after
+	left: 33.333%
+	width: 33.333%
+	background: none repeat scroll 0% 0% rgb(216, 0, 28)
+	border-style: solid
+	border-color: rgb(255, 255, 255)
+	border-width: 0px 4px
+	margin-left: -4px
+	z-index: 1
+
+body:before, body:after
+	content ""
+	position: absolute
+	top: -16px
+	height: 16px
 
 .tt-hint
 	display none
@@ -98,10 +121,10 @@ main
 	margin 0 auto 20px auto
 	width 140px
 
-.thursday
+.saturday
 	.icon-arrow-left
 		display none
-.monday
+.sunday
 	.icon-arrow-right
 		display none
 .icon
@@ -168,14 +191,35 @@ a
 				padding 10px 0 0
 				p
 					margin 0 0 10px 0
-	&.to
-		.to
+	&.everyone
+		.everyone
 			display block
-	&.br
-		.br
+	&.webmaker
+		.webmaker
 			display block
-	&.sc
-		.sc
+	&.games
+		.games
+			display block
+	&.connect
+		.connect
+			display block
+	&.privacy
+		.privacy
+			display block
+	&.physical
+		.physical
+			display block
+	&.mobile
+		.mobile
+			display block
+	&.journalism
+		.journalism
+			display block
+	&.science
+		.science
+			display block
+	&.badges
+		.badges
 			display block
 
 .tips-wrapper
@@ -309,15 +353,15 @@ header
 								a
 									border-radius 10px 10px 10px 10px
 
-					&:before
-						content ""
-						display block
-						width 28px
-						height 10px
-						background no-repeat url('/img/sandstone/menu-point.png')
-						position absolute
-						left 12px
-						top -10px
+						&:before
+							content ""
+							display block
+							width 28px
+							height 10px
+							background no-repeat url('/img/sandstone/menu-point.png')
+							position absolute
+							right 12px
+							top -10px
 
 					&:hover, &:active, &.hover
 						ul
@@ -551,7 +595,6 @@ header
 	text-align center
 	margin 20px 0 0 0
 	display none
-	background url('/img/logo-home.png') no-repeat 50% 295px
 	background-size 110px 110px
 
 	progress
@@ -708,9 +751,6 @@ $background-orange
 
 
 @media (max-width: 480px)
-
-	body
-		background url('/img/back-repeat.jpg') repeat-x 0 0, url('/img/back-repeat-bottom.jpg') repeat, #f5f1e8
 
 	.title-icon
 		width 80px

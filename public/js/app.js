@@ -2,7 +2,7 @@
   'use strict';
 
   window._gaq = [];
-  _gaq.push(['_setAccount', 'UA-35433268-40']);
+  _gaq.push(['_setAccount', '']);
   _gaq.push(['_trackPageview']);
   (function() {
     var ga = document.createElement('script');
@@ -311,12 +311,19 @@
       $scope.listing = false;
 
       $scope.locations = {
-        'br': 'Brussels',
-        'sc': 'Santa Clara',
-        'to': 'Toronto'
+        'everyone': 'Everyone',
+        'webmaker': 'Webmaker',
+        'connect': 'Connect',
+        'privacy': 'Privacy',
+        'physical': 'Physical',
+        'games': 'Games',
+        'science': 'Science',
+        'badges': 'Badges',
+        'journalism': 'Jounalism',
+        'mobile': 'Mobile'
       };
 
-      var defaultLocation = 'sc';
+      var defaultLocation = 'everyone';
 
       if ($rootScope.user) {
         defaultLocation = $rootScope.user.location;
@@ -345,9 +352,16 @@
 
       $scope.setLocation = function(location) {
         _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
-        $('#schedule-listing').removeClass('br')
-          .removeClass('to')
-          .removeClass('sc')
+        $('#schedule-listing').removeClass('everyone')
+          .removeClass('webmaker')
+          .removeClass('connect')
+          .removeClass('privacy')
+          .removeClass('physical')
+          .removeClass('games')
+          .removeClass('science')
+          .removeClass('badges')
+          .removeClass('journalism')
+          .removeClass('mobile')
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
         $scope.showLocations();
@@ -390,14 +404,6 @@
       };
 
       $scope.days = [{
-        name: 'thursday',
-        title: 'Thurs',
-        value: []
-      }, {
-        name: 'friday',
-        title: 'Fri',
-        value: []
-      }, {
         name: 'saturday',
         title: 'Sat',
         value: []
@@ -405,16 +411,12 @@
         name: 'sunday',
         title: 'Sun',
         value: []
-      }, {
-        name: 'monday',
-        title: 'Mon',
-        value: []
       }];
 
-      if ($rootScope.user && ($rootScope.user.day > 3 && $rootScope.user.day < 8)) {
-        $scope.selected = $scope.days[$rootScope.user.day - 3];
+      if ($rootScope.user && ($rootScope.user.day > 5 && $rootScope.user.day < 7)) {
+        $scope.selected = $scope.days[$rootScope.user.day - 5];
       } else {
-        // Otherwise default to Thursday
+        // Otherwise default to Friday
         $scope.selected = $scope.days[0];
       }
 
@@ -424,20 +426,11 @@
         for (var s in data) {
           var evt = data[s];
 
-          if (s.indexOf('3') > -1) {
+          if (s.indexOf('5') > -1) {
             $scope.days[0].value.push(evt);
-
-          } else if (s.indexOf('4') > -1) {
+          } else if (s.indexOf('6') > -1) {
             $scope.days[1].value.push(evt);
 
-          } else if (s.indexOf('5') > -1) {
-            $scope.days[2].value.push(evt);
-
-          } else if (s.indexOf('6') > -1) {
-            $scope.days[3].value.push(evt);
-
-          } else if (s.indexOf('7') > -1) {
-            $scope.days[4].value.push(evt);
           }
 
           for (var entry in evt) {

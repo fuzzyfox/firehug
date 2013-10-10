@@ -8,3 +8,4 @@ app.css
 public/assets
 newrelic.js
 newrelic_agent.log
+dump.rdb
