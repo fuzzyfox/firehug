@@ -19,7 +19,6 @@ var getObjSize = function (obj) {
 
 var setType = function (opts, cell) {
 	var value = cell.value || '';
-
 	switch (cell.col) {
 		case '1':
 			opts.startTime = value;
@@ -71,7 +70,6 @@ var readWorksheet = function (worksheet, next) {
 
 	worksheet.cells({
 		range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
-
 	}, function (err, cells) {
 		if (err) {
 			next(err);

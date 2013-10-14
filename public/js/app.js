@@ -47,6 +47,11 @@
           controllerAs: 'around',
           templateUrl: '/partials/getting-around.html'
         })
+        .when('/maps', {
+          controller: 'MapCtrl',
+          controllerAs: 'maps',
+          templateUrl: '/partials/maps.html'
+        })
         // .when('/questions', {
         //   controller: 'QuestionsCtrl',
         //   controllerAs: 'questions',
@@ -266,7 +271,7 @@
               req.onerror = function() {
                 alert('Error: ' + this.error.name);
               };
-            }
+            };
           }
         };
       }
@@ -306,6 +311,10 @@
     function($scope, $rootScope) {}
   ]);
 
+  app.controller('MapCtrl', ['$scope', '$rootScope',
+    function($scope, $rootScope) {}
+  ]);
+
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
     function($scope, $rootScope, $http, $sce, $routeParams) {
       $scope.listing = false;
@@ -320,7 +329,8 @@
         'science': 'Science',
         'badges': 'Badges',
         'journalism': 'Jounalism',
-        'mobile': 'Mobile'
+        'mobile': 'Mobile',
+        'data': 'Open Data'
       };
 
       var defaultLocation = 'everyone';
@@ -362,6 +372,7 @@
           .removeClass('badges')
           .removeClass('journalism')
           .removeClass('mobile')
+          .removeClass('data')
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
         $scope.showLocations();
