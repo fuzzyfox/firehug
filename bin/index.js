@@ -9,19 +9,19 @@ rule15min.minute = 15;
 var rule30min = new schedule.RecurrenceRule();
 rule30min.minute = 30;
 
-var getUsers;
-function getUsersFork() {
-  if (getUsers) {
-    getUsers.kill();
-    return;
-  }
-  console.log('getUsers forked.');
-  getUsers = fork(__dirname + '/getUsers');
-  getUsers.on('exit', function (code, signal) {
-    console.log('getUsers exited. code: %d - signal: %d', code, signal);
-    getUsers = null;
-  });
-}
+// var getUsers;
+// function getUsersFork() {
+//   if (getUsers) {
+//     getUsers.kill();
+//     return;
+//   }
+//   console.log('getUsers forked.');
+//   getUsers = fork(__dirname + '/getUsers');
+//   getUsers.on('exit', function (code, signal) {
+//     console.log('getUsers exited. code: %d - signal: %d', code, signal);
+//     getUsers = null;
+//   });
+// }
 
 var getSchedule;
 function getScheduleFork() {
@@ -37,10 +37,10 @@ function getScheduleFork() {
   });
 }
 
-schedule.scheduleJob(rule15min, function() {
-  getUsersFork();
-});
-getUsersFork();
+// schedule.scheduleJob(rule15min, function() {
+//   getUsersFork();
+// });
+// getUsersFork();
 
 schedule.scheduleJob(rule30min, function() {
   getScheduleFork();
