@@ -3,11 +3,17 @@
 var schedule = require('node-schedule');
 var fork = require('child_process').fork;
 
+var rule0min = new schedule.RecurrenceRule();
+rule0min.minute = 0;
+
 var rule15min = new schedule.RecurrenceRule();
 rule15min.minute = 15;
 
 var rule30min = new schedule.RecurrenceRule();
 rule30min.minute = 30;
+
+var rule45min = new schedule.RecurrenceRule();
+rule45min.minute = 45;
 
 // var getUsers;
 // function getUsersFork() {
@@ -41,8 +47,16 @@ function getScheduleFork() {
 //   getUsersFork();
 // });
 // getUsersFork();
-
+schedule.scheduleJob(rule0min, function() {
+  getScheduleFork();
+});
+schedule.scheduleJob(rule15min, function() {
+  getScheduleFork();
+});
 schedule.scheduleJob(rule30min, function() {
+  getScheduleFork();
+});
+schedule.scheduleJob(rule45min, function() {
   getScheduleFork();
 });
 getScheduleFork();

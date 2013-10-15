@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+  // 'use strict';
 
   window._gaq = [];
   _gaq.push(['_setAccount', '']);
@@ -320,7 +320,7 @@
       $scope.listing = false;
 
       $scope.locations = {
-        'everyone': 'Everyone',
+        'everyone': 'Keynote',
         'webmaker': 'Webmaker',
         'connect': 'Connect',
         'privacy': 'Privacy',
@@ -333,7 +333,7 @@
         'data': 'Open Data'
       };
 
-      var defaultLocation = 'everyone';
+      var defaultLocation = localStorage.getItem('defaultLocation') || 'everyone';
 
       if ($rootScope.user) {
         defaultLocation = $rootScope.user.location;
@@ -376,6 +376,7 @@
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
         $scope.showLocations();
+        localStorage.setItem('defaultLocation', location);
       };
 
       $scope.isActiveLocation = function(location) {
@@ -455,12 +456,31 @@
         }
       };
 
-      $http({
-        url: '/schedule',
-        method: 'GET'
-      }).then(function(data) {
-        loadSchedule(data.data.schedule);
-      });
+      // check if localstore mod time is more than 15 min old, 
+      // if not load schedule out off local storage IF an internet 
+      // connection is available.
+      
+      // if localmodtime < now - 15min
+      if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
+        $http({
+          url: '/schedule',
+          method: 'GET'
+        }).success(function(data) {
+          console.log('live load schedule');
+          // set last mod time to now in localstore
+          localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
+          localStorage.setItem('localModTime', moment().toString());
+          loadSchedule(data.schedule);
+        }).error(function(data){
+          console.log('local load schedule (live fail)');
+          // // on error load local schedule data
+          loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
+        });
+      }
+      else {
+        console.log('local load schedule');
+        loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
+      }
     }
   ]);
 

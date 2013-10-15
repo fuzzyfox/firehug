@@ -60,7 +60,7 @@ app.use(express.static(__dirname + '/public', {
 var nap = require('nap');
 
 nap({
-  mode: 'production',
+  mode: 'development',
   assets: {
     js: {
       all: [
@@ -71,6 +71,7 @@ nap({
         '/public/js/vendor/angular-route.js',
         // '/public/js/vendor/fastclick.js',
         // '/public/js/vendor/typeahead.js',
+        '/public/js/vendor/moment.js',
         '/public/js/app.js'
       ]
     },
