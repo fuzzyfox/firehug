@@ -1,4 +1,4 @@
-name: summit
+name: festival-firehug
 mem: 128M
 framework:
   type: node
