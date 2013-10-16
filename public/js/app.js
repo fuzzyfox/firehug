@@ -514,25 +514,19 @@
     }
   ]);
 
-  app.controller('BadgesCtrl', ['$scope',
-    function($scope) {
-      $scope.tip = {};
+  app.controller('BadgesCtrl', ['$scope', '$http',
+    function($scope, $http) {
+      $http({
+        url: '/badges',
+        method: 'GET'
+      }).success(function(data) {
+        console.log('live load badges');
+        console.log(data);
+        $scope.badges = data;
+      }).error(function(data){
+        console.log('live load badges failed');
+      });
 
-      for (var i = 0; i < 7; i++) {
-        $scope.tip[i] = false;
-      }
-
-      $scope.showingTip = function(id) {
-        return (id === $scope.tip[id]);
-      };
-
-      $scope.showTip = function(id) {
-        if ($scope.tip[id] === id) {
-          $scope.tip[id] = false;
-        } else {
-          $scope.tip[id] = id;
-        }
-      };
     }
   ]);
 
