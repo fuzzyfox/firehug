@@ -1,7 +1,7 @@
 {
   "name": "firehug",
   "version": "0.0.1",
-  "repository": "git@github.com:digitarald/firehug.git",
+  "repository": "git@github.com:fuzzyfox/firehug.git",
   "private": true,
   "license": "MPL",
   "dependencies": {
