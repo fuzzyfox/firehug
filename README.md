@@ -1,4 +1,4 @@
-# Firehug
+# Firehug <small>MozFest port</small>
 
 ## Contribute
 
@@ -9,6 +9,18 @@ How to run:
     npm start
 
 Open an issue if you need API keys for `local.json`.
+
+## Deploy to heroku
+
+	heroku create
+	git push heroku master
+	heroku addons:add redistogo
+	heroku config:set NODE_ENV=production
+	heroku config:set sessionSecret=secret
+	heroku config:set sessionName=sid
+	heroku config:set googleKey=yourgooglespreadsheetkey
+	heroku config:set threshhold=5000
+	heroku open
 
 ## License
 
