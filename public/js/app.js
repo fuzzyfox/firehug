@@ -52,6 +52,11 @@
           controllerAs: 'maps',
           templateUrl: '/partials/maps.html'
         })
+        .when('/badges', {
+          controller: 'BadgesCtrl',
+          controllerAs: 'badges',
+          templateUrl: '/partials/badges.html'
+        })
         // .when('/questions', {
         //   controller: 'QuestionsCtrl',
         //   controllerAs: 'questions',
@@ -459,10 +464,10 @@
         }
       };
 
-      // check if localstore mod time is more than 15 min old, 
-      // if not load schedule out off local storage IF an internet 
+      // check if localstore mod time is more than 15 min old,
+      // if not load schedule out off local storage IF an internet
       // connection is available.
-      
+
       // if localmodtime < now - 15min
       if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
         $http({
@@ -508,6 +513,29 @@
       };
     }
   ]);
+
+  app.controller('BadgesCtrl', ['$scope',
+    function($scope) {
+      $scope.tip = {};
+
+      for (var i = 0; i < 7; i++) {
+        $scope.tip[i] = false;
+      }
+
+      $scope.showingTip = function(id) {
+        return (id === $scope.tip[id]);
+      };
+
+      $scope.showTip = function(id) {
+        if ($scope.tip[id] === id) {
+          $scope.tip[id] = false;
+        } else {
+          $scope.tip[id] = id;
+        }
+      };
+    }
+  ]);
+
 
   // var dialogKeys = {};
   // var glyphKey = 0;
