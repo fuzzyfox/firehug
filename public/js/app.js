@@ -425,11 +425,14 @@
         value: []
       }];
 
-      if ($rootScope.user && ($rootScope.user.day > 5 && $rootScope.user.day < 7)) {
-        $scope.selected = $scope.days[$rootScope.user.day - 5];
-      } else {
-        // Otherwise default to Friday
+      // if day = mon/tue/wed/thur/fri/sat
+      if(moment().day() > 0){
+        // show saturday by default
         $scope.selected = $scope.days[0];
+      }
+      else {
+        // Otherwise default to Sunday
+        $scope.selected = $scope.days[1];
       }
 
       var loadSchedule = function(data) {
