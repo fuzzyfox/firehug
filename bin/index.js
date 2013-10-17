@@ -43,20 +43,40 @@ function getScheduleFork() {
   });
 }
 
+var getBadges;
+function getBadgesFork() {
+  if (getBadges) {
+    getBadges.kill();
+    return;
+  }
+  console.log('getBadges forked.');
+  getBadges = fork(__dirname + '/getBadges');
+  getBadges.on('exit', function (code, signal) {
+    console.log('getBadges exited. code: %d - signal: %d', code, signal);
+    getBadges = null;
+  });
+}
+
+
 // schedule.scheduleJob(rule15min, function() {
 //   getUsersFork();
 // });
 // getUsersFork();
 schedule.scheduleJob(rule0min, function() {
   getScheduleFork();
+  getBadgesFork();
 });
 schedule.scheduleJob(rule15min, function() {
   getScheduleFork();
+  getBadgesFork();
 });
 schedule.scheduleJob(rule30min, function() {
   getScheduleFork();
+  getBadgesFork();
 });
 schedule.scheduleJob(rule45min, function() {
   getScheduleFork();
+  getBadgesFork();
 });
 getScheduleFork();
+getBadgesFork();

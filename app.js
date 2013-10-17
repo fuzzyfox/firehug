@@ -1,7 +1,9 @@
 'use strict';
 
 // for ITs monitoring tool
-// require('newrelic');
+if ( process.env.NEW_RELIC_HOME ) {
+  require( 'newrelic' );
+}
 
 var express = require('express');
 var http = require('http');
@@ -262,6 +264,11 @@ app.get('/help', function(request, response) {
 //     });
 //   });
 // });
+app.get('/badges', function(req, res, next) {
+  client.get('badges', function(err, badges) {
+    res.json(JSON.parse(badges));
+  });
+});
 
 app.get('/schedule', function(req, res, next) {
   client.smembers('schedules', function(err, schedules) {
