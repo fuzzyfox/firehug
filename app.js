@@ -37,7 +37,7 @@ var app = express();
 // };
 
 // Setup express
-if (!process.NODE_ENV) {
+if (!process.env.NODE_ENV) {
   app.use(express.logger());
 }
 
@@ -54,7 +54,7 @@ app.use(stylus.middleware({
 }));
 
 // Static sources
-var maxAge = process.NODE_ENV ? 86400000 : 0;
+var maxAge = process.env.NODE_ENV ? 86400000 : 0;
 app.use(express.static(__dirname + '/public', {
   maxAge: maxAge
 }));
@@ -62,7 +62,7 @@ app.use(express.static(__dirname + '/public', {
 var nap = require('nap');
 
 nap({
-  mode: 'development',
+  mode: process.env.NODE_ENV || 'development',
   assets: {
     js: {
       all: [
@@ -87,7 +87,7 @@ nap({
   }
 });
 
-nap.package();
+nap.package(console.log);
 
 // CSP
 var headers = require('express-standard');
@@ -96,14 +96,14 @@ var headers = require('express-standard');
 // headers.add_csp('frame-src', 'https://login.persona.org');
 headers.add_csp_self('script-src');
 // headers.add_csp('script-src', 'https://login.persona.org');
-headers.add_csp('script-src', 'https://ssl.google-analytics.com');
+// headers.add_csp('script-src', 'https://ssl.google-analytics.com');
 headers.add_csp_self('style-src');
 headers.add_csp('style-src', "'unsafe-inline'");
 headers.add_csp_self('img-src');
 headers.add_csp('img-src', 'data:');
 // headers.add_csp('img-src', 'https://mozillians.org');
-headers.add_csp('img-src', 'https://secure.gravatar.com');
-headers.add_csp('img-src', 'https://ssl.google-analytics.com');
+// headers.add_csp('img-src', 'https://secure.gravatar.com');
+// headers.add_csp('img-src', 'https://ssl.google-analytics.com');
 
 app.use(headers.handle);
 
@@ -369,6 +369,24 @@ app.get('/manifest.webapp', function(req, res) {
 //     });
 //   });
 // });
+
+// generate appcache manifest ONLY if production
+if(process.env.NODE_ENV == 'production'){
+  var fs = require('fs');
+  app.get('/firehug.appcache', function(req, res) {
+    // deal w/ css/js
+    var assets = fs.readdirSync('./public/assets/'),
+        partials = fs.readdirSync('./public/partials/'),
+        images = fs.readdirSync('./public/img/'),
+        fonts = fs.readdirSync('./public/fonts/');
+
+    var caches = assets.concat(partials, images, fonts);
+
+
+    res.contentType('text/cache-manifest');
+    res.send('CACHE MANIFEST\n# Created ' + now + '\n' + caches.join('\n'));
+  });
+}
 
 // Start express server
 var server = http.createServer(app);
