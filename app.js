@@ -16,6 +16,7 @@ var nib = require('nib');
 var connectRedis = require('connect-redis');
 var request = require('request');
 var time = require('time');
+var url = require('url');
 
 var shared = require('./shared');
 var nconf = shared.nconf;
@@ -104,6 +105,7 @@ headers.add_csp('img-src', 'data:');
 // headers.add_csp('img-src', 'https://mozillians.org');
 // headers.add_csp('img-src', 'https://secure.gravatar.com');
 // headers.add_csp('img-src', 'https://ssl.google-analytics.com');
+headers.add_csp('img-src', url.parse(nconf.get('obrEndpoint')).protocol + '//' + url.parse(nconf.get('obrEndpoint')).host);
 
 app.use(headers.handle);
 
