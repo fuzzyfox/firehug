@@ -13,5 +13,7 @@
     "surveyGooglePass": "",
     "surveyGoogleSpreadsheet": "",
     "surveyGoogleWorksheet": "",
-    "surveyIdle": 7200000
+    "surveyIdle": 7200000,
+    "obrEndpoint": "",
+    "obrProgram": ""
 }
