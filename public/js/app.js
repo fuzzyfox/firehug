@@ -16,6 +16,13 @@
   var origin = location.protocol + '//' + location.host;
 
   // FastClick.attach(document.body);
+  
+  // set back button behaviour
+  $('.menu-icn.menu-back[ng-show=canGoBack]').on('click', function(e){
+    history.go(-1);
+    e.preventDefault();
+    return false;
+  });
 
   var app = angular.module('summit', ['ngRoute']);
 
@@ -48,6 +55,11 @@
           templateUrl: '/partials/getting-around.html'
         })
         .when('/maps', {
+          controller: 'MapCtrl',
+          controllerAs: 'maps',
+          templateUrl: '/partials/maps.html'
+        })
+        .when('/maps/:level', {
           controller: 'MapCtrl',
           controllerAs: 'maps',
           templateUrl: '/partials/maps.html'
@@ -311,8 +323,18 @@
     function($scope, $rootScope) {}
   ]);
 
-  app.controller('MapCtrl', ['$scope', '$rootScope',
-    function($scope, $rootScope) {}
+  app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams', 
+    function($scope, $rootScope, $routeParams) {
+      if($routeParams.level){
+        $('#floor-select option[value=' + $routeParams.level + ']').prop('selected', true);
+        $('#floor-plan').prop('src', '/img/floorplans/' + $routeParams.level + '.png');
+      }
+
+
+      $('#floor-select').on('change', function(e){
+        $('#floor-plan').prop('src', '/img/floorplans/' + this.value + '.png');
+      });
+    }
   ]);
 
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
