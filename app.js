@@ -373,6 +373,7 @@ app.get('/manifest.webapp', function(req, res) {
 // });
 
 // generate appcache manifest ONLY if production
+// - less than optimal, refactor
 if(process.env.NODE_ENV == 'production'){
   var fs = require('fs');
   app.get('/firehug.appcache', function(req, res) {
@@ -382,11 +383,26 @@ if(process.env.NODE_ENV == 'production'){
         images = fs.readdirSync('./public/img/'),
         fonts = fs.readdirSync('./public/fonts/');
 
-    var caches = assets.concat(partials, images, fonts);
+    assets.forEach(function(e, i, a){
+      a[i] = './assets/' + e;
+    });
 
+    partials.forEach(function(e, i, a){
+      a[i] = './partials/' + e;
+    });
+
+    images.forEach(function(e, i, a){
+      a[i] = './img/' + e;
+    });
+
+    fonts.forEach(function(e, i, a){
+      a[i] = './fonts/' + e;
+    });
+
+    var caches = assets.concat(partials);
 
     res.contentType('text/cache-manifest');
-    res.send('CACHE MANIFEST\n# Created ' + now + '\n' + caches.join('\n'));
+    res.send('CACHE MANIFEST\n# Created ' + now + '\n' + caches.join('\n') + '\n\nNETWORK:\n*');
   });
 }
 
