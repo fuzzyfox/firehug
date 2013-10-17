@@ -20,6 +20,8 @@ Open an issue if you need API keys for `local.json`.
 	heroku config:set sessionName=sid
 	heroku config:set googleKey=yourgooglespreadsheetkey
 	heroku config:set threshhold=5000
+	heroku config:set obrEndpoint="http://badger.example.com"
+	heroku config:set obrProgram=some-obr-program
 	heroku open
 
 ## License
