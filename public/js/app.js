@@ -558,7 +558,9 @@
         console.log('live load badges failed');
       });
 
-      $scope.claimPage = function() window.location='http://badges.openbadges.org';
+      $scope.claimPage = function() {
+        window.location='http://badges.openbadges.org';
+      };
 
       $scope.tip = {};
 
