@@ -378,6 +378,11 @@
         }
       };
 
+      $scope.getSelectedOption = function(){
+        console.log($('#schedule-location-list').val());
+        return $('#schedule-location-list').val();
+      }
+
       $scope.isShowingLocations = function() {
         return $scope.listing;
       };
