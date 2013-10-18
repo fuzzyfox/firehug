@@ -16,7 +16,7 @@
   var origin = location.protocol + '//' + location.host;
 
   // FastClick.attach(document.body);
-  
+
   // set back button behaviour
   $('.menu-icn.menu-back[ng-show=canGoBack]').on('click', function(e){
     history.go(-1);
@@ -328,7 +328,7 @@
     function($scope, $rootScope) {}
   ]);
 
-  app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams', 
+  app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
     function($scope, $rootScope, $routeParams) {
       if($routeParams.level){
         $('#floor-select option[value=' + $routeParams.level + ']').prop('selected', true);
@@ -553,6 +553,21 @@
         console.log('live load badges failed');
       });
 
+      $scope.claimPage = function() window.location='http://badges.openbadges.org';
+
+      $scope.tip = {};
+
+      $scope.showingTip = function(id) {
+        return (id === $scope.tip[id]);
+      };
+
+      $scope.showTip = function(id) {
+        if ($scope.tip[id] === id) {
+          $scope.tip[id] = false;
+        } else {
+          $scope.tip[id] = id;
+        }
+      };
     }
   ]);
 

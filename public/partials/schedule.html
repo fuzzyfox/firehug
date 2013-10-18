@@ -14,7 +14,7 @@
             <span>{{ day.title }}</span>
           </h3>
           <div id="schedule-locations">
-            Track: <select name="" id="schedule-location-list" ng-click="showLocations()">
+            Track: <select name="schedule-location-list" class="subview-selector" id="schedule-location-list" ng-click="showLocations()">
               <option value="{{ key }}" ng-click="setLocation(key)" ng-repeat="(key, value) in locations" ng-selected="isActiveLocation(key)">{{value}}</option>
             </select>
           </div>
