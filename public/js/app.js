@@ -348,7 +348,7 @@
 
       $scope.locations = {
         'everyone': 'Keynote',
-        'scrum': 'Scrums',
+        'webmaker_scrum': 'Webmaker: Scrums',
         'webmaker': 'Webmaker',
         'connect': 'Connect',
         'privacy': 'Privacy',
