@@ -552,6 +552,20 @@
       });
 
       $scope.claimPage = function() window.location='http://badges.openbadges.org';
+
+      $scope.tip = {};
+
+      $scope.showingTip = function(id) {
+        return (id === $scope.tip[id]);
+      };
+
+      $scope.showTip = function(id) {
+        if ($scope.tip[id] === id) {
+          $scope.tip[id] = false;
+        } else {
+          $scope.tip[id] = id;
+        }
+      };
     }
   ]);
 
