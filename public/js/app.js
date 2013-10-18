@@ -348,6 +348,7 @@
 
       $scope.locations = {
         'everyone': 'Keynote',
+        'scrum': 'Scrums',
         'webmaker': 'Webmaker',
         'connect': 'Connect',
         'privacy': 'Privacy',
@@ -368,7 +369,7 @@
 
       $scope.location = defaultLocation;
 
-      _gaq.push(['_trackEvent', 'Schedule', 'View', defaultLocation]);
+      //_gaq.push(['_trackEvent', 'Schedule', 'View', defaultLocation]);
 
       $scope.showLocations = function() {
         if ($scope.listing) {
@@ -391,6 +392,7 @@
         _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
         $('#schedule-listing').removeClass('everyone')
           .removeClass('webmaker')
+          .removeClass('scrum')
           .removeClass('connect')
           .removeClass('privacy')
           .removeClass('physical')
