@@ -397,7 +397,7 @@
         // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
         $('#schedule-listing').removeClass('everyone')
           .removeClass('webmaker')
-          .removeClass('scrum')
+          .removeClass('webmaker_scrum')
           .removeClass('connect')
           .removeClass('privacy')
           .removeClass('physical')
