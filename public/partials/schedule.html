@@ -13,10 +13,10 @@
               <i class="icon-arrow-right" ng-click="setActive($index + 1)"></i> Next</a>
             <span>{{ day.title }}</span>
           </h3>
-          <div id="schedule-locations" ng-class="{ active : isShowingLocations() }">
-            <a ng-click="showLocations()" class="current"><span>{{ locations[location] }}</span>
-              <i class="icon-sort-down"></i></a>
-            <a class="location-items" ng-click="setLocation(key)" ng-class="{ active : isActiveLocation(key) }" ng-repeat="(key, value) in locations">{{ value }}</a>
+          <div id="schedule-locations">
+            Track: <select name="" id="schedule-location-list" ng-click="showLocations()">
+              <option value="{{ key }}" ng-click="setLocation(key)" ng-repeat="(key, value) in locations" ng-selected="isActiveLocation(key)">{{value}}</option>
+            </select>
           </div>
         </div>
         <ul class="events {{ day.name }}" ng-show="loaded">
