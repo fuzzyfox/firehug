@@ -389,7 +389,7 @@
       };
 
       $scope.setLocation = function(location) {
-        _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
+        // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
         $('#schedule-listing').removeClass('everyone')
           .removeClass('webmaker')
           .removeClass('scrum')
@@ -404,7 +404,9 @@
           .removeClass('data')
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
+
         $scope.showLocations();
+
         localStorage.setItem('defaultLocation', location);
       };
 
