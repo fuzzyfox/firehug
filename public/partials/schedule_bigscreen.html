@@ -1,0 +1,54 @@
+<div class="row">
+  <article id="schedule-listing" class="bigscreen col-sm-8 col-sm-offset-2 curr-location {{ location }}">
+    <header>
+      <img src="/img/schedule-icon.png" class="title-icon">
+      <h2 ng-class="{ active: isShowingLocations() }" class="current"><span>{{ locations[location] }}</span><br> Schedule</h2>
+      <div class="clearfix" style="clear:both;"></div>
+    </header>
+
+    <div style="text-align:right;margin-bottom: 4px">
+      Track: <select ng-init="selectedLocation = locations[location]" ng-model="selectedLocation" name="schedule-location-list" class="subview-selector" id="schedule-location-list" ng-change="setLocation(getSelectedOption())" ng-options="value for (key, value) in locations">
+      </select>
+    </div>
+
+    <div class="event-wrapper" ng-switch="selected" ng-repeat="day in days" ng-animate="'animate'">
+      <section ng-class="{ active : isActive(day) }">
+        <div class="{{ day.name }} subtitle">
+          <h3>
+            <a ng-click="setActive($index - 1)" class="icon">
+              <i class="icon-arrow-left" ng-click="setActive($index - 1)"></i> Prev</a>
+            <a ng-click="setActive($index + 1)" class="icon">
+              <i class="icon-arrow-right" ng-click="setActive($index + 1)"></i> Next</a>
+            <span>{{ day.name }}</span>
+          </h3>
+          
+        </div>
+        <ul class="events {{ day.name }}" ng-show="loaded">
+          <li data-ng-repeat="(key, value) in day.value track by $index">
+            <div ng-click="expandDescription(v)" class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index" ng-class="getDescriptionState(v)">
+              <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
+                <span class="more">+</span>
+                <span class="less">-</span>
+              </a>
+              <div class="city">
+                <h3>{{ v.name }}</h3>
+                <p class="city-stats">
+                  <span>{{ v.location }}</span>
+                  <time>{{ v.startTime }} - {{ v.endTime }}</time>
+                </p>
+
+                <div class="description" ng-class="! getDescriptionState(v)">
+                  <div class="speaker" ng-bind-html="v.speaker"></div>
+                  <div ng-bind-html="v.description"></div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div ng-hide="loaded">
+          <p class="text-center text-muted">Loading events, please wait …</p>
+        </div>
+      </section>
+    </div>
+  </article>
+</div>
