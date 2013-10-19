@@ -372,7 +372,7 @@
         'science': 'Science',
         'badges': 'Badges',
         'journalism': 'Jounalism',
-        'opendata': 'Open Data',
+        'data': 'Open Data',
         'mobile': 'Mobile'
       };
 
@@ -421,7 +421,7 @@
           .removeClass('badges')
           .removeClass('journalism')
           .removeClass('mobile')
-          .removeClass('opendata')
+          .removeClass('data')
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
 
