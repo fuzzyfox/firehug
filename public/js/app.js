@@ -404,7 +404,7 @@
       };
 
       $scope.refresh = function() {
-        document.location.href = '/#!/schedule?schedule';
+        document.location.href = '/#!/schedule' + ($routeParams.track ? '/' + $routeParams.track : null) + '?schedule';
         document.location.reload();
       };
 
@@ -466,13 +466,19 @@
         return $scope.selected === day;
       };
 
+      $scope.isPastEvent = function(endTimestamp){
+        return (endTimestamp.day() == moment().day() && endTimestamp <= moment());
+      };
+
       $scope.days = [{
         name: 'saturday',
         title: 'Sat',
+        date: '10/26/2013', // US date format
         value: []
       }, {
         name: 'sunday',
         title: 'Sun',
+        date: '10/27/2013',
         value: []
       }];
 
@@ -496,7 +502,6 @@
             $scope.days[0].value.push(evt);
           } else if (s.indexOf('6') > -1) {
             $scope.days[1].value.push(evt);
-
           }
 
           for (var entry in evt) {
@@ -505,6 +510,14 @@
             }
             if (evt[entry].speaker) {
               evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
+            }
+
+            if (s.indexOf('5') > -1) {
+              evt[entry].startTimestamp = moment($scope.days[0].date + ' ' + evt[entry].startTime);
+              evt[entry].endTimestamp = moment($scope.days[0].date + ' ' + evt[entry].endTime);
+            } else if (s.indexOf('6') > -1) {
+              evt[entry].startTimestamp = moment($scope.days[1].date + ' ' + evt[entry].startTime);
+              evt[entry].endTimestamp = moment($scope.days[1].date + ' ' + evt[entry].endTime);
             }
           }
         }
@@ -518,7 +531,8 @@
       if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
         $http({
           url: '/schedule',
-          method: 'GET'
+          method: 'GET',
+          timeout: 1000
         }).success(function(data) {
           console.log('live load schedule');
           // set last mod time to now in localstore
