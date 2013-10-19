@@ -857,3 +857,27 @@ select
 		-webkit-appearance none
 		-moz-appearance none
 		appearance none
+
+#schedule-listing
+	&.bigscreen
+		header
+			height auto
+			text-align left
+			padding-top 30px
+
+			h2
+				text-align inherit
+			img.title-icon
+				margin 0 1em 1em 0
+				width 84px
+				float left
+
+	#schedule-locations
+		z-index 10
+
+.clearfix
+	&:before
+		content " "
+		display table
+	&:after
+		clear both

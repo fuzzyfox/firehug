@@ -1,5 +1,5 @@
 (function() {
-  // 'use strict';
+ 'use strict';
 
   window._gaq = [];
   _gaq.push(['_setAccount', '']);
@@ -48,6 +48,21 @@
           controller: 'ScheduleCtrl',
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule.html'
+        })
+        .when('/schedule/:track', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule.html'
+        })
+        .when('/bigschedule', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule_bigscreen.html'
+        })
+        .when('/bigschedule/:track', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule_bigscreen.html'
         })
         .when('/around', {
           controller: 'AroundCtrl',
@@ -357,11 +372,11 @@
         'science': 'Science',
         'badges': 'Badges',
         'journalism': 'Jounalism',
-        'mobile': 'Mobile',
-        'data': 'Open Data'
+        'opendata': 'Open Data',
+        'mobile': 'Mobile'
       };
 
-      var defaultLocation = localStorage.getItem('defaultLocation') || 'everyone';
+      var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'everyone';
 
       if ($rootScope.user) {
         defaultLocation = $rootScope.user.location;
@@ -380,7 +395,7 @@
       };
 
       $scope.getSelectedOption = function(){
-        console.log($('#schedule-location-list').val());
+        //console.log($('#schedule-location-list').val());
         return $('#schedule-location-list').val();
       }
 
@@ -406,7 +421,7 @@
           .removeClass('badges')
           .removeClass('journalism')
           .removeClass('mobile')
-          .removeClass('data')
+          .removeClass('opendata')
           .addClass(location)
           .find('.current span').text($scope.locations[location]);
 
