@@ -382,15 +382,7 @@ app.controller('HomeCtrl', ['$scope', '$rootScope',
 
 app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
   function($scope, $rootScope, $routeParams) {
-    if($routeParams.level){
-      $('#floor-select option[value=' + $routeParams.level + ']').prop('selected', true);
-      $('#floor-plan').prop('src', '/img/floorplans/' + $routeParams.level + '.png');
-    }
-
-
-    $('#floor-select').on('change', function(e){
-      $('#floor-plan').prop('src', '/img/floorplans/' + this.value + '.png');
-    });
+    $scope.level = $routeParams.level || 'level-0';
   }
 ]);
 
@@ -588,7 +580,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       $scope.loaded = false;
       $scope.days[0].value = [];
       $scope.days[1].value = [];
-      // if localmodtime < now - 15min
+      // if localmodtime < now - 7min
       if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
         $http({
           url: '/schedule',
@@ -635,7 +627,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
 app.controller('AroundCtrl', ['$scope', '$http', '$sce', 
   function($scope, $http, $sce) {
-    // if localmodtime < now - 15min
+    // if localmodtime < now - 7min
     if(!localStorage.getItem('faqModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('faqModTime')))){
       $http({
         url: '/faq',
