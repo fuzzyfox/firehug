@@ -582,6 +582,8 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     
     $scope.getSchedule();
 
+    // runs a schedule update which in turn removes 
+    // past events from view
     if(!window.scheduleInterval){
       window.scheduleInterval = true;
       console.log('starting interval');
