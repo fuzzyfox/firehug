@@ -272,6 +272,12 @@ app.get('/badges', function(req, res, next) {
   });
 });
 
+app.get('/faq', function(req, res, next) {
+  client.get('faq', function(err, faq) {
+    res.send(faq);
+  });
+});
+
 app.get('/schedule', function(req, res, next) {
   client.smembers('schedules', function(err, schedules) {
     if (err) {

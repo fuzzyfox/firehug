@@ -15,5 +15,6 @@
     "surveyGoogleWorksheet": "",
     "surveyIdle": 7200000,
     "obrEndpoint": "",
-    "obrProgram": ""
+    "obrProgram": "",
+    "faqKey": ""
 }

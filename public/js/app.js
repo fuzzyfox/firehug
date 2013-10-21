@@ -571,27 +571,17 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
   }
 ]);
 
-app.controller('AroundCtrl', ['$scope',
-  function($scope) {
-    $scope.tip = {};
-
-    for (var i = 0; i < 7; i++) {
-      $scope.tip[i] = false;
-    }
-
-    $scope.showingTip = function(id) {
-      return (id === $scope.tip[id]);
-    };
-
-    $scope.showTip = function(id) {
-      if ($scope.tip[id] === id) {
-        $scope.tip[id] = false;
-      } else {
-        $scope.tip[id] = id;
-      }
-    };
+app.controller('AroundCtrl', ['$scope', '$http', '$sce', 
+  function($scope, $http, $sce) {
+    $http({
+      url: '/faq',
+      method: 'GET'
+    }).success(function(data){
+      console.log(data);
+      $scope.faq = $sce.trustAsHtml(data);
+    });
   }
-  ]);
+]);
 
 app.controller('BadgesCtrl', ['$scope', '$http',
   function($scope, $http) {

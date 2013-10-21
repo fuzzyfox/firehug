@@ -57,6 +57,19 @@ function getBadgesFork() {
   });
 }
 
+var getFAQ;
+function getFAQFork() {
+  if (getFAQ) {
+    getFAQ.kill();
+    return;
+  }
+  console.log('getFAQ forked.');
+  getFAQ = fork(__dirname + '/getFAQ');
+  getFAQ.on('exit', function (code, signal) {
+    console.log('getFAQ exited. code: %d - signal: %d', code, signal);
+    getFAQ = null;
+  });
+}
 
 // schedule.scheduleJob(rule15min, function() {
 //   getUsersFork();
@@ -65,18 +78,23 @@ function getBadgesFork() {
 schedule.scheduleJob(rule0min, function() {
   getScheduleFork();
   getBadgesFork();
+  getFAQFork();
 });
 schedule.scheduleJob(rule15min, function() {
   getScheduleFork();
   getBadgesFork();
+  getFAQFork();
 });
 schedule.scheduleJob(rule30min, function() {
   getScheduleFork();
   getBadgesFork();
+  getFAQFork();
 });
 schedule.scheduleJob(rule45min, function() {
   getScheduleFork();
   getBadgesFork();
+  getFAQFork();
 });
 getScheduleFork();
 getBadgesFork();
+getFAQFork();

@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var redis = require('redis');
+var request = require('request');
+var Showdown = require('showdown');
+var shared = require('./../shared');
+var converter = new Showdown.converter();
+var nconf = shared.nconf;
+var client = shared.redisClient;
+
+request({
+	url: 'https://docs.google.com/document/d/'+ nconf.get('faqKey') +'/pub?embedded=true'
+}, function(err, response, body){
+	if(!err){
+		var content = body.match('<body class=".*">.*</body>')[0].replace(/<\/p>/ig, '\n').replace(/(<([^>]+)>)/ig,"").replace('&gt;', '>').replace('&lt;', '<');
+		content = converter.makeHtml(content);
+		client.set('faq', content, function (err) {
+			if (err) {
+				console.log('Could not save faq');
+				return;
+			}
+
+			console.log('faq saved');
+		});
+	}
+});
