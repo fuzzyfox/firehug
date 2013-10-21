@@ -355,7 +355,7 @@ app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
       $('#floor-plan').prop('src', '/img/floorplans/' + this.value + '.png');
     });
   }
-  ]);
+]);
 
 app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
@@ -473,7 +473,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     $scope.days = [{
       name: 'saturday',
       title: 'Sat',
-      date: '10/26/2013', // US date format
+      date: '10/21/2013', // US date format
       value: []
     }, {
       name: 'sunday',
