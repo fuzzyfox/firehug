@@ -492,6 +492,14 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       $scope.selected = $scope.days[1];
     }
 
+    var getLocationLink = function(location){
+      var floor = location.charAt(0);
+      if(location.match(/^\d\s/)){
+        location = "Floor " + floor + ": " + location.substr(1);
+      }
+      return '<a href="#!/maps/level-'+floor+'">' + location + '</a>';
+    }
+
     $scope.loadSchedule = function(data) {
       $scope.loaded = true;
 
@@ -510,6 +518,9 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
           }
           if (evt[entry].speaker) {
             evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
+          }
+          if(evt[entry].location) {
+            evt[entry].location = $sce.trustAsHtml(getLocationLink(evt[entry].location));
           }
 
           if (s.indexOf('5') > -1) {

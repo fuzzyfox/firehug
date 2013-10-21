@@ -29,7 +29,7 @@
               <div class="city">
                 <h3>{{ v.name }}</h3>
                 <p class="city-stats">
-                  <span>{{ v.location }}</span>
+                  <span ng-bind-html="v.location"></span>
                   <time><span data-startTimestamp="{{ v.startTimestamp.toString() }}">{{ v.startTime }}</span> - <span data-endTimestamp="{{ v.endTimestamp.toString() }}">{{ v.endTime }}</span></time>
                 </p>
 
