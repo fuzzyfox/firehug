@@ -229,85 +229,122 @@ $locationProvider.html5Mode(false).hashPrefix('!');
   //   }
   // ]);
 
-app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location',
-  function AppCtrl($scope, /*persona,*/ $rootScope, $location) {
-      // var payload = $(document.body).data('payload') || {};
+app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '$http', 
+  function AppCtrl($scope, /*persona,*/ $rootScope, $location, $http) {
+    // var payload = $(document.body).data('payload') || {};
 
-      // if (payload.user) {
-      //   $rootScope.user = payload.user;
-      //   $rootScope.ready = true;
-      //   _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
+    // if (payload.user) {
+    //   $rootScope.user = payload.user;
+    //   $rootScope.ready = true;
+    //   _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
+    // }
+
+    // $rootScope.$on('persona:login', function(event, user) {
+    //   _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
+    //   $rootScope.user = user;
+    //   localStorage.setItem('email', user.email);
+
+    //   if (!$rootScope.user.activeDay) {
+    //     $scope.beforeLogin = null;
+    //   }
+    //   $location.path($scope.beforeLogin || '/');
+    // });
+    // $rootScope.$on('persona:logout', function() {
+    //   localStorage.removeItem('email');
+    //   // Refresh page to reset all data
+    //   location.href = '/#!/';
+    // });
+    
+    // attempt to prefetch schedule/faq to allow offline sooner
+    if(!localStorage.getItem('localModTime')){
+      $http({
+        url: '/schedule',
+        method: 'GET',
+        timeout: 2000
+      }).success(function(data) {
+        console.log('live load schedule');
+        // set last mod time to now in localstore
+        localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
+        localStorage.setItem('localModTime', moment().toString());
+      });
+    }
+    if(!localStorage.getItem('faqModTime')){
+      $http({
+        url: '/faq',
+        method: 'GET',
+        timeout: 2000
+      }).success(function(data) {
+        console.log('live load faq');
+        // set last mod time to now in localstore
+        localStorage.setItem('faq', data);
+        localStorage.setItem('faqModTime', moment().toString());
+      });
+    }
+
+    // comply w/ eu/uk cookie law (implied consent)
+    if(localStorage.getItem('eu-cookie-law')){
+      $('#eu-cookie-law').hide();
+    }
+    else {
+      localStorage.setItem('eu-cookie-law', true);
+      setTimeout(function(){
+        $('#eu-cookie-law').slideToggle(1000);
+      }, 10000);
+    }
+
+    $scope.$on('$viewContentLoaded', function(event) {
+      _gaq.push(['_trackPageview', $location.path()]);
+    });
+
+    // var authenticated = ['/dialog', '/questions'];
+
+    // Watch login and redirect as needed
+    $rootScope.$watch(function() {
+      return $location.path();
+    }, function(newValue, oldValue) {
+      var newClass = newValue.replace(/[^a-z-]/, '') || 'index';
+      var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
+      $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
+
+      // if (!$rootScope.user && newValue != '/login' && authenticated.indexOf(newValue) != -1) {
+      //   $rootScope.beforeLogin = newValue;
+      //   $location.path('/login');
       // }
 
-      // $rootScope.$on('persona:login', function(event, user) {
-      //   _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
-      //   $rootScope.user = user;
-      //   localStorage.setItem('email', user.email);
+      $rootScope.canGoBack = (newValue != '/');
+      $rootScope.path = newValue;
+    });
 
-      //   if (!$rootScope.user.activeDay) {
-      //     $scope.beforeLogin = null;
-      //   }
-      //   $location.path($scope.beforeLogin || '/');
-      // });
-      // $rootScope.$on('persona:logout', function() {
-      //   localStorage.removeItem('email');
-      //   // Refresh page to reset all data
-      //   location.href = '/#!/';
-      // });
+    // // Load persona
+    // var email = localStorage.getItem('email');
 
-$scope.$on('$viewContentLoaded', function(event) {
-  _gaq.push(['_trackPageview', $location.path()]);
-});
-
-      // var authenticated = ['/dialog', '/questions'];
-
-      // Watch login and redirect as needed
-      $rootScope.$watch(function() {
-        return $location.path();
-      }, function(newValue, oldValue) {
-        var newClass = newValue.replace(/[^a-z-]/, '') || 'index';
-        var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
-        $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
-
-        // if (!$rootScope.user && newValue != '/login' && authenticated.indexOf(newValue) != -1) {
-        //   $rootScope.beforeLogin = newValue;
-        //   $location.path('/login');
-        // }
-
-        $rootScope.canGoBack = (newValue != '/');
-        $rootScope.path = newValue;
+    // persona.load().then(function() {
+    //   return persona.start(email);
+    // }).then(function() {
+      safeApply($scope, function() {
+        $rootScope.ready = true;
       });
+    // });
 
-      // // Load persona
-      // var email = localStorage.getItem('email');
-
-      // persona.load().then(function() {
-      //   return persona.start(email);
-      // }).then(function() {
-        safeApply($scope, function() {
-          $rootScope.ready = true;
-        });
-      // });
-
-if (navigator.mozApps) {
-  var selfReq = navigator.mozApps.getSelf();
-  selfReq.onsuccess = function() {
-    if (!selfReq.result) {
-      $scope.canInstall = true;
-      $scope.install = function() {
-        var manifest = origin + '/manifest.webapp';
-        var req = navigator.mozApps.install(manifest);
-        req.onsuccess = function() {
-          req.result.launch();
-        };
-        req.onerror = function() {
-          alert('Error: ' + this.error.name);
-        };
+    if (navigator.mozApps) {
+      var selfReq = navigator.mozApps.getSelf();
+      selfReq.onsuccess = function() {
+        if (!selfReq.result) {
+          $scope.canInstall = true;
+          $scope.install = function() {
+            var manifest = origin + '/manifest.webapp';
+            var req = navigator.mozApps.install(manifest);
+            req.onsuccess = function() {
+              req.result.launch();
+            };
+            req.onerror = function() {
+              alert('Error: ' + this.error.name);
+            };
+          };
+        }
       };
     }
-  };
-}
-}
+  }
 ]);
 
   // app.controller('LoginCtrl', ['$scope', '$rootScope', 'persona', '$location',
@@ -598,13 +635,33 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
 app.controller('AroundCtrl', ['$scope', '$http', '$sce', 
   function($scope, $http, $sce) {
-    $http({
-      url: '/faq',
-      method: 'GET'
-    }).success(function(data){
-      console.log(data);
-      $scope.faq = $sce.trustAsHtml(data);
-    });
+    // if localmodtime < now - 15min
+    if(!localStorage.getItem('faqModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('faqModTime')))){
+      $http({
+        url: '/faq',
+        method: 'GET',
+        timeout: 2000
+      }).success(function(data) {
+        console.log('live load faq');
+        // set last mod time to now in localstore
+        localStorage.setItem('faq', data);
+        localStorage.setItem('faqModTime', moment().toString());
+        $scope.faq = $sce.trustAsHtml(data);
+      }).error(function(data){
+        if(localStorage.getItem('faq')){
+          console.log('local load faq (live fail)');
+          // // on error load local schedule data
+          $scope.faq = $sce.trustAsHtml(localStorage.getItem('faq'));
+        }
+        else {
+          console.log('failed to load faq');
+        }
+      });
+    }
+    else {
+      console.log('local load faq');
+      $scope.faq = $sce.trustAsHtml(localStorage.getItem('faq'));
+    }
   }
 ]);
 
