@@ -527,28 +527,41 @@
       // if not load schedule out off local storage IF an internet
       // connection is available.
 
-      // if localmodtime < now - 15min
-      if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
-        $http({
-          url: '/schedule',
-          method: 'GET',
-          timeout: 1000
-        }).success(function(data) {
-          console.log('live load schedule');
-          // set last mod time to now in localstore
-          localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
-          localStorage.setItem('localModTime', moment().toString());
-          loadSchedule(data.schedule);
-        }).error(function(data){
-          console.log('local load schedule (live fail)');
-          // // on error load local schedule data
+      var getSchedule = function(){
+        $scope.loaded = false;
+        $scope.days[0].value = [];
+        $scope.days[1].value = [];
+        // if localmodtime < now - 15min
+        if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
+          $http({
+            url: '/schedule',
+            method: 'GET',
+            timeout: 1000
+          }).success(function(data) {
+            console.log('live load schedule');
+            // set last mod time to now in localstore
+            localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
+            localStorage.setItem('localModTime', moment().toString());
+            loadSchedule(data.schedule);
+          }).error(function(data){
+            if(localStorage.getItem('localSchedule')){
+              console.log('local load schedule (live fail)');
+              // // on error load local schedule data
+              loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
+            }
+            else {
+              console.log('failed to load schedule');
+            }
+          });
+        }
+        else {
+          console.log('local load schedule');
           loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
-        });
-      }
-      else {
-        console.log('local load schedule');
-        loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
-      }
+        }
+      };
+      getSchedule();
+
+      setInterval(getSchedule, 10000);
     }
   ]);
 
