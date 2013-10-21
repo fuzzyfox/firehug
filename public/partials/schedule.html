@@ -1,6 +1,6 @@
 <div class="row">
   <article id="schedule-listing" class="col-sm-8 col-sm-offset-2 curr-location {{ location }}">
-    <img src="/img/schedule-icon.png" class="title-icon" ng-click="getSchedule()">
+    <img src="/img/schedule-icon.png" class="title-icon" ng-click="refresh()">
     <h2 ng-class="{ active: isShowingLocations() }" class="current"><span>{{ locations[location] }}</span> Schedule</h2>
     
     <div style="text-align:right;margin-bottom: 4px">
