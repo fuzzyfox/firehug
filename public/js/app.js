@@ -493,12 +493,20 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     }
 
     var getLocationLink = function(location){
+      // get first char of location (should be a digit)
       var floor = location.charAt(0);
+
+      // ensure first char is a digit, if not return unlinked location
+      if(!floor.match(/\d/)){
+        return location;
+      }
+
+      // Check if location has name, if so humanize
       if(location.match(/^\d\s/)){
         location = "Floor " + floor + ": " + location.substr(1);
       }
       return '<a href="#!/maps/level-'+floor+'">' + location + '</a>';
-    }
+    };
 
     $scope.loadSchedule = function(data) {
       $scope.loaded = true;
@@ -574,11 +582,15 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     
     $scope.getSchedule();
 
-    setInterval(function () {
-      $scope.$apply(function () {
-        $scope.getSchedule();
-      });
-    }, 10000);
+    if(!window.scheduleInterval){
+      window.scheduleInterval = true;
+      console.log('starting interval');
+      setInterval(function () {
+        $scope.$apply(function () {
+          $scope.getSchedule();
+        });
+      }, 10000);
+    }
   }
 ]);
 
