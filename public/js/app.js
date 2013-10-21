@@ -473,7 +473,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     $scope.days = [{
       name: 'saturday',
       title: 'Sat',
-      date: '10/21/2013', // US date format
+      date: '10/26/2013', // US date format
       value: []
     }, {
       name: 'sunday',
@@ -537,7 +537,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
         $http({
           url: '/schedule',
           method: 'GET',
-          timeout: 1000
+          timeout: 2000
         }).success(function(data) {
           console.log('live load schedule');
           // set last mod time to now in localstore
@@ -551,7 +551,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
             $scope.loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
           }
           else {
-            console.log('failed to load scheduled');
+            console.log('failed to load schedule');
           }
         });
       }
