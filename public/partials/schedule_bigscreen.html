@@ -1,5 +1,5 @@
 <div class="row">
-  <article id="schedule-listing" class="bigscreen col-sm-8 col-sm-offset-2 curr-location {{ location }}">
+  <article id="schedule-listing" class="bigscreen col-sm-12 curr-location {{ location }}">
     <header>
       <img src="/img/schedule-icon.png" class="title-icon">
       <h2 ng-class="{ active: isShowingLocations() }" class="current"><span>{{ locations[location] }}</span><br> Schedule</h2>
@@ -25,22 +25,14 @@
         </div>
         <ul class="events {{ day.name }}" ng-show="loaded">
           <li data-ng-repeat="(key, value) in day.value track by $index">
-            <div ng-click="expandDescription(v)" class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index" ng-class="getDescriptionState(v)">
-              <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
-                <span class="more">+</span>
-                <span class="less">-</span>
-              </a>
+            <div class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index">
               <div class="city">
                 <h3>{{ v.name }}</h3>
                 <p class="city-stats">
                   <span>{{ v.location }}</span>
                   <time>{{ v.startTime }} - {{ v.endTime }}</time>
                 </p>
-
-                <div class="description" ng-class="! getDescriptionState(v)">
-                  <div class="speaker" ng-bind-html="v.speaker"></div>
-                  <div ng-bind-html="v.description"></div>
-                </div>
+                <div class="speaker" ng-bind-html="v.speaker"></div>
               </div>
             </div>
           </li>
