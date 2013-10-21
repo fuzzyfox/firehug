@@ -1,19 +1,19 @@
 (function() {
  'use strict';
 
-  window._gaq = [];
-  _gaq.push(['_setAccount', '']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-    var ga = document.createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = 'https://ssl.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
-  })();
+ window._gaq = [];
+ _gaq.push(['_setAccount', '']);
+ _gaq.push(['_trackPageview']);
+ (function() {
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
+})();
 
-  var origin = location.protocol + '//' + location.host;
+var origin = location.protocol + '//' + location.host;
 
   // FastClick.attach(document.body);
 
@@ -29,11 +29,11 @@
   app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
       $routeProvider
-        .when('/', {
-          controller: 'HomeCtrl',
-          controllerAs: 'home',
-          templateUrl: '/partials/home.html'
-        })
+      .when('/', {
+        controller: 'HomeCtrl',
+        controllerAs: 'home',
+        templateUrl: '/partials/home.html'
+      })
         // .when('/login', {
         //   controller: 'LoginCtrl',
         //   controllerAs: 'login',
@@ -44,46 +44,46 @@
         //   controllerAs: 'logout',
         //   templateUrl: '/partials/logout.html'
         // })
-        .when('/schedule', {
-          controller: 'ScheduleCtrl',
-          controllerAs: 'schedule',
-          templateUrl: '/partials/schedule.html'
-        })
-        .when('/schedule/:track', {
-          controller: 'ScheduleCtrl',
-          controllerAs: 'schedule',
-          templateUrl: '/partials/schedule.html'
-        })
-        .when('/bigschedule', {
-          controller: 'ScheduleCtrl',
-          controllerAs: 'schedule',
-          templateUrl: '/partials/schedule_bigscreen.html'
-        })
-        .when('/bigschedule/:track', {
-          controller: 'ScheduleCtrl',
-          controllerAs: 'schedule',
-          templateUrl: '/partials/schedule_bigscreen.html'
-        })
-        .when('/around', {
-          controller: 'AroundCtrl',
-          controllerAs: 'around',
-          templateUrl: '/partials/getting-around.html'
-        })
-        .when('/maps', {
-          controller: 'MapCtrl',
-          controllerAs: 'maps',
-          templateUrl: '/partials/maps.html'
-        })
-        .when('/maps/:level', {
-          controller: 'MapCtrl',
-          controllerAs: 'maps',
-          templateUrl: '/partials/maps.html'
-        })
-        .when('/badges', {
-          controller: 'BadgesCtrl',
-          controllerAs: 'badges',
-          templateUrl: '/partials/badges.html'
-        })
+.when('/schedule', {
+  controller: 'ScheduleCtrl',
+  controllerAs: 'schedule',
+  templateUrl: '/partials/schedule.html'
+})
+.when('/schedule/:track', {
+  controller: 'ScheduleCtrl',
+  controllerAs: 'schedule',
+  templateUrl: '/partials/schedule.html'
+})
+.when('/bigschedule', {
+  controller: 'ScheduleCtrl',
+  controllerAs: 'schedule',
+  templateUrl: '/partials/schedule_bigscreen.html'
+})
+.when('/bigschedule/:track', {
+  controller: 'ScheduleCtrl',
+  controllerAs: 'schedule',
+  templateUrl: '/partials/schedule_bigscreen.html'
+})
+.when('/around', {
+  controller: 'AroundCtrl',
+  controllerAs: 'around',
+  templateUrl: '/partials/getting-around.html'
+})
+.when('/maps', {
+  controller: 'MapCtrl',
+  controllerAs: 'maps',
+  templateUrl: '/partials/maps.html'
+})
+.when('/maps/:level', {
+  controller: 'MapCtrl',
+  controllerAs: 'maps',
+  templateUrl: '/partials/maps.html'
+})
+.when('/badges', {
+  controller: 'BadgesCtrl',
+  controllerAs: 'badges',
+  templateUrl: '/partials/badges.html'
+})
         // .when('/questions', {
         //   controller: 'QuestionsCtrl',
         //   controllerAs: 'questions',
@@ -99,13 +99,13 @@
         //   controllerAs: 'dialog',
         //   templateUrl: '/partials/dialog.html'
         // })
-        .otherwise({
-          redirectTo: '/'
-        });
+.otherwise({
+  redirectTo: '/'
+});
 
-      $locationProvider.html5Mode(false).hashPrefix('!');
-    }
-  ]);
+$locationProvider.html5Mode(false).hashPrefix('!');
+}
+]);
 
 
   // app.factory('persona', ['$q', '$rootScope', '$http',
@@ -229,8 +229,8 @@
   //   }
   // ]);
 
-  app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location',
-    function AppCtrl($scope, /*persona,*/ $rootScope, $location) {
+app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location',
+  function AppCtrl($scope, /*persona,*/ $rootScope, $location) {
       // var payload = $(document.body).data('payload') || {};
 
       // if (payload.user) {
@@ -255,9 +255,9 @@
       //   location.href = '/#!/';
       // });
 
-      $scope.$on('$viewContentLoaded', function(event) {
-        _gaq.push(['_trackPageview', $location.path()]);
-      });
+$scope.$on('$viewContentLoaded', function(event) {
+  _gaq.push(['_trackPageview', $location.path()]);
+});
 
       // var authenticated = ['/dialog', '/questions'];
 
@@ -289,26 +289,26 @@
         });
       // });
 
-      if (navigator.mozApps) {
-        var selfReq = navigator.mozApps.getSelf();
-        selfReq.onsuccess = function() {
-          if (!selfReq.result) {
-            $scope.canInstall = true;
-            $scope.install = function() {
-              var manifest = origin + '/manifest.webapp';
-              var req = navigator.mozApps.install(manifest);
-              req.onsuccess = function() {
-                req.result.launch();
-              };
-              req.onerror = function() {
-                alert('Error: ' + this.error.name);
-              };
-            };
-          }
+if (navigator.mozApps) {
+  var selfReq = navigator.mozApps.getSelf();
+  selfReq.onsuccess = function() {
+    if (!selfReq.result) {
+      $scope.canInstall = true;
+      $scope.install = function() {
+        var manifest = origin + '/manifest.webapp';
+        var req = navigator.mozApps.install(manifest);
+        req.onsuccess = function() {
+          req.result.launch();
         };
-      }
+        req.onerror = function() {
+          alert('Error: ' + this.error.name);
+        };
+      };
     }
-  ]);
+  };
+}
+}
+]);
 
   // app.controller('LoginCtrl', ['$scope', '$rootScope', 'persona', '$location',
   //   function LoginCtrl($scope, $rootScope, persona, $location) {
@@ -339,285 +339,291 @@
   //   }
   // ]);
 
-  app.controller('HomeCtrl', ['$scope', '$rootScope',
-    function($scope, $rootScope) {}
+app.controller('HomeCtrl', ['$scope', '$rootScope',
+  function($scope, $rootScope) {}
   ]);
 
-  app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
-    function($scope, $rootScope, $routeParams) {
-      if($routeParams.level){
-        $('#floor-select option[value=' + $routeParams.level + ']').prop('selected', true);
-        $('#floor-plan').prop('src', '/img/floorplans/' + $routeParams.level + '.png');
-      }
-
-
-      $('#floor-select').on('change', function(e){
-        $('#floor-plan').prop('src', '/img/floorplans/' + this.value + '.png');
-      });
+app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
+  function($scope, $rootScope, $routeParams) {
+    if($routeParams.level){
+      $('#floor-select option[value=' + $routeParams.level + ']').prop('selected', true);
+      $('#floor-plan').prop('src', '/img/floorplans/' + $routeParams.level + '.png');
     }
+
+
+    $('#floor-select').on('change', function(e){
+      $('#floor-plan').prop('src', '/img/floorplans/' + this.value + '.png');
+    });
+  }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
-    function($scope, $rootScope, $http, $sce, $routeParams) {
-      $scope.listing = false;
+app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
+  function($scope, $rootScope, $http, $sce, $routeParams) {
+    $scope.listing = false;
 
-      $scope.locations = {
-        'everyone': 'Keynote',
-        'webmaker_scrum': 'Webmaker: Scrums',
-        'webmaker': 'Webmaker',
-        'connect': 'Connect',
-        'privacy': 'Privacy',
-        'physical': 'Physical',
-        'games': 'Games',
-        'science': 'Science',
-        'badges': 'Badges',
-        'journalism': 'Jounalism',
-        'data': 'Open Data',
-        'mobile': 'Mobile'
-      };
+    $scope.locations = {
+      'everyone': 'Keynote',
+      'webmaker_scrum': 'Webmaker: Scrums',
+      'webmaker': 'Webmaker',
+      'connect': 'Connect',
+      'privacy': 'Privacy',
+      'physical': 'Physical',
+      'games': 'Games',
+      'science': 'Science',
+      'badges': 'Badges',
+      'journalism': 'Jounalism',
+      'data': 'Open Data',
+      'mobile': 'Mobile'
+    };
 
-      var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'everyone';
+    var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'everyone';
 
-      if ($rootScope.user) {
-        defaultLocation = $rootScope.user.location;
+    if ($rootScope.user) {
+      defaultLocation = $rootScope.user.location;
+    }
+
+    $scope.location = defaultLocation;
+
+    //_gaq.push(['_trackEvent', 'Schedule', 'View', defaultLocation]);
+
+    $scope.showLocations = function() {
+      if ($scope.listing) {
+        $scope.listing = false;
+      } else {
+        $scope.listing = true;
+      }
+    };
+
+    $scope.getSelectedOption = function(){
+      //console.log($('#schedule-location-list').val());
+      return $('#schedule-location-list').val();
+    }
+
+    $scope.isShowingLocations = function() {
+      return $scope.listing;
+    };
+
+    $scope.refresh = function() {
+      // document.location.href = '/#!/schedule' + ($routeParams.track ? '/' + $routeParams.track : '') + '?schedule';
+      document.location.reload();
+    };
+
+    $scope.setLocation = function(location) {
+      // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
+      $('#schedule-listing').removeClass('everyone')
+      .removeClass('webmaker')
+      .removeClass('webmaker_scrum')
+      .removeClass('connect')
+      .removeClass('privacy')
+      .removeClass('physical')
+      .removeClass('games')
+      .removeClass('science')
+      .removeClass('badges')
+      .removeClass('journalism')
+      .removeClass('mobile')
+      .removeClass('data')
+      .addClass(location)
+      .find('.current span').text($scope.locations[location]);
+
+      $scope.showLocations();
+
+      localStorage.setItem('defaultLocation', location);
+    };
+
+    $scope.isActiveLocation = function(location) {
+      return $('#schedule-listing').hasClass(location);
+    };
+
+    $scope.setActive = function(idx) {
+      if (idx < 0) {
+        idx = 0;
+      } else if (idx > $scope.days.length - 1) {
+        idx = $scope.days.length - 1;
       }
 
-      $scope.location = defaultLocation;
+      $scope.selected = $scope.days[idx];
+    };
 
-      //_gaq.push(['_trackEvent', 'Schedule', 'View', defaultLocation]);
+    $scope.hasDescriptionOrSpeaker = function(ev) {
+      return (ev.description || ev.speaker);
+    };
 
-      $scope.showLocations = function() {
-        if ($scope.listing) {
-          $scope.listing = false;
+    $scope.expandDescription = function(ev) {
+      if ($('.expander').hasClass('active')) {
+        if (!ev.enabled) {
+          ev.enabled = true;
         } else {
-          $scope.listing = true;
+          ev.enabled = false;
         }
-      };
-
-      $scope.getSelectedOption = function(){
-        //console.log($('#schedule-location-list').val());
-        return $('#schedule-location-list').val();
       }
+    };
 
-      $scope.isShowingLocations = function() {
-        return $scope.listing;
-      };
+    $scope.getDescriptionState = function(ev) {
+      return (ev.enabled && $scope.hasDescriptionOrSpeaker(ev)) ? 'more' : 'less';
+    };
 
-      $scope.refresh = function() {
-        document.location.href = '/#!/schedule' + ($routeParams.track ? '/' + $routeParams.track : null) + '?schedule';
-        document.location.reload();
-      };
+    $scope.isActive = function(day) {
+      return $scope.selected === day;
+    };
 
-      $scope.setLocation = function(location) {
-        // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
-        $('#schedule-listing').removeClass('everyone')
-          .removeClass('webmaker')
-          .removeClass('webmaker_scrum')
-          .removeClass('connect')
-          .removeClass('privacy')
-          .removeClass('physical')
-          .removeClass('games')
-          .removeClass('science')
-          .removeClass('badges')
-          .removeClass('journalism')
-          .removeClass('mobile')
-          .removeClass('data')
-          .addClass(location)
-          .find('.current span').text($scope.locations[location]);
+    $scope.isPastEvent = function(endTimestamp){
+      return (endTimestamp.day() == moment().day() && endTimestamp <= moment());
+    };
 
-        $scope.showLocations();
+    $scope.days = [{
+      name: 'saturday',
+      title: 'Sat',
+      date: '10/21/2013', // US date format
+      value: []
+    }, {
+      name: 'sunday',
+      title: 'Sun',
+      date: '10/27/2013',
+      value: []
+    }];
 
-        localStorage.setItem('defaultLocation', location);
-      };
+    // if day = mon/tue/wed/thur/fri/sat
+    if(moment().day() > 0){
+      // show saturday by default
+      $scope.selected = $scope.days[0];
+    }
+    else {
+      // Otherwise default to Sunday
+      $scope.selected = $scope.days[1];
+    }
 
-      $scope.isActiveLocation = function(location) {
-        return $('#schedule-listing').hasClass(location);
-      };
+    $scope.loadSchedule = function(data) {
+      $scope.loaded = true;
 
-      $scope.setActive = function(idx) {
-        if (idx < 0) {
-          idx = 0;
-        } else if (idx > $scope.days.length - 1) {
-          idx = $scope.days.length - 1;
+      for (var s in data) {
+        var evt = data[s];
+
+        if (s.indexOf('5') > -1) {
+          $scope.days[0].value.push(evt);
+        } else if (s.indexOf('6') > -1) {
+          $scope.days[1].value.push(evt);
         }
 
-        $scope.selected = $scope.days[idx];
-      };
-
-      $scope.hasDescriptionOrSpeaker = function(ev) {
-        return (ev.description || ev.speaker);
-      };
-
-      $scope.expandDescription = function(ev) {
-        if ($('.expander').hasClass('active')) {
-          if (!ev.enabled) {
-            ev.enabled = true;
-          } else {
-            ev.enabled = false;
+        for (var entry in evt) {
+          if (evt[entry].description) {
+            evt[entry].description = $sce.trustAsHtml(evt[entry].description);
           }
-        }
-      };
-
-      $scope.getDescriptionState = function(ev) {
-        return (ev.enabled && $scope.hasDescriptionOrSpeaker(ev)) ? 'more' : 'less';
-      };
-
-      $scope.isActive = function(day) {
-        return $scope.selected === day;
-      };
-
-      $scope.isPastEvent = function(endTimestamp){
-        return (endTimestamp.day() == moment().day() && endTimestamp <= moment());
-      };
-
-      $scope.days = [{
-        name: 'saturday',
-        title: 'Sat',
-        date: '10/26/2013', // US date format
-        value: []
-      }, {
-        name: 'sunday',
-        title: 'Sun',
-        date: '10/27/2013',
-        value: []
-      }];
-
-      // if day = mon/tue/wed/thur/fri/sat
-      if(moment().day() > 0){
-        // show saturday by default
-        $scope.selected = $scope.days[0];
-      }
-      else {
-        // Otherwise default to Sunday
-        $scope.selected = $scope.days[1];
-      }
-
-      var loadSchedule = function(data) {
-        $scope.loaded = true;
-
-        for (var s in data) {
-          var evt = data[s];
+          if (evt[entry].speaker) {
+            evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
+          }
 
           if (s.indexOf('5') > -1) {
-            $scope.days[0].value.push(evt);
+            evt[entry].startTimestamp = moment($scope.days[0].date + ' ' + evt[entry].startTime);
+            evt[entry].endTimestamp = moment($scope.days[0].date + ' ' + evt[entry].endTime);
           } else if (s.indexOf('6') > -1) {
-            $scope.days[1].value.push(evt);
-          }
-
-          for (var entry in evt) {
-            if (evt[entry].description) {
-              evt[entry].description = $sce.trustAsHtml(evt[entry].description);
-            }
-            if (evt[entry].speaker) {
-              evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
-            }
-
-            if (s.indexOf('5') > -1) {
-              evt[entry].startTimestamp = moment($scope.days[0].date + ' ' + evt[entry].startTime);
-              evt[entry].endTimestamp = moment($scope.days[0].date + ' ' + evt[entry].endTime);
-            } else if (s.indexOf('6') > -1) {
-              evt[entry].startTimestamp = moment($scope.days[1].date + ' ' + evt[entry].startTime);
-              evt[entry].endTimestamp = moment($scope.days[1].date + ' ' + evt[entry].endTime);
-            }
+            evt[entry].startTimestamp = moment($scope.days[1].date + ' ' + evt[entry].startTime);
+            evt[entry].endTimestamp = moment($scope.days[1].date + ' ' + evt[entry].endTime);
           }
         }
-      };
-
-      // check if localstore mod time is more than 15 min old,
-      // if not load schedule out off local storage IF an internet
-      // connection is available.
-
-      var getSchedule = function(){
-        $scope.loaded = false;
-        $scope.days[0].value = [];
-        $scope.days[1].value = [];
-        // if localmodtime < now - 15min
-        if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
-          $http({
-            url: '/schedule',
-            method: 'GET',
-            timeout: 1000
-          }).success(function(data) {
-            console.log('live load schedule');
-            // set last mod time to now in localstore
-            localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
-            localStorage.setItem('localModTime', moment().toString());
-            loadSchedule(data.schedule);
-          }).error(function(data){
-            if(localStorage.getItem('localSchedule')){
-              console.log('local load schedule (live fail)');
-              // // on error load local schedule data
-              loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
-            }
-            else {
-              console.log('failed to load schedule');
-            }
-          });
-        }
-        else {
-          console.log('local load schedule');
-          loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
-        }
-      };
-      getSchedule();
-
-      setInterval(getSchedule, 10000);
-    }
-  ]);
-
-  app.controller('AroundCtrl', ['$scope',
-    function($scope) {
-      $scope.tip = {};
-
-      for (var i = 0; i < 7; i++) {
-        $scope.tip[i] = false;
       }
+    };
 
-      $scope.showingTip = function(id) {
-        return (id === $scope.tip[id]);
-      };
+    // check if localstore mod time is more than 15 min old,
+    // if not load schedule out off local storage IF an internet
+    // connection is available.
 
-      $scope.showTip = function(id) {
-        if ($scope.tip[id] === id) {
-          $scope.tip[id] = false;
-        } else {
-          $scope.tip[id] = id;
-        }
-      };
+    $scope.getSchedule = function(){
+      console.log(moment().toString());
+      $scope.loaded = false;
+      $scope.days[0].value = [];
+      $scope.days[1].value = [];
+      // if localmodtime < now - 15min
+      if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
+        $http({
+          url: '/schedule',
+          method: 'GET',
+          timeout: 1000
+        }).success(function(data) {
+          console.log('live load schedule');
+          // set last mod time to now in localstore
+          localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
+          localStorage.setItem('localModTime', moment().toString());
+          $scope.loadSchedule(data.schedule);
+        }).error(function(data){
+          if(localStorage.getItem('localSchedule')){
+            console.log('local load schedule (live fail)');
+            // // on error load local schedule data
+            $scope.loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
+          }
+          else {
+            console.log('failed to load scheduled');
+          }
+        });
+      }
+      else {
+        console.log('local load schedule');
+        $scope.loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
+      }
+    };
+    
+    $scope.getSchedule();
+
+    setInterval(function () {
+      $scope.$apply(function () {
+        $scope.getSchedule();
+      });
+    }, 10000);
+  }
+]);
+
+app.controller('AroundCtrl', ['$scope',
+  function($scope) {
+    $scope.tip = {};
+
+    for (var i = 0; i < 7; i++) {
+      $scope.tip[i] = false;
     }
+
+    $scope.showingTip = function(id) {
+      return (id === $scope.tip[id]);
+    };
+
+    $scope.showTip = function(id) {
+      if ($scope.tip[id] === id) {
+        $scope.tip[id] = false;
+      } else {
+        $scope.tip[id] = id;
+      }
+    };
+  }
   ]);
 
-  app.controller('BadgesCtrl', ['$scope', '$http',
-    function($scope, $http) {
-      $http({
-        url: '/badges',
-        method: 'GET'
-      }).success(function(data) {
-        console.log('live load badges');
-        console.log(data);
-        $scope.badges = data;
-      }).error(function(data){
-        console.log('live load badges failed');
-      });
+app.controller('BadgesCtrl', ['$scope', '$http',
+  function($scope, $http) {
+    $http({
+      url: '/badges',
+      method: 'GET'
+    }).success(function(data) {
+      console.log('live load badges');
+      console.log(data);
+      $scope.badges = data;
+    }).error(function(data){
+      console.log('live load badges failed');
+    });
 
-      $scope.claimPage = function() {
-        window.location='http://badges.openbadges.org';
-      };
+    $scope.claimPage = function() {
+      window.location='http://badges.openbadges.org';
+    };
 
-      $scope.tip = {};
+    $scope.tip = {};
 
-      $scope.showingTip = function(id) {
-        return (id === $scope.tip[id]);
-      };
+    $scope.showingTip = function(id) {
+      return (id === $scope.tip[id]);
+    };
 
-      $scope.showTip = function(id) {
-        if ($scope.tip[id] === id) {
-          $scope.tip[id] = false;
-        } else {
-          $scope.tip[id] = id;
-        }
-      };
-    }
+    $scope.showTip = function(id) {
+      if ($scope.tip[id] === id) {
+        $scope.tip[id] = false;
+      } else {
+        $scope.tip[id] = id;
+      }
+    };
+  }
   ]);
 
 
