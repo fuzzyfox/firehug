@@ -37,7 +37,7 @@ var setType = function (opts, cell) {
 			break;
 
 		case '5':
-			var html = converter.makeHtml(value);
+			var html = converter.makeHtml(value.replace(/^\s+|\s+$/g, ''));
 			html = html.replace('<a ', '<a target="_blank" ');
 			opts.description = html;
 			break;
@@ -47,7 +47,7 @@ var setType = function (opts, cell) {
 			break;
 
 		case '7':
-			var html = converter.makeHtml(value);
+			var html = converter.makeHtml(value.replace(/^\s+|\s+$/g, ''));
 			html = html.replace('<a ', '<a target="_blank" ');
 			opts.speaker = html;
 			break;
@@ -57,7 +57,7 @@ var setType = function (opts, cell) {
 			break;
 
 		case '9':
-			opts.tags = value.replace(/\s+/g, '').split(',');
+			opts.tags = value.replace(/\s+/g, '').split(', ');
 			break;
 
 	}
