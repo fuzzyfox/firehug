@@ -44,46 +44,51 @@ var origin = location.protocol + '//' + location.host;
         //   controllerAs: 'logout',
         //   templateUrl: '/partials/logout.html'
         // })
-.when('/schedule', {
-  controller: 'ScheduleCtrl',
-  controllerAs: 'schedule',
-  templateUrl: '/partials/schedule.html'
-})
-.when('/schedule/:track', {
-  controller: 'ScheduleCtrl',
-  controllerAs: 'schedule',
-  templateUrl: '/partials/schedule.html'
-})
-.when('/bigschedule', {
-  controller: 'ScheduleCtrl',
-  controllerAs: 'schedule',
-  templateUrl: '/partials/schedule_bigscreen.html'
-})
-.when('/bigschedule/:track', {
-  controller: 'ScheduleCtrl',
-  controllerAs: 'schedule',
-  templateUrl: '/partials/schedule_bigscreen.html'
-})
-.when('/around', {
-  controller: 'AroundCtrl',
-  controllerAs: 'around',
-  templateUrl: '/partials/getting-around.html'
-})
-.when('/maps', {
-  controller: 'MapCtrl',
-  controllerAs: 'maps',
-  templateUrl: '/partials/maps.html'
-})
-.when('/maps/:level', {
-  controller: 'MapCtrl',
-  controllerAs: 'maps',
-  templateUrl: '/partials/maps.html'
-})
-.when('/badges', {
-  controller: 'BadgesCtrl',
-  controllerAs: 'badges',
-  templateUrl: '/partials/badges.html'
-})
+        .when('/schedule', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule.html'
+        })
+        .when('/schedule/:track', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule.html'
+        })
+        .when('/schedule/:day/:track/:slug', {
+          controller: 'ScheduleDetailCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule-detail.html'
+        })
+        .when('/bigschedule', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule_bigscreen.html'
+        })
+        .when('/bigschedule/:track', {
+          controller: 'ScheduleCtrl',
+          controllerAs: 'schedule',
+          templateUrl: '/partials/schedule_bigscreen.html'
+        })
+        .when('/around', {
+          controller: 'AroundCtrl',
+          controllerAs: 'around',
+          templateUrl: '/partials/getting-around.html'
+        })
+        .when('/maps', {
+          controller: 'MapCtrl',
+          controllerAs: 'maps',
+          templateUrl: '/partials/maps.html'
+        })
+        .when('/maps/:level', {
+          controller: 'MapCtrl',
+          controllerAs: 'maps',
+          templateUrl: '/partials/maps.html'
+        })
+        .when('/badges', {
+          controller: 'BadgesCtrl',
+          controllerAs: 'badges',
+          templateUrl: '/partials/badges.html'
+        })
         // .when('/questions', {
         //   controller: 'QuestionsCtrl',
         //   controllerAs: 'questions',
@@ -621,6 +626,48 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
           $scope.getSchedule();
         });
       }, 10000);
+    }
+  }
+]);
+
+app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
+  function($scope, $rootScope, $http, $sce, $routeParams) {
+    var dayNum = 5;
+    if($routeParams.day == 'sat'){
+      dayNum = 5;
+    }
+    else if($routeParams.day = 'sun'){
+      dayNum = 6;
+    }
+
+    // get specific schedule item
+    var loadSession = function(schedule){
+      var track = schedule[$routeParams.track + '-' + dayNum];
+      for(var entry in track){
+        var evt = track[entry];
+        if(evt.slug == $routeParams.slug){
+          console.log(evt);
+          $scope.event = evt;
+        }
+      }
+    };
+
+    // get schedule if not in existance
+    if(!localStorage.getItem('localModTime')){
+      $http({
+        url: '/schedule',
+        method: 'GET',
+        timeout: 2000
+      }).success(function(data) {
+        console.log('live load schedule');
+        // set last mod time to now in localstore
+        localStorage.setItem('localSchedule', JSON.stringify(data.schedule));
+        localStorage.setItem('localModTime', moment().toString());
+        loadSession(data.schedule);
+      });
+    }
+    else {
+      loadSession(JSON.parse(localStorage.getItem('localSchedule')));
     }
   }
 ]);
