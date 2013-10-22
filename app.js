@@ -330,10 +330,12 @@ app.get('/schedule', function(req, res, next) {
             var evt = sortedSchedule[track];
 
             for (var entry in evt){
-              var slug = evt[entry].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-                link = nconf.get('etherpadURL') + track + '_' + slug;
+              if(evt[entry].name){
+                var slug = evt[entry].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+                  link = nconf.get('etherpadURL') + track + '_' + slug;
 
-              evt[entry].slug = slug;
+                evt[entry].slug = slug;
+              }
               if(!evt[entry].link){
                 evt[entry].link = link;
               }
