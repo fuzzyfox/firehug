@@ -14,7 +14,7 @@ request({
 	url: 'https://docs.google.com/document/d/'+ nconf.get('faqKey') +'/pub?embedded=true'
 }, function(err, response, body){
 	if(!err){
-		var content = body.match('<body class=".*">.*</body>')[0].replace(/<\/p>/ig, '\n').replace(/(<([^>]+)>)/ig,"").replace('&gt;', '>').replace('&lt;', '<');
+		var content = body.match('<body class=".*">.*</body>')[0].replace('<p><body class="c2">', '').replace('</body></p>', '');
 		content = converter.makeHtml(content);
 		client.set('faq', content, function (err) {
 			if (err) {
