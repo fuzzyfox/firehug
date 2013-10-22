@@ -18,11 +18,11 @@ var origin = location.protocol + '//' + location.host;
   // FastClick.attach(document.body);
 
   // set back button behaviour
-  $('.menu-icn.menu-back[ng-show=canGoBack]').on('click', function(e){
-    history.go(-1);
-    e.preventDefault();
-    return false;
-  });
+  // $('.menu-icn.menu-back[ng-show=canGoBack]').on('click', function(e){
+  //   history.go(-1);
+  //   e.preventDefault();
+  //   return false;
+  // });
 
   var app = angular.module('summit', ['ngRoute']);
 
@@ -297,9 +297,9 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
       }, 10000);
     }
 
-    $scope.$on('$viewContentLoaded', function(event) {
-      _gaq.push(['_trackPageview', $location.path()]);
-    });
+    // $scope.$on('$viewContentLoaded', function(event) {
+    //   _gaq.push(['_trackPageview', $location.path()]);
+    // });
 
     // var authenticated = ['/dialog', '/questions'];
 
@@ -397,10 +397,12 @@ app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
 
 app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
+    $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
+
     $scope.listing = false;
 
     $scope.locations = {
-      'everyone': 'Keynote',
+      'plenary': 'Plenary',
       'webmaker_scrum': 'Webmaker: Scrums',
       'webmaker': 'Webmaker',
       'connect': 'Connect',
@@ -409,12 +411,12 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       'games': 'Games',
       'science': 'Science',
       'badges': 'Badges',
-      'journalism': 'Jounalism',
+      'journalism': 'Journalism',
       'data': 'Open Data',
       'mobile': 'Mobile'
     };
 
-    var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'everyone';
+    var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'plenary';
 
     if ($rootScope.user) {
       defaultLocation = $rootScope.user.location;
@@ -443,12 +445,13 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
     $scope.refresh = function() {
       // document.location.href = '/#!/schedule' + ($routeParams.track ? '/' + $routeParams.track : '') + '?schedule';
+      localStorage.removeItem('localModTime');
       document.location.reload();
     };
 
     $scope.setLocation = function(location) {
       // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
-      $('#schedule-listing').removeClass('everyone')
+      $('#schedule-listing').removeClass('plenary')
       .removeClass('webmaker')
       .removeClass('webmaker_scrum')
       .removeClass('connect')
@@ -590,7 +593,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       $scope.days[0].value = [];
       $scope.days[1].value = [];
       // if localmodtime < now - 7min
-      if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('localModTime')))){
+      if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 3) > moment(localStorage.getItem('localModTime')))){
         $http({
           url: '/schedule',
           method: 'GET',
