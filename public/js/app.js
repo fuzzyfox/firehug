@@ -292,8 +292,11 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
     }
     else {
       localStorage.setItem('eu-cookie-law', true);
+      $('#eu-cookie-law .dismiss').click(function(){
+        $('#eu-cookie-law').slideUp(1000);
+      });
       setTimeout(function(){
-        $('#eu-cookie-law').slideToggle(1000);
+        $('#eu-cookie-law').slideUp(1000);
       }, 10000);
     }
 
