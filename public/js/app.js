@@ -629,7 +629,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
         $scope.$apply(function () {
           $scope.getSchedule();
         });
-      }, 10000);
+      }, 60000);
     }
   }
 ]);
