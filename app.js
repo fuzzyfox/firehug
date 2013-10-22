@@ -17,6 +17,7 @@ var connectRedis = require('connect-redis');
 var request = require('request');
 var time = require('time');
 var url = require('url');
+var shorturl = require('shorturl');
 
 var shared = require('./shared');
 var nconf = shared.nconf;
@@ -318,6 +319,24 @@ app.get('/schedule', function(req, res, next) {
 
           for (var i = 0; i < keys.length; i++) {
             sortedSchedule[keys[i]] = scheduleList[keys[i]];
+          }
+
+          for (var track in sortedSchedule){
+            var evt = sortedSchedule[track];
+
+            for (var entry in evt){
+              if(!evt[entry].link){
+                var slug = evt[entry].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+                  link = nconf.get('etherpadURL') + track + '_' + slug;
+                
+                // shorturl(link, 'bit.ly', {login: nconf.get('bitlyLogin'), apiKey: nconf.get('bitlyKey')}, function(result){
+                //   evt[entry].link = result;
+                //   console.log(result);
+                // });
+                
+                evt[entry].link = link;
+              }
+            }
           }
 
           res.send({

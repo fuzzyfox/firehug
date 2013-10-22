@@ -16,5 +16,8 @@
     "surveyIdle": 7200000,
     "obrEndpoint": "",
     "obrProgram": "",
-    "faqKey": ""
+    "faqKey": "",
+    "bitlyLogin": "",
+    "bitlyKey": "",
+    "etherpadURL": ""
 }
