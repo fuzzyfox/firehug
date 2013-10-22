@@ -54,7 +54,7 @@ var origin = location.protocol + '//' + location.host;
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule.html'
         })
-        .when('/schedule/:day/:track/:slug', {
+        .when('/schedule/:track/:slug', {
           controller: 'ScheduleDetailCtrl',
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule-detail.html'
@@ -382,8 +382,12 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
   // ]);
 
 app.controller('HomeCtrl', ['$scope', '$rootScope',
-  function($scope, $rootScope) {}
-  ]);
+  function($scope, $rootScope) {
+    $scope.displayFridayInfo = function(){
+      return (moment() > moment('10/26/2013'));
+    };
+  }
+]);
 
 app.controller('MapCtrl', ['$scope', '$rootScope', '$routeParams',
   function($scope, $rootScope, $routeParams) {
@@ -632,23 +636,30 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
 app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
-    var dayNum = 5;
-    if($routeParams.day == 'sat'){
-      dayNum = 5;
-    }
-    else if($routeParams.day = 'sun'){
-      dayNum = 6;
-    }
-
     // get specific schedule item
     var loadSession = function(schedule){
-      var track = schedule[$routeParams.track + '-' + dayNum];
-      for(var entry in track){
-        var evt = track[entry];
-        if(evt.slug == $routeParams.slug){
-          console.log(evt);
-          $scope.event = evt;
+      function setScopeEvent(track){
+        for(var entry in track){
+          var evt = track[entry];
+          if(evt.slug == $routeParams.slug){
+
+            if(evt.description){
+              evt.description = $sce.trustAsHtml(evt.description);
+            }
+            if(evt.speaker){
+              evt.speaker = $sce.trustAsHtml(evt.speaker);
+            }
+
+            $scope.event = evt;
+          }
         }
+      }
+
+      var track = schedule[$routeParams.track + '-5'];
+      setScopeEvent(track);
+      if(!$scope.event){
+        track = schedule[$routeParams.track + '-6'];
+        setScopeEvent(track);
       }
     };
 

@@ -1,9 +1,23 @@
-
 <div class="row" id="view-getting-around">
   <article class="col-sm-8 col-sm-offset-2">
     <img src="/img/schedule-icon.png" class="title-icon">
-    <h2>{{ event.name }}</h2>
-      <div class="content">
-      </div>
+	<div class="event-wrapper">
+		<div class="content event">
+			<div class="details">
+				<div class="city">
+					<h3>{{ event.name }}</h3>
+					<p class="city-stats">
+						<span ng-bind-html="event.location"></span>
+						<time><span data-startTimestamp="{{ event.startTimestamp.toString() }}">{{ event.startTime }}</span> - <span data-endTimestamp="{{ event.endTimestamp.toString() }}">{{ event.endTime }}</span></time>
+					</p>
+					<div class="description">
+						<div class="speaker" ng-bind-html="event.speaker"></div>
+						<div ng-bind-html="event.description"></div>
+						<div class="session-etherpad"><a href="{{event.link}}" target="_blank">Session Etherpad</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
   </article>
 </div>
