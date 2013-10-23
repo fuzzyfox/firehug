@@ -69,8 +69,13 @@ var origin = location.protocol + '//' + location.host;
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule_bigscreen.html'
         })
+        .when('/friday', {
+          controller: 'FridayCtrl',
+          controllerAs: 'friday',
+          templateUrl: '/partials/friday.html'
+        })
         .when('/around', {
-          controller: 'AroundCtrl',
+          controller: 'FAQCtrl',
           controllerAs: 'around',
           templateUrl: '/partials/getting-around.html'
         })
@@ -689,7 +694,7 @@ app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '
   }
 ]);
 
-app.controller('AroundCtrl', ['$scope', '$http', '$sce', 
+app.controller('FAQCtrl', ['$scope', '$http', '$sce', 
   function($scope, $http, $sce) {
     // if localmodtime < now - 7min
     if(!localStorage.getItem('faqModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('faqModTime')))){
@@ -753,6 +758,30 @@ app.controller('BadgesCtrl', ['$scope', '$http',
     };
   }
   ]);
+
+app.controller('FridayCtrl', ['$scope',
+    function($scope) {
+      $scope.tip = {};
+
+      for (var i = 0; i < 7; i++) {
+        $scope.tip[i] = false;
+      }
+
+      $scope.showingTip = function(id) {
+        return (id === $scope.tip[id]);
+      };
+
+      $scope.showTip = function(id) {
+        if ($scope.tip[id] === id) {
+          $scope.tip[id] = false;
+        } else {
+          $scope.tip[id] = id;
+        }
+      };
+    }
+  ]);
+
+
 
 
   // var dialogKeys = {};
