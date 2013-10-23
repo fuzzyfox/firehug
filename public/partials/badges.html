@@ -5,9 +5,8 @@
     <div class="badge-wrapper">
       <ul class="badges">
         <li class="details clearfix" ng-click="showTip(badge.name)" ng-class="{ active : showingTip(badge.name) }" ng-repeat="badge in badges">
-          <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
-            <span class="more">+</span>
-            <span class="less">-</span>
+          <a class="expander" ng-class="{ active : showingTip(badge.name) }">
+            <img class="badge-image img-responsive" src="{{badge.image}}">
           </a>
           <div class="inner">
             <h3 class="badge-name">{{ badge.name }}</h3>
