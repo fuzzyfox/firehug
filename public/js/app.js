@@ -239,7 +239,7 @@ $locationProvider.html5Mode(false).hashPrefix('!');
   //   }
   // ]);
 
-app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '$http', 
+app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '$http',
   function AppCtrl($scope, /*persona,*/ $rootScope, $location, $http) {
     // var payload = $(document.body).data('payload') || {};
 
@@ -264,7 +264,7 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
     //   // Refresh page to reset all data
     //   location.href = '/#!/';
     // });
-    
+
     // attempt to prefetch schedule/faq to allow offline sooner
     if(!localStorage.getItem('localModTime')){
       $http({
@@ -628,10 +628,10 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
         $scope.loadSchedule(JSON.parse(localStorage.getItem('localSchedule')));
       }
     };
-    
+
     $scope.getSchedule();
 
-    // runs a schedule update which in turn removes 
+    // runs a schedule update which in turn removes
     // past events from view
     if(!window.scheduleInterval){
       window.scheduleInterval = true;
@@ -694,7 +694,7 @@ app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '
   }
 ]);
 
-app.controller('FAQCtrl', ['$scope', '$http', '$sce', 
+app.controller('FAQCtrl', ['$scope', '$http', '$sce',
   function($scope, $http, $sce) {
     // if localmodtime < now - 7min
     if(!localStorage.getItem('faqModTime') || (moment().subtract('minutes', 7) > moment(localStorage.getItem('faqModTime')))){
@@ -740,7 +740,7 @@ app.controller('BadgesCtrl', ['$scope', '$http',
     });
 
     $scope.claimPage = function() {
-      window.location='http://badges.openbadges.org';
+      window.location='http://badges.mozillafestival.org';
     };
 
     $scope.tip = {};
