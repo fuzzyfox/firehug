@@ -1,0 +1,37 @@
+<div class="row" id="view-getting-around">
+  <article class="col-sm-8 col-sm-offset-2">
+    <img src="/img/schedule-icon.png" class="title-icon">
+    <h2>Friday: Opening Night</h2>
+    <div class="tips-wrapper">
+      <ul class="events">
+        <li class="details">
+          <div class="inner">
+            <h3>Registration</h3>
+            <p class="city-stats">
+              <span ng-bind-html="v.location"></span>
+              <time>18:00</time>
+            </p>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(1)" ng-class="{ active : showingTip(1) }">
+          <a class="expander" ng-class="{ active : showingTip(1) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Opening Science Fair</h3>
+            <p class="city-stats">
+              <span ng-bind-html="v.location"></span>
+              <time>18:30 - 21:00</time>
+              <div class="speaker" ng-bind-html="v.speaker"></div>
+            </p>
+            <section ng-class="{ active : showingTip(1) }">
+              Explore demos from 50 projects that celebrate the tech and culture of the web. Drinks and a lively atmosphere included.
+            </section>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </article>
+</div>
+
