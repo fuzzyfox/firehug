@@ -332,7 +332,7 @@ app.get('/schedule', function(req, res, next) {
             for (var entry in evt){
               if(evt[entry].name){
                 var slug = evt[entry].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-                  link = nconf.get('etherpadURL') + track + '_' + slug;
+                  link = nconf.get('etherpadURL') + evt[entry].id + '_' + slug;
 
                 evt[entry].slug = slug;
               }
