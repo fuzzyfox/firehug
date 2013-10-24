@@ -460,8 +460,8 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     $scope.setLocation = function(location) {
       // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
       $('#schedule-listing').removeClass('all')
-      .removeClass('webmaker')
-      .removeClass('webmaker_scrum')
+      .removeClass('teachtheweb')
+      .removeClass('teachtheweb_scrum')
       .removeClass('connect')
       .removeClass('privacy')
       .removeClass('physical')
