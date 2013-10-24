@@ -5,7 +5,7 @@
     <p style="text-align:center">Last Updated: {{ lastUpdate }}</p>
 
     <div style="text-align:right;margin-bottom: 4px">
-      Track: <select ng-init="selectedLocation = locations[location]" ng-model="selectedLocation" name="schedule-location-list" class="subview-selector" id="schedule-location-list" ng-change="setLocation(getSelectedOption())" ng-options="value for (key, value) in locations">
+      Select Track: <select ng-init="selectedLocation = locations[location]" ng-model="selectedLocation" name="schedule-location-list" class="subview-selector" id="schedule-location-list" ng-change="setLocation(getSelectedOption())" ng-options="value for (key, value) in locations">
       </select>
     </div>
     

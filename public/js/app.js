@@ -411,7 +411,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
     $scope.locations = {
       'plenary': 'Plenary',
-      'webmaker_scrum': 'Webmaker: Scrums',
+      'webmaker_scrum': 'Build + Teach Scrum',
       'webmaker': 'Webmaker',
       'connect': 'Connect',
       'privacy': 'Privacy',
