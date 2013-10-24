@@ -356,6 +356,10 @@ app.post('/logout', function(request, response) {
   response.status(200).send();
 });
 
+app.get('/time', function(request, response) {
+  response.send(Date().toString());
+});
+
 
 app.get('/manifest.webapp', function(req, res) {
   res.contentType('application/x-web-app-manifest+json');
