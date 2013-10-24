@@ -410,12 +410,12 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     $scope.listing = false;
 
     $scope.locations = {
-      'plenary': 'Plenary',
-      'webmaker_scrum': 'Build + Teach Scrum',
-      'webmaker': 'Webmaker',
-      'connect': 'Connect',
+      'all': 'Plenary',
+      'teachtheweb': 'Build + Teach the Web',
+      'teachtheweb_scrum': 'Build + Teach: Scrum',
+      'connect': 'Connect Your City',
       'privacy': 'Privacy',
-      'physical': 'Physical',
+      'physical': 'Physical Web',
       'games': 'Games',
       'science': 'Science',
       'badges': 'Badges',
@@ -424,7 +424,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       'mobile': 'Mobile'
     };
 
-    var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'plenary';
+    var defaultLocation = $routeParams.track || localStorage.getItem('defaultLocation') || 'all';
 
     if ($rootScope.user) {
       defaultLocation = $rootScope.user.location;
@@ -459,7 +459,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
     $scope.setLocation = function(location) {
       // _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
-      $('#schedule-listing').removeClass('plenary')
+      $('#schedule-listing').removeClass('all')
       .removeClass('webmaker')
       .removeClass('webmaker_scrum')
       .removeClass('connect')
