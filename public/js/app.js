@@ -559,6 +559,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
 
     $scope.loadSchedule = function(data) {
       $scope.loaded = true;
+      $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
 
       for (var s in data) {
         var evt = data[s];
