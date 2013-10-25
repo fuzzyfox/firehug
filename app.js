@@ -358,7 +358,14 @@ app.post('/logout', function(request, response) {
 
 
 app.get('/time', function(request, response) {
-  response.send(Date().toString());
+  response.render('time', {
+    currentTime: Date().toString()
+  });
+});
+
+app.get('/timeUpdater.js', function(req, res) {
+  res.contentType('application/javascript');
+  res.sendfile(__dirname + '/public/js/timeUpdater.js');
 });
 
 
