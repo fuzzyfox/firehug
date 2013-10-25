@@ -740,7 +740,7 @@ app.controller('BadgesCtrl', ['$scope', '$http',
     });
 
     $scope.claimPage = function() {
-      window.location='http://badges.mozillafestival.org';
+      window.open('http://badges.mozillafestival.org');
     };
 
     $scope.tip = {};
