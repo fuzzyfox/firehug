@@ -267,7 +267,6 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
 
     // attempt to prefetch schedule/faq to allow offline sooner
     if(!localStorage.getItem('localModTime')){
-      console.log('/schedule?' + moment().toString());
       $http({
         url: '/schedule?' + moment().toString(),
         method: 'GET',
@@ -605,9 +604,8 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
       $scope.days[1].value = [];
       // if localmodtime < now - 7min
       if(!localStorage.getItem('localModTime') || (moment().subtract('minutes', 3) > moment(localStorage.getItem('localModTime')))){
-        console.log('/schedule?' + moment().toString());
         $http({
-          url: '/schedule?' + moment().toString(),
+          url: '/schedule',
           method: 'GET',
           timeout: 2000
         }).success(function(data) {
@@ -680,9 +678,8 @@ app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '
 
     // get schedule if not in existance
     if(!localStorage.getItem('localModTime')){
-      console.log('/schedule?' + moment().toString());
       $http({
-        url: '/schedule?' + moment().toString(),
+        url: '/schedule',
         method: 'GET',
         timeout: 2000
       }).success(function(data) {
