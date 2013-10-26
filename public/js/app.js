@@ -268,7 +268,7 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
     // attempt to prefetch schedule/faq to allow offline sooner
     if(!localStorage.getItem('localModTime')){
       $http({
-        url: '/schedule',
+        url: '/schedule?' + moment().toString(),
         method: 'GET',
         timeout: 2000
       }).success(function(data) {
