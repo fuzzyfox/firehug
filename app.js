@@ -341,6 +341,9 @@ app.get('/schedule', function(req, res, next) {
               }
             }
           }
+          response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+          response.setHeader("Pragma", "no-cache");
+          response.setHeader("Expires", "0");
 
           res.send({
             schedule: sortedSchedule
@@ -414,7 +417,7 @@ app.get('/manifest.webapp', function(req, res) {
 
 // generate appcache manifest ONLY if production
 // - less than optimal, refactor
-  
+
 app.get('/firehug.appcache', function(req, res) {
   if(process.env.NODE_ENV == 'production'){
     var fs = require('fs');
