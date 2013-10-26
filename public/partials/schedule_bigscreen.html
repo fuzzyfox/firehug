@@ -25,7 +25,7 @@
         </div>
         <ul class="events {{ day.name }}" ng-show="loaded">
           <li data-ng-repeat="(key, value) in day.value track by $index">
-            <div class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index" ng-class="{ pastEvent : isPastEvent(v.endTimestamp) }">
+            <div class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index">
               <div class="city">
                 <h3>{{ v.name }}</h3>
                 <p class="city-stats">
