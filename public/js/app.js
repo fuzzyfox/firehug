@@ -49,11 +49,6 @@ var origin = location.protocol + '//' + location.host;
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule.html'
         })
-        .when('/schedule/mega', {
-          controller: 'ScheduleAllCtrl',
-          controllerAs: 'schedule',
-          templateUrl: '/partials/schedule-all.html'
-        })
         .when('/schedule/:track', {
           controller: 'ScheduleCtrl',
           controllerAs: 'schedule',
@@ -273,7 +268,7 @@ app.controller('AppCtrl', ['$scope', /*'persona',*/ '$rootScope', '$location', '
     // attempt to prefetch schedule/faq to allow offline sooner
     if(!localStorage.getItem('localModTime')){
       $http({
-        url: '/schedule?' + moment().toString(),
+        url: '/schedule',
         method: 'GET',
         timeout: 2000
       }).success(function(data) {
@@ -652,6 +647,7 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
   }
 ]);
 
+<<<<<<< HEAD
 app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
     $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
@@ -966,6 +962,8 @@ app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$ro
   }
 ]);
 
+=======
+>>>>>>> developement
 app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
     // get specific schedule item
