@@ -341,9 +341,9 @@ app.get('/schedule', function(req, res, next) {
               }
             }
           }
-          response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-          response.setHeader("Pragma", "no-cache");
-          response.setHeader("Expires", "0");
+          // response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+          // response.setHeader("Pragma", "no-cache");
+          // response.setHeader("Expires", "0");
 
           res.send({
             schedule: sortedSchedule
