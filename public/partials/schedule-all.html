@@ -1,0 +1,46 @@
+<div class="row">
+  <article id="schedule-listing" class="col-sm-8 col-sm-offset-2 curr-location {{ location }}">
+    <img src="/img/schedule-icon.png" class="title-icon" ng-click="refresh()">
+    <p style="text-align:center">Last Updated: {{ lastUpdate }}</p>
+    
+    <div class="event-wrapper" ng-switch="selected" ng-repeat="day in days" ng-animate="'animate'">
+      <section ng-class="{ active : isActive(day) }">
+        <div class="{{ day.name }} subtitle">
+          <h3>
+            <a ng-click="setActive($index - 1)" class="icon">
+              <i class="icon-arrow-left" ng-click="setActive($index - 1)"></i> Prev</a>
+            <a ng-click="setActive($index + 1)" class="icon">
+              <i class="icon-arrow-right" ng-click="setActive($index + 1)"></i> Next</a>
+            <span>{{ day.title }}</span>
+          </h3>
+        </div>
+        <ul class="events {{ day.name }}" ng-show="loaded">
+          <li data-ng-repeat="(key, value) in day.value track by $index">
+            <div ng-click="expandDescription(v)" class="details {{ v.id }} {{ getDescriptionState(v) }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index" ng-class="{ pastEvent : isPastEvent(v.endTimestamp) }">
+              <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
+                <span class="more">+</span>
+                <span class="less">-</span>
+              </a>
+              <div class="city">
+                <h3>{{ v.name }}</h3>
+                <p class="city-stats">
+                  <span ng-bind-html="v.location"></span>
+                  <time><span data-startTimestamp="{{ v.startTimestamp.toString() }}">{{ v.startTime }}</span> - <span data-endTimestamp="{{ v.endTimestamp.toString() }}">{{ v.endTime }}</span></time>
+                  <div class="speaker" ng-bind-html="v.speaker"></div>
+                </p>
+
+                <div class="description" ng-class="! getDescriptionState(v)">
+                  <div ng-bind-html="v.description"></div>
+                  <div class="session-etherpad"><a href="{{v.link}}" target="_blank">Session Notes</a></div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div ng-hide="loaded">
+          <p class="text-center text-muted">Loading events, please wait …</p>
+        </div>
+      </section>
+    </div>
+  </article>
+</div>
