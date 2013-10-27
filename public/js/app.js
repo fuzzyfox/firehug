@@ -52,7 +52,7 @@ var origin = location.protocol + '//' + location.host;
         .when('/schedule/all', {
           controller: 'ScheduleAllCtrl',
           controllerAs: 'schedule',
-          templateUrl: '/partials/schedule.html'
+          templateUrl: '/partials/schedule-all.html'
         })
         .when('/schedule/:track', {
           controller: 'ScheduleCtrl',
@@ -806,40 +806,111 @@ app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$ro
       return '<a href="#!/maps/level-'+floor+'">' + location + '</a>';
     };
 
+    function makeEl(s, text, attr) {
+      var a = s.split('.');
+      var tag = a.shift();
+      var el = document.createElement(tag);
+      el.className = a.join(' ');
+      if (text) el.textContent = text;
+      if (attr) {
+          for (var k in attr) {
+              el.setAttribute(k, attr[k]);
+          }
+      }
+      return el;
+    }
+
+    function getEventsByFloor(data) {
+      // console.log(data);
+      var floors = [];
+      for (var i=0; i<10; i++) {
+        floors.push([]);
+      }
+      var tracks = ['all','badges','connect','data','games','journalism','mobile','physical','privacy','science','teachtheweb','teachtheweb_scrum'];
+      var iter = tracks.map(function (t) {
+        return t + '-6';
+      });
+      iter.forEach(function (slug) {
+        // console.log(slug);
+        var track = data[slug];
+        // console.log(track);
+        for (var s in track) {
+          var session = track[s];
+
+          var floor = 0;
+          if(session.location){
+            floor = parseInt(session.location.charAt(0), 10) || 0;
+          }
+          
+          track[s].time = parseInt(session.startTime.replace(':',''),10);
+          track[s].timeEnd = session.endTime ? parseInt(session.endTime.replace(':',''),10) : session.time + 100;
+          console.log(floor);
+          floors[floor].push(session);
+        }
+      });
+      return floors;
+    }
+
     $scope.loadSchedule = function(data) {
       $scope.loaded = true;
       $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
-
-      for (var s in data) {
-        var evt = data[s];
-
-        if (s.indexOf('5') > -1) {
-          $scope.days[0].value.push(evt);
-        } else if (s.indexOf('6') > -1) {
-          $scope.days[1].value.push(evt);
+      
+      $scope.el = document.createElement('div');
+      
+      $scope.el.innerHTML = '';
+      var evs = getEventsByFloor(data);
+      window.floors = evs;
+      var now = new Date();
+      var nowTime = now.getHours() * 100 + now.getMinutes();
+      for (var i=9; i>=0; i--) {
+        var floor = evs[i];
+        floor.sort(function(a, b) {
+          return b.time - a.time;
+        });
+        if (floor.length) {
+          $scope.el.appendChild(makeEl('h2', i ? 'Floor ' + i : 'General'));
         }
+        var inProgress = false;
+        // console.log(floor);
+        floor.forEach(function(session) {
+          if (session.time - nowTime < 100 && session.timeEnd > nowTime) {
+            var classes = '.session.content';
+            if (session.time < nowTime) {
+              classes += '.inprogress';
+            }
+            var sEl = makeEl('div' + classes);
 
-        for (var entry in evt) {
-          if (evt[entry].description) {
-            evt[entry].description = $sce.trustAsHtml(evt[entry].description);
-          }
-          if (evt[entry].speaker) {
-            evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
-          }
-          if(evt[entry].location) {
-            evt[entry].location = $sce.trustAsHtml(getLocationLink(evt[entry].location));
-          }
+            session.id = $scope.locations[session.id];
 
-          if (s.indexOf('5') > -1) {
-            evt[entry].startTimestamp = moment($scope.days[0].date + ' ' + evt[entry].startTime);
-            evt[entry].endTimestamp = moment($scope.days[0].date + ' ' + evt[entry].endTime);
-          } else if (s.indexOf('6') > -1) {
-            evt[entry].startTimestamp = moment($scope.days[1].date + ' ' + evt[entry].startTime);
-            evt[entry].endTimestamp = moment($scope.days[1].date + ' ' + evt[entry].endTime);
+            sEl.appendChild(makeEl('h3.potch-title', session.startTime + ' - ' + session.name));
+            var details = makeEl('div.potch-details');
+            if (session.format) {
+              details.appendChild(makeEl('div', session.id + ' - ' + session.format));
+            } else {
+              details.appendChild(makeEl('div', session.id));
+            }
+            details.appendChild(makeEl('div', [session.startTime,session.endTime||''].join('-')));
+            if (session.location) {
+              details.appendChild(makeEl('div.location', 'Room ' + session.location));
+            }
+            if (session.description) {
+              details.innerHTML += session.description;
+            }
+            sEl.appendChild(details);
+            // console.log('' === sEL.innerHTML);
+
+            $scope.el.appendChild(sEl);
           }
-        }
+        });
       }
+      $scope.cake = $sce.trustAsHtml($scope.el.innerHTML);
     };
+
+    document.body.addEventListener('click', function (e) {
+      if (e.target.classList.contains('potch-title')) {
+        e.target.classList.toggle('open');
+      }
+    });
 
     // check if localstore mod time is more than 15 min old,
     // if not load schedule out off local storage IF an internet
