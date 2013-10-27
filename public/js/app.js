@@ -49,7 +49,7 @@ var origin = location.protocol + '//' + location.host;
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule.html'
         })
-        .when('/schedule/all', {
+        .when('/schedule/mega', {
           controller: 'ScheduleAllCtrl',
           controllerAs: 'schedule',
           templateUrl: '/partials/schedule-all.html'
