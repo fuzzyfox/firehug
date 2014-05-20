@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 // for ITs monitoring tool
 if ( process.env.NEW_RELIC_HOME ) {
@@ -27,16 +27,6 @@ require('./bin');
 
 var app = express();
 
-// var isLoggedIn = function(req, res, next) {
-//   if (req.session.user) {
-//     next();
-//   } else {
-//     return res.status(401).send({
-//       status: 0
-//     });
-//   }
-// };
-
 // Setup express
 if (!process.env.NODE_ENV) {
   app.use(express.logger());
@@ -49,8 +39,8 @@ app.use(stylus.middleware({
   src: __dirname + '/public',
   compile: function compile(str, path) {
     return stylus(str)
-      .set('filename', path)
-      .use(nib());
+    .set('filename', path)
+    .use(nib());
   }
 }));
 
@@ -67,44 +57,44 @@ nap({
   assets: {
     js: {
       all: [
-        '/public/js/vendor/indexeddb-shim.js',
-        '/public/js/vendor/async-storage.js',
-        '/public/js/vendor/jquery.js',
-        '/public/js/vendor/angular.js',
-        '/public/js/vendor/angular-route.js',
-        // '/public/js/vendor/fastclick.js',
-        // '/public/js/vendor/typeahead.js',
+      '/public/js/vendor/indexeddb-shim.js',
+      '/public/js/vendor/async-storage.js',
+      '/public/js/vendor/jquery.js',
+      '/public/js/vendor/angular.js',
+      '/public/js/vendor/angular-route.js',
+        '/public/js/vendor/fastclick.js',
+        '/public/js/vendor/typeahead.js',
         '/public/js/vendor/moment.js',
         '/public/js/app.js'
-      ]
-    },
-    css: {
-      all: [
+        ]
+      },
+      css: {
+        all: [
         '/public/css/vendor/bootstrap.css',
         '/public/css/vendor/font-awesome.css',
         '/public/css/app.styl'
-      ]
+        ]
+      }
     }
-  }
-});
+  });
 
 nap.package(console.log);
 
 // CSP
 var headers = require('express-standard');
 
-// headers.add_csp_self('default-src');
-// headers.add_csp('frame-src', 'https://login.persona.org');
+headers.add_csp_self('default-src');
+headers.add_csp('frame-src', 'https://login.persona.org');
 headers.add_csp_self('script-src');
-// headers.add_csp('script-src', 'https://login.persona.org');
-// headers.add_csp('script-src', 'https://ssl.google-analytics.com');
+headers.add_csp('script-src', 'https://login.persona.org');
+headers.add_csp('script-src', 'https://ssl.google-analytics.com');
 headers.add_csp_self('style-src');
 headers.add_csp('style-src', "'unsafe-inline'");
 headers.add_csp_self('img-src');
 headers.add_csp('img-src', 'data:');
-// headers.add_csp('img-src', 'https://mozillians.org');
-// headers.add_csp('img-src', 'https://secure.gravatar.com');
-// headers.add_csp('img-src', 'https://ssl.google-analytics.com');
+headers.add_csp('img-src', 'https://mozillians.org');
+headers.add_csp('img-src', 'https://secure.gravatar.com');
+headers.add_csp('img-src', 'https://ssl.google-analytics.com');
 headers.add_csp('img-src', url.parse(nconf.get('obrEndpoint')).protocol + '//' + url.parse(nconf.get('obrEndpoint')).host);
 
 app.use(headers.handle);
@@ -128,46 +118,6 @@ app.use(express.session({
 }));
 
 var now = new time.Date();
-
-// function getDay(user) {
-//   switch (user.location) {
-//     case 'br':
-//       now.setTimezone('Europe/Brussels');
-//       break;
-//     case 'sc':
-//       now.setTimezone('America/Los_Angeles');
-//       break;
-//     default:
-//       now.setTimezone('America/New_York');
-//       break;
-//   };
-
-//   return now.getDate();
-// };
-
-// function isActiveDay(user) {
-//   var day = getDay(user);
-//   return day >= 5 && day <= 6;
-// }
-
-// function getPayload(session) {
-//   var nextQuestions = null;
-//   if (session.submitted) {
-//     var future = new Date(session.submitted + nconf.get('surveyIdle'));
-//     if (future > Date.now()) {
-//       nextQuestions = future.toUTCString();
-//     }
-//   }
-
-//   return {
-//     email: session.user.email,
-//     location: session.user.location,
-//     dialog: session.user.dialog,
-//     day: getDay(session.user),
-//     activeDay: isActiveDay(session.user),
-//     nextQuestions: nextQuestions
-//   };
-// };
 
 app.get('/', function(request, response) {
   var six = (request.query.hexagon == 6);
@@ -195,77 +145,6 @@ app.get('/help', function(request, response) {
   response.render('help');
 });
 
-// app.post('/verify', function(request, response) {
-//   var assertion = request.body.assertion;
-//   if (!assertion) {
-//     response.status(400).send({
-//       error: 'No assertion'
-//     });
-//   }
-//   console.log('Verifying with %s', nconf.get('audience'));
-//   Users.emailFromAssertion(assertion, nconf.get('audience'), function(err, result) {
-//     if (err) {
-//       console.log('Users.emailFromAssertion failed', err);
-//       return response.status(400).send({
-//         error: 'Invalid assertion'
-//       });
-//     }
-//     console.log('Users.login', result.email);
-
-//     Users.login(result.email, function(err, user) {
-//       if (err || !user) {
-//         console.log('Users.login failed', err);
-//         return response.status(400).send({
-//           error: 'User not found'
-//         });
-//       }
-
-//       request.session.user = user;
-
-//       console.log('Users.login success', user.username);
-//       response.send({
-//         status: 1,
-//         user: getPayload(request.session)
-//       });
-//     });
-//   });
-// });
-
-// app.post('/questions', isLoggedIn, function(request, response) {
-//   var session = request.session;
-//   var user = request.session.user;
-
-//   if (session.submitted || !isActiveDay(user)) {
-//     // 2 hours = nconf.get('surveyIdle') ms
-//     var nextQuestions = (new Date(session.submitted + nconf.get('surveyIdle'))).getTime();
-//     if (nextQuestions > Date.now()) {
-//       return response.status(400).send({
-//         status: 0,
-//         error: 'idle'
-//       });
-//     }
-//   }
-
-//   Surveys.add({
-//     user: user.username,
-//     location: user.location,
-//     mood: request.body.mood,
-//     quote: request.body.quote,
-//     influencers: request.body.influencers,
-//   }, function(err) {
-//     if (err) {
-//       return response.status(400).send({
-//         status: 0
-//       });
-//     }
-//     // TODO: Store in redis
-//     session.submitted = Date.now();
-//     response.send({
-//       status: 1,
-//       error: 'storage'
-//     });
-//   });
-// });
 app.get('/badges', function(req, res, next) {
   client.get('badges', function(err, badges) {
     res.json(JSON.parse(badges));
@@ -332,7 +211,7 @@ app.get('/schedule', function(req, res, next) {
             for (var entry in evt){
               if(evt[entry].name){
                 var slug = evt[entry].name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-                  link = nconf.get('etherpadURL') + evt[entry].id + '_' + slug;
+                link = nconf.get('etherpadURL') + evt[entry].id + '_' + slug;
 
                 evt[entry].slug = slug;
               }
@@ -347,8 +226,8 @@ app.get('/schedule', function(req, res, next) {
           });
         }
       });
-    });
-  });
+});
+});
 });
 
 app.post('/logout', function(request, response) {
@@ -374,55 +253,17 @@ app.get('/manifest.webapp', function(req, res) {
   res.sendfile(__dirname + '/public/manifest.webapp');
 });
 
-// app.get('/typeahead', isLoggedIn, function(req, res) {
-//   var location = req.session.user.location;
-//   var currentUser = req.session.user.username;
-//   var defaultGravatar = nconf.get('domain') + nconf.get('gravatarPath');
-
-//   client.smembers('location:' + location, function(err, usernames) {
-//     if (err) {
-//       return res.status(400).send();
-//     }
-
-//     var multi = client.multi();
-//     for (var username in usernames) {
-//       if (currentUser != usernames[username]) {
-//         multi.hgetall('user:' + usernames[username]);
-//       }
-//     }
-//     multi.exec(function(err, users) {
-//       if (err || !users) {
-//         return res.status(400).send();
-//       }
-
-//       var cleanUsers = users.map(function(user) {
-//         var entry = {
-//           fullName: user.fullName,
-//           username: user.username
-//         };
-//         entry.avatar = user.avatar || gravatar.url(user.email, {
-//           s: 50,
-//           d: defaultGravatar
-//         }, true);
-//         return entry;
-//       });
-
-//       res.send(cleanUsers);
-//     });
-//   });
-// });
-
 // generate appcache manifest ONLY if production
 // - less than optimal, refactor
-  
+
 app.get('/firehug.appcache', function(req, res) {
-  if(process.env.NODE_ENV == 'production'){
+  if(process.env.NODE_ENV === 'production'){
     var fs = require('fs');
     // deal w/ css/js
     var assets = fs.readdirSync('./public/assets/'),
-        partials = fs.readdirSync('./public/partials/'),
-        images = fs.readdirSync('./public/img/'),
-        fonts = fs.readdirSync('./public/fonts/');
+    partials = fs.readdirSync('./public/partials/'),
+    images = fs.readdirSync('./public/img/'),
+    fonts = fs.readdirSync('./public/fonts/');
 
     assets.forEach(function(e, i, a){
       a[i] = './assets/' + e;
@@ -458,111 +299,280 @@ server.listen(process.env.PORT || 5000, function() {
   console.log('Listening on http://%s:%d', address.address, address.port);
 });
 
+// check for mozillians apiKey before enabling users.
+// if set assume feature wanted.
+if( ! ( ( nconf.get('apiKey') === '' ) ||
+        ( nconf.get('apiApp') === '' ) ||
+        ( nconf.get('mozilliansURL') === '' ) ||
+        ( nconf.get('audience') === '' )
+      )
+  ) {
+  console.log('enabling mozillians api ');
 
-// var Users = {
+  function getDay(user) {
+    switch (user.location) {
+      case 'br':
+        now.setTimezone('Europe/Brussels');
+        break;
+      case 'sc':
+        now.setTimezone('America/Los_Angeles');
+        break;
+      default:
+        now.setTimezone('America/New_York');
+        break;
+    };
 
-//   emailFromAssertion: function(assertion, audience, next) {
-//     var vreq = https.request({
-//       host: 'login.persona.org',
-//       path: '/verify',
-//       method: 'POST'
-//     }, function(vres) {
-//       var body = '';
-//       vres.on('data', function(chunk) {
-//         body += chunk;
-//       }).on('end', function() {
-//         try {
-//           var verifierResp = JSON.parse(body);
-//           var valid = verifierResp && verifierResp.status === 'okay';
-//           if (!valid) {
-//             next(new Error('failed to verify assertion: ' + verifierResp.reason));
-//             return;
-//           }
-//           next(null, {
-//             email: verifierResp.email
-//           });
-//         } catch (e) {
-//           next(new Error('non-JSON response from verifier: ' + e));
-//         }
-//       });
-//     });
-//     vreq.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+    return now.getDate();
+  };
 
-//     var data = querystring.stringify({
-//       assertion: assertion,
-//       audience: audience
-//     });
-//     vreq.setHeader('Content-Length', data.length);
-//     vreq.write(data);
-//     vreq.end();
-//   },
+  function isActiveDay(user) {
+    var day = getDay(user);
+    return day >= 5 && day <= 6;
+  }
 
-//   login: function(email, next) {
-//     client.get('email:' + email.toLowerCase(), function(err, username) {
-//       if (err || !username) {
-//         return next(new Error('Email not found ', err));
-//       }
-//       console.log('login with username: %s', username);
-//       client.hgetall('user:' + username, function(err, user) {
-//         console.log()
-//         if (err || !user) {
-//           return next(new Error('Username not found ', err));
-//         }
-//         next(null, user);
-//       });
-//     });
-//   }
+  function getPayload(session) {
+    var nextQuestions = null;
+    if (session.submitted) {
+      var future = new Date(session.submitted + nconf.get('surveyIdle'));
+      if (future > Date.now()) {
+        nextQuestions = future.toUTCString();
+      }
+    }
 
-// };
+    return {
+      email: session.user.email,
+      location: session.user.location,
+      dialog: session.user.dialog,
+      day: getDay(session.user),
+      activeDay: isActiveDay(session.user),
+      nextQuestions: nextQuestions
+    };
+  };
 
-// var Surveys = {
+  var Users = {
 
-//   add: function(record, next) {
+    emailFromAssertion: function(assertion, audience, next) {
+      var vreq = https.request({
+        host: 'login.persona.org',
+        path: '/verify',
+        method: 'POST'
+      }, function(vres) {
+        var body = '';
+        vres.on('data', function(chunk) {
+          body += chunk;
+        }).on('end', function() {
+          try {
+            var verifierResp = JSON.parse(body);
+            var valid = verifierResp && verifierResp.status === 'okay';
+            if (!valid) {
+              next(new Error('failed to verify assertion: ' + verifierResp.reason));
+              return;
+            }
+            next(null, {
+              email: verifierResp.email
+            });
+          } catch (e) {
+            next(new Error('non-JSON response from verifier: ' + e));
+          }
+        });
+      });
+      vreq.setHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-//     var Spreadsheet = require('edit-google-spreadsheet');
+      var data = querystring.stringify({
+        assertion: assertion,
+        audience: audience
+      });
+      vreq.setHeader('Content-Length', data.length);
+      vreq.write(data);
+      vreq.end();
+    },
 
-//     Spreadsheet.create({
-//       debug: true,
-//       username: nconf.get('surveyGoogleEmail'),
-//       password: nconf.get('surveyGooglePass'),
-//       spreadsheetId: nconf.get('surveyGoogleSpreadsheet'),
-//       worksheetId: nconf.get('surveyGoogleWorksheet'),
-//       callback: function sheetReady(err, spreadsheet) {
-//         if (err) {
-//           return next(err);
-//         }
+    login: function(email, next) {
+      client.get('email:' + email.toLowerCase(), function(err, username) {
+        if (err || !username) {
+          return next(new Error('Email not found ', err));
+        }
+        console.log('login with username: %s', username);
+        client.hgetall('user:' + username, function(err, user) {
+          if (err || !user) {
+            return next(new Error('Username not found ', err));
+          }
+          next(null, user);
+        });
+      });
+    }
 
-//         spreadsheet.receive(function(err, rows, info) {
-//           if (err) {
-//             return next(err);
-//           }
-//           var nextRow = info.nextRow;
+  };
 
-//           var values = {};
-//           values[nextRow] = [
-//             [
-//               (new Date()).toUTCString(),
-//               record.user,
-//               record.location,
-//               record.mood || '-',
-//               record.quote || '-', (record.influencers || []).join(', ')
-//             ]
-//           ];
-//           spreadsheet.add(values);
+  app.post('/verify', function(request, response) {
+    var assertion = request.body.assertion;
+    if (!assertion) {
+      response.status(400).send({
+        error: 'No assertion'
+      });
+    }
+    console.log('Verifying with %s', nconf.get('audience'));
+    Users.emailFromAssertion(assertion, nconf.get('audience'), function(err, result) {
+      if (err) {
+        console.log('Users.emailFromAssertion failed', err);
+        return response.status(400).send({
+          error: 'Invalid assertion'
+        });
+      }
+      console.log('Users.login', result.email);
 
-//           spreadsheet.send({
-//             autoSize: true
-//           }, function(err) {
-//             if (err) {
-//               return next(err);
-//             }
-//             console.log('Added row %d', nextRow);
-//             next(null);
-//           });
+      Users.login(result.email, function(err, user) {
+        if (err || !user) {
+          console.log('Users.login failed', err);
+          return response.status(400).send({
+            error: 'User not found'
+          });
+        }
 
-//         });
-//       }
-//     });
-//   }
+        request.session.user = user;
 
-// };
+        console.log('Users.login success', user.username);
+        response.send({
+          status: 1,
+          user: getPayload(request.session)
+        });
+      });
+    });
+  });
+
+  if( ! ( (nconf.get('surveyGoogleEmail') === '') ||
+          (nconf.get('surveyGooglePass') === '') ||
+          (nconf.get('surveyGoogleSpreadsheet') === '') ||
+          (nconf.get('surveyGoogleWorksheet') === '')
+        )
+    ) {
+
+    console.log('enabling surveys');
+
+    var Surveys = {
+
+      add: function(record, next) {
+
+        var Spreadsheet = require('edit-google-spreadsheet');
+
+        Spreadsheet.create({
+          debug: true,
+          username: nconf.get('surveyGoogleEmail'),
+          password: nconf.get('surveyGooglePass'),
+          spreadsheetId: nconf.get('surveyGoogleSpreadsheet'),
+          worksheetId: nconf.get('surveyGoogleWorksheet'),
+          callback: function sheetReady(err, spreadsheet) {
+            if (err) {
+              return next(err);
+            }
+
+            spreadsheet.receive(function(err, rows, info) {
+              if (err) {
+                return next(err);
+              }
+              var nextRow = info.nextRow;
+
+              var values = {};
+              values[nextRow] = [
+              [
+              (new Date()).toUTCString(),
+              record.user,
+              record.location,
+              record.mood || '-',
+              record.quote || '-', (record.influencers || []).join(', ')
+              ]
+              ];
+              spreadsheet.add(values);
+
+              spreadsheet.send({
+                autoSize: true
+              }, function(err) {
+                if (err) {
+                  return next(err);
+                }
+                console.log('Added row %d', nextRow);
+                next(null);
+              });
+
+            });
+          }
+        });
+      }
+    };
+
+    app.get('/typeahead', isLoggedIn, function(req, res) {
+      var location = req.session.user.location;
+      var currentUser = req.session.user.username;
+      var defaultGravatar = nconf.get('domain') + nconf.get('gravatarPath');
+
+      client.smembers('location:' + location, function(err, usernames) {
+        if (err) {
+          return res.status(400).send();
+        }
+
+        var multi = client.multi();
+        for (var username in usernames) {
+          if (currentUser != usernames[username]) {
+            multi.hgetall('user:' + usernames[username]);
+          }
+        }
+        multi.exec(function(err, users) {
+          if (err || !users) {
+            return res.status(400).send();
+          }
+
+          var cleanUsers = users.map(function(user) {
+            var entry = {
+              fullName: user.fullName,
+              username: user.username
+            };
+            entry.avatar = user.avatar || gravatar.url(user.email, {
+              s: 50,
+              d: defaultGravatar
+            }, true);
+            return entry;
+          });
+
+          res.send(cleanUsers);
+        });
+      });
+    });
+
+    app.post('/questions', isLoggedIn, function(request, response) {
+      var session = request.session;
+      var user = request.session.user;
+
+      if (session.submitted || !isActiveDay(user)) {
+        // 2 hours = nconf.get('surveyIdle') ms
+        var nextQuestions = (new Date(session.submitted + nconf.get('surveyIdle'))).getTime();
+        if (nextQuestions > Date.now()) {
+          return response.status(400).send({
+            status: 0,
+            error: 'idle'
+          });
+        }
+      }
+
+      Surveys.add({
+        user: user.username,
+        location: user.location,
+        mood: request.body.mood,
+        quote: request.body.quote,
+        influencers: request.body.influencers,
+      }, function(err) {
+        if (err) {
+          return response.status(400).send({
+            status: 0
+          });
+        }
+        // TODO: Store in redis
+        session.submitted = Date.now();
+        response.send({
+          status: 1,
+          error: 'storage'
+        });
+      });
+    });
+
+  }
+}

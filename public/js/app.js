@@ -646,8 +646,6 @@ app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$route
     }
   }
 ]);
-
-<<<<<<< HEAD
 app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
     $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
@@ -837,7 +835,7 @@ app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$ro
           if(session.location){
             floor = parseInt(session.location.charAt(0), 10) || 0;
           }
-          
+
           track[s].time = parseInt(session.startTime.replace(':',''),10);
           track[s].timeEnd = session.endTime ? parseInt(session.endTime.replace(':',''),10) : session.time + 100;
           console.log(floor);
@@ -850,9 +848,9 @@ app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$ro
     $scope.loadSchedule = function(data) {
       $scope.loaded = true;
       $scope.lastUpdate = moment(localStorage.getItem('localModTime')).fromNow() || moment().fromNow();
-      
+
       $scope.el = document.createElement('div');
-      
+
       $scope.el.innerHTML = '';
       var evs = getEventsByFloor(data);
       window.floors = evs;
@@ -962,8 +960,6 @@ app.controller('ScheduleAllCtrl', ['$scope', '$rootScope', '$http', '$sce', '$ro
   }
 ]);
 
-=======
->>>>>>> developement
 app.controller('ScheduleDetailCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
   function($scope, $rootScope, $http, $sce, $routeParams) {
     // get specific schedule item
