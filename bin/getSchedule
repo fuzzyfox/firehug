@@ -1,139 +1,104 @@
 #!/usr/bin/env node
-
 'use strict';
 
-var redis = require('redis');
-var async = require('async');
-var GoogleSpreadsheet = require('google-spreadsheets');
-var Showdown = require('showdown');
+/*
+  Get all the libs, etc...
+ */
+var shared = require( '../shared' );
+var env = shared.env;
+var redisClient = shared.redisClient;
+var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
 
-var shared = require('./../shared');
-var nconf = shared.nconf;
-var client = shared.redisClient;
+var GoogleSpreadsheet = require( 'google-spreadsheet' );
 
-var converter = new Showdown.converter();
+// This is where all gets put.
+var worksheets = {};
 
-var getObjSize = function (obj) {
-	return Object.keys(obj).length;
-};
+// We do NOT want to be keeping any email addresses, so regex to find them
+var emailRegex = new RegExp('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])', 'ig');
 
-var setType = function (opts, cell) {
-	var value = cell.value || '';
-	switch (cell.col) {
-		case '1':
-			opts.startTime = value;
-			break;
+/*
+  Get the raw data and make it useful
+ */
+var doc = new GoogleSpreadsheet( env.get( 'GOOGLE_KEY' ) );
+doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( error ) {
+  if( error ) {
+    console.error( error );
+    process.exit( 1 );
+  }
 
-		case '2':
-			opts.endTime = value;
-			break;
+  doc.getInfo( function( error, rawData ) {
+    if( error ) {
+      console.error( error );
+      process.exit( 1 );
+    }
 
-		case '3':
-			opts.location = value;
-			break;
+    // simple counter to check if all sheets processed
+    var processedSheets = 0;
 
-		case '4':
-			opts.name = value;
-			break;
+    // process worksheets
+    rawData.worksheets.forEach( function( sheet, idx ) {
+      // setup sane usage
+      worksheets[ sheet.title ] = sheet;
+      sheet = worksheets[ sheet.title ];
 
-		case '5':
-			var html = converter.makeHtml(value.replace(/^\s+|\s+$/g, ''));
-			html = html.replace('<a ', '<a target="_blank" ');
-			opts.description = html;
-			break;
+      // add the index for the sheet to sheet obj
+      sheet.sheetIndex = idx;
 
-		case '6':
-			opts.format = value;
-			break;
+      // get rows headings
+      sheet.getRows( function( error, rowData ) {
+        if( error ) {
+          console.error( error );
+          process.exit( 1 );
+        }
+        // get column headings before processing futher
+        sheet.columnNames = [];
+        for( var key in rowData[ 0 ] ) {
+          // if key not "content" or starting w/ an "_" AND is a string
+          if( ( !/^(_|content|email)/.test( key ) ) && ( typeof rowData[ 0 ][ key ] === 'string' ) ) {
+            sheet.columnNames.push( key );
+          }
+        }
 
-		case '7':
-			var html = converter.makeHtml(value.replace(/^\s+|\s+$/g, ''));
-			html = html.replace('<a ', '<a target="_blank" ');
-			opts.speaker = html;
-			break;
+        // now deal w/ row data
+        sheet.data = [];
 
-		case '8':
-			opts.link = value;
-			break;
+        rowData.forEach( function( row ) {
+          var tmp = {};
 
-		case '9':
-			opts.tags = value.replace(/\s+/g, '').split(', ');
-			break;
+          sheet.columnNames.forEach( function( column ) {
+            var safeColumn = row[ column ];
 
-	}
+            /*
+              Remove emails on inbound data. Never store these outside gDocs.
+             */
+            if( ! /^meta$/i.test( sheet.title ) ) { // SKIP CHECK if we're looking at the "meta" sheet.
+              safeColumn = safeColumn.replace( emailRegex, '' ); // remove emails if added
+              safeColumn = safeColumn.replace( /<>/ig, '' ); // clean up a little from email removal
+            }
 
-	return opts;
-};
+            /*
+              Remove anything that could bork things using the data.
+             */
+            safeColumn = safeColumn.replace( /(<([^>]+)>)/ig, '' ); // remove html
+            safeColumn = safeColumn.trim(); // no silly excess whitespace
 
-var readWorksheet = function (worksheet, next) {
-	var title = worksheet.title.toLowerCase();
+            tmp[ column ] = safeColumn;
+          });
 
-	worksheet.cells({
-		range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
-	}, function (err, cells) {
-		if (err) {
-			next(err);
-			return;
-		}
-		var rowCount = 1;
-		var count = 1;
+          sheet.data.push( tmp );
+        });
 
-		for (var cell in cells) {
-			var count = 1;
-			var events = {};
-
-			for (var ev in cells[cell]) {
-				var row = cells[cell][ev];
-				var opts = {};
-
-				if (row && count > 1) {
-					for (var c in row) {
-						opts = setType(opts, row[c]);
-					}
-
-					opts.id = title.split('-')[0].toLowerCase();
-				}
-
-				if (getObjSize(opts)) {
-					var countVal = rowCount;
-
-					if (parseInt(rowCount, 10) < 10) {
-						countVal = '0' + countVal;
-					}
-					events[countVal] = opts;
-					rowCount ++;
-				}
-
-				count ++;
-			}
-
-			client.set('schedule:' + title, JSON.stringify(events),
-				function (err) {
-					if (err) {
-						console.log('Could not save schedule ', title, events);
-						next(err);
-						return;
-					}
-					client.sadd('schedules', title);
-
-					console.log('%s: %d - Saved schedule', title, count);
-					next(null);
-				});
-		}
-	});
-};
-
-GoogleSpreadsheet({
-	key: nconf.get('googleKey')
-}, function (err, spreadsheets) {
-	if (err) {
-		throw new Error('Error reading spreadsheets data: ' + err);
-	}
-	async.each(spreadsheets.worksheets, readWorksheet, function(err) {
-		if (err) {
-			throw err;
-		}
-		console.log('getSchedule success');
-		process.exit();
-	});
+        // store data
+        redisClient.set( redisPrefix + ':' + sheet.title, JSON.stringify( worksheets[ sheet.title ] ), function() {
+          // check if all worksheets processed + exit if so.
+          processedSheets += 1;
+          if( processedSheets === rawData.worksheets.length ) {
+            // done all the things, exit now
+            process.exit( 0 );
+          }
+        });
+      });
+    });
+  });
 });
