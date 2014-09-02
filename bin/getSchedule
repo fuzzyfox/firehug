@@ -4,10 +4,12 @@
 /*
   Get all the libs, etc...
  */
+var shortid = require( 'shortid' );
 var shared = require( '../shared' );
 var env = shared.env;
 var redisClient = shared.redisClient;
 var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
+var redisPrefix = redisPrefix + ':sheets';
 
 var GoogleSpreadsheet = require( 'google-spreadsheet' );
 
@@ -35,6 +37,8 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
 
     // simple counter to check if all sheets processed
     var processedSheets = 0;
+    // simple counter to check if save is in progress
+    var savesInProgress = 0;
 
     // process worksheets
     rawData.worksheets.forEach( function( sheet, idx ) {
@@ -83,22 +87,43 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
             safeColumn = safeColumn.replace( /(<([^>]+)>)/ig, '' ); // remove html
             safeColumn = safeColumn.trim(); // no silly excess whitespace
 
+            /*
+              Ensure all rows that have a "SID" column have a value for "SID".
+             */
+            if( column === 'sid' && !safeColumn ) {
+              var sid = shortid.generate();
+
+              // save sid to spreadsheet
+              row[ column ] = sid;
+              savesInProgress += 1;
+              row.save( function() {
+                savesInProgress -= 1;
+              });
+
+              safeColumn.id = sid; // in safe column we're going to override id
+            }
+
             tmp[ column ] = safeColumn;
           });
 
           sheet.data.push( tmp );
         });
 
-        // store data
+        // store data in redis db
         redisClient.set( redisPrefix + ':' + sheet.title, JSON.stringify( worksheets[ sheet.title ] ), function() {
           // check if all worksheets processed + exit if so.
           processedSheets += 1;
-          if( processedSheets === rawData.worksheets.length ) {
-            // done all the things, exit now
-            process.exit( 0 );
-          }
         });
       });
     });
+
+    (function exitLoop() {
+      if( processedSheets === rawData.worksheets.length && !savesInProgress ) {
+        // done all the things, exit now
+        return process.exit( 0 );
+      }
+
+      setTimeout( exitLoop, 10 );
+    }());
   });
 });

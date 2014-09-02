@@ -1,22 +1,20 @@
 #!/usr/bin/env node
 'use strict';
 
-var redis = require( 'redis' );
 var request = require( 'request' );
-var Showdown = require( 'showdown' );
+var Entities = require( 'html-entities' ).AllHtmlEntities;
+var entities = new Entities();
 var shared = require( '../shared' );
-var converter = new Showdown.converter();
 var env = shared.env;
 var client = shared.redisClient;
 var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
 
 request({
-	url: 'https://docs.google.com/document/d/'+ env.get('faqKey') +'/pub?embedded=true'
+  url: 'https://docs.google.com/feeds/download/documents/Export?exportFormat=plaintext&format=txt&id=' + env.get( 'faqKey' )
 }, function(err, response, body){
 	if(!err){
-		var content = body.match('<body class=".*">.*</body>')[0].replace('<p><body class="c2">', '').replace('</body></p>', '');
-		content = converter.makeHtml(content);
-		return client.set( redisPrefix + ':faq', content, function (err) {
+		var content = entities.decode( body ).replace( /(<([^>]+)>)/ig, '' );
+		return client.set( redisPrefix + ':docs:faq', content, function (err) {
 			if (err) {
 				console.error('Could not save faq');
         process.exit( 1 );

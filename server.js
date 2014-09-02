@@ -4,7 +4,7 @@ var express = require( 'express' );
 var morgan = require( 'morgan' );
 var helmet = require( 'helmet' );
 var moment = require( 'moment' );
-// var sessions = require( './lib/sessions' );
+var sessions = require( './lib/sessions' );
 var shared = require( './shared' );
 var env = shared.env;
 // var debug = shared.debug;
@@ -38,7 +38,7 @@ app.disable( 'x-powered-by' );
 // } ) );
 
 // no cacheing api routes pl0x
-app.all( '*', function( req, res, next ) {
+app.all( [ '/healthcheck', '/api/*' ], function( req, res, next ) {
   res.set({
     'Cache-Control': 'no-cache, no-store, must-revalidate',
     'Pragma': 'no-cache',
@@ -73,8 +73,20 @@ app.get( '/help', function( req, res ) {
 /**
  * @todo turn into full api for schedule
  */
-app.get( [ '/schedule', '/schedule.json' ], function( req, res ) {
-  res.jsonp( {} );
+app.get( '/api/sessions/:theme?', function( req, res, next ) {
+  if( req.params.theme ) {
+    return sessions.getSessions( req.params.theme, function(err, sessions) {
+      if( err ) {
+        return next();
+      }
+
+      res.jsonp( sessions );
+    });
+  }
+
+  sessions.getSessions( function(err, sessions){
+    res.jsonp( sessions );
+  });
 });
 
 /**
