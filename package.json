@@ -17,7 +17,6 @@
     "hbs": "2.3.x",
     "helmet": "^0.4.1",
     "hiredis": ">= 0.1.15",
-    "html-entities": "^1.1.1",
     "lodash": "^2.4.1",
     "moment": "^2.8.2",
     "morgan": "^1.2.3",

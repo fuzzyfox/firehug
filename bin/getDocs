@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+'use strict';
+
+var request = require( 'request' );
+var shared = require( '../shared' );
+var env = shared.env;
+var redisClient = shared.redisClient;
+var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
+redisPrefix = redisPrefix + ':docs';
+
+// object to store doc details in
+var gDocs = [];
+
+// get all google docs keys from environment
+var gDocEnvKeys = Object.keys( env.get() ).filter( function( key ) {
+  return ( /^google_doc_/i.test( key ) );
+});
+
+// get sheet names from end of key, and populate
+// `gDocs` object
+gDocEnvKeys.forEach( function( key ) {
+  var name = key.match( /^google_doc_(.+)$/i )[ 1 ].toLowerCase();
+  gDocs.push({
+    name: name,
+    key: env.get( key )
+  });
+});
+
+// itterate through docs, fetching their contents in plain text,
+// and storing them in the redis db
+var docsFetched = 0;
+gDocs.forEach(function( doc ) {
+  request({
+    url: 'https://docs.google.com/feeds/download/documents/Export?exportFormat=plaintext&format=txt&id=' + doc.key
+  }, function( err, res, body ) {
+    if( !err ) {
+      return redisClient.set( redisPrefix + ':' + doc.name, body, function( err ) {
+        if( err ) {
+          console.error( err );
+
+        }
+
+        docsFetched += 1;
+
+        if( docsFetched === gDocs.length ) {
+          process.exit( 0 );
+        }
+      });
+    }
+
+    console.error( err );
+    process.exit( 1 );
+  });
+});
+
+if( docsFetched === gDocs.length ) {
+  process.exit( 0 );
+}
