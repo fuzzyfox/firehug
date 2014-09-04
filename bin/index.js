@@ -2,6 +2,7 @@
 
 // setup
 var fs = require( 'fs' );
+var later = require( 'later' );
 var fork = require( 'child_process' ).fork;
 var shared = require( '../shared' );
 var env = shared.env;
@@ -57,11 +58,8 @@ function forkBins() {
   });
 }
 
-// bit like setInterval, but async (hat-tip Paul Irish)
-(function loop() {
-  forkBins();
-  setTimeout( loop, env.get( 'POLL_INTERVAL' ) );
-}());
+var schedule = later.parse.cron( env.get( 'JOB_SCHEDULE' ) );
+later.setInterval( forkBins, schedule );
 
 module.exports = {
   getStatus: function() {

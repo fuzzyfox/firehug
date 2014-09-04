@@ -3,10 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ webappManifest.name }} – Server Clock</title>
+  <style>
+    body {
+      font: 16px/1.5 'Open Sans', Arial, Sans-Serif;
+    }
+    dt {
+      font-weight: lighter;
+      font-size: 1.4em;
+    }
+  </style>
 </head>
 <body>
-  <div id="time" data-currentTime="{{ serverTime }}">{{ serverTime }}</div>
+  <dl>
+    <dt>Current server time</dt>
+    <dd><time id="time">{{ serverTime }}</time></dd>
 
+    <dt>Next poll to Google</dt>
+    <dd><time id="later" data-cron="{{ laterCron }}">{{ laterTime }}</time></dd>
+  </dl>
+
+  <script src="/vendor/later/later.min.js"></script>
   <script src="/js/timeUpdater.js"></script>
 </body>
 </html>

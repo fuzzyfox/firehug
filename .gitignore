@@ -64,3 +64,4 @@ dump.rdb
 
 app.css
 public/assets
+public/vendor

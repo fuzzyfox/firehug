@@ -68,10 +68,10 @@ module.exports = function( grunt ) {
     // bump version number
     bump: {
       options: {
-        files: [ 'package.json' ],
+        files: [ 'package.json', 'bower.json' ],
         commit: true,
         commitMessage: 'version bump to v%VERSION%',
-        commitFiles: [ 'package.json' ],
+        commitFiles: [ 'package.json', 'bower.json' ],
         createTag: true,
         tagName: 'v%VERSION%',
         push: false

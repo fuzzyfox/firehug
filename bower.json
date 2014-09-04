@@ -1,0 +1,25 @@
+{
+  "name": "firehug",
+  "version": "0.5.0",
+  "homepage": "https://github.com/fuzzyfox/firehug",
+  "description": "A human-conference schedule app to guide you through the experience.",
+  "keywords": [
+    "mozilla",
+    "festival",
+    "event",
+    "webapp",
+    "schedule"
+  ],
+  "license": "MPL-2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "later": "*"
+  }
+}

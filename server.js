@@ -9,6 +9,7 @@ var helmet = require( 'helmet' );
 var moment = require( 'moment' );
 var marked = require( 'marked' );
 var lodash = require( 'lodash' );
+var later = require( 'later' );
 var fs = require( 'fs' );
 var nunjucks = require( 'nunjucks' );
 var sessions = require( './lib/sessions' );
@@ -120,9 +121,12 @@ app.get( '/', function( req, res ) {
  * @todo render a page showing server time, time of next poll, and time remaining (tick)
  */
 app.get( '/time', function( req, res ) {
+  var schedule = later.parse.cron( env.get( 'JOB_SCHEDULE' ) );
+
   res.render( 'time.html', {
     serverTime: moment().toISOString(),
-    serverPollInterval: env.get( 'POLL_INTERVAL' )
+    laterTime: later.schedule( schedule ).next( 1 ),
+    laterCron: env.get( 'JOB_SCHEDULE' )
   });
 });
 
