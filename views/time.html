@@ -1,17 +1,12 @@
-<!doctype html>
-<html ng-csp ng-app="summit" ng-controller="AppCtrl as app" ng-class="{'state-ready': ready}">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<title>Mozilla Festival 2013 - Server time</title>
+  <meta charset="UTF-8">
+  <title>{{ webappmanifest.name }} – Server Clock</title>
 </head>
 <body>
-	<div id="time" data-currentTime="{{{currentTime}}}">
-        <p>{{{currentTime}}}</p>
-	</div>
+  <div id="time" data-currentTime="{{ serverTime }}">{{ serverTime }}</div>
 
-	<script src="timeUpdater.js"></script>
+  <script src="/js/timeUpdater.js"></script>
 </body>
 </html>

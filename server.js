@@ -1,22 +1,31 @@
 'use strict';
 
+/*
+  Get Libs
+ */
 var express = require( 'express' );
 var morgan = require( 'morgan' );
 var helmet = require( 'helmet' );
 var moment = require( 'moment' );
 var marked = require( 'marked' );
 var lodash = require( 'lodash' );
+var fs = require( 'fs' );
+var nunjucks = require( 'nunjucks' );
 var sessions = require( './lib/sessions' );
 var documents = require( './lib/documents' );
 var shared = require( './shared' );
 var env = shared.env;
 // var debug = shared.debug;
 
-// job scheduler
+/*
+  Start Recurring Jobs
+ */
 var jobs = require( './bin' );
-var jobStartTime = moment();
+// var jobStartTime = moment();
 
-// setup server
+/*
+  Server Setup
+ */
 var app = express();
 
 app.use( express.static( __dirname + '/public' ) );
@@ -47,7 +56,7 @@ app.set( 'json spaces', 2 );
 //   reportOnly: true
 // } ) );
 
-// no cacheing api routes pl0x
+// No caching api routes pl0x
 app.all( [ '/healthcheck', '/api/*' ], function( req, res, next ) {
   res.set({
     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -58,7 +67,39 @@ app.all( [ '/healthcheck', '/api/*' ], function( req, res, next ) {
   return next();
 });
 
-// healthcheck
+/*
+  Generate webapp manifest
+ */
+var webappManifest = fs.readFileSync( 'manifest.webapp', 'utf8' );
+webappManifest = JSON.parse( webappManifest );
+
+var webappManifestOverrides = env.get( 'WEBAPP_MANIFEST' ) || '{}';
+webappManifestOverrides = JSON.parse( webappManifestOverrides );
+
+webappManifest = lodash.extend( webappManifest, webappManifestOverrides );
+
+// add to res.locals
+app.use( function( req, res, next ) {
+  res.locals.webappManifest = webappManifest;
+  next();
+});
+
+/*
+  Setup Nunjucks
+ */
+var nunjucksEnv = nunjucks.configure( 'views', {
+  autoescape: true
+});
+
+// add markdown parser to nunjucks
+nunjucksEnv.addFilter( 'marked', marked );
+
+// add nunjucks to res.render
+nunjucksEnv.express( app );
+
+/*
+  Healthcheck
+ */
 app.get( '/healthcheck', function( req, res ) {
   res.jsonp({
     version: require( './package' ).version,
@@ -67,11 +108,49 @@ app.get( '/healthcheck', function( req, res ) {
   });
 });
 
-/* routes */
+/*
+  Routes
+ */
 app.get( '/', function( req, res ) {
   console.log( '/' );
   res.send( 'load webapp' );
 });
+
+/**
+ * @todo render a page showing server time, time of next poll, and time remaining (tick)
+ */
+app.get( '/time', function( req, res ) {
+  res.render( 'time.html', {
+    serverTime: moment().toISOString(),
+    serverPollInterval: env.get( 'POLL_INTERVAL' )
+  });
+});
+
+/**
+ * @todo generate dynamically based on remote config/local env
+ */
+app.get( '/manifest.webapp', function( req, res ) {
+  res.type( 'application/x-web-app-manifest+json' );
+  res.send( JSON.stringify( webappManifest ) );
+});
+
+/**
+ * @todo generate dynamically using `fs`
+ */
+app.get( '/firehug.appcache', function( req, res ) {
+  var caches = [];
+  res.contentType( 'text/cache-manifest' );
+
+  if( env.get( 'NODE_ENV' ) === 'production' ) {
+    caches = [];
+  }
+
+  res.send( 'CACHE MANIFEST\n# Created ' + moment().format() + '\n' + caches.join( '\n' ) + '\n\nNETWORK:\n*' );
+});
+
+/*
+  API Routes
+ */
 
 /**
  * Get a specific session by its id. This should
@@ -185,35 +264,6 @@ app.get( '/api/docs', function( req, res ) {
   });
 
   res.jsonp( docs );
-});
-
-/**
- * @todo render a page showing server time, time of next poll, and time remaining (tick)
- */
-app.get( '/time', function( req, res ) {
-  res.send( jobStartTime );
-});
-
-/**
- * @todo generate dynamically based on remote config/local env
- */
-app.get( '/manifest.webapp', function( req, res ) {
-  res.contentType( 'application/x-web-app-manifest+json' );
-  res.sendfile( __dirname + '/public/manifest.webapp' );
-});
-
-/**
- * @todo generate dynamically using `fs`
- */
-app.get( '/firehug.appcache', function( req, res ) {
-  var caches = [];
-  res.contentType( 'text/cache-manifest' );
-
-  if( env.get( 'NODE_ENV' ) === 'production' ) {
-    caches = [];
-  }
-
-  res.send( 'CACHE MANIFEST\n# Created ' + moment().format() + '\n' + caches.join( '\n' ) + '\n\nNETWORK:\n*' );
 });
 
 var server = app.listen( env.get( 'PORT' ) || 5000, function() {
