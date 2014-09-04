@@ -7,6 +7,7 @@
   "dependencies": {
     "express": "^4.8.7",
     "google-spreadsheet": "^0.2.8",
+    "grunt-contrib-less": "^0.11.4",
     "helmet": "^0.4.1",
     "later": "^1.1.6",
     "lodash": "^2.4.1",

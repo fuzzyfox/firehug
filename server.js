@@ -81,7 +81,8 @@ webappManifest = lodash.extend( webappManifest, webappManifestOverrides );
 
 // add to res.locals
 app.use( function( req, res, next ) {
-  res.locals.webappManifest = webappManifest;
+  res.locals.app = webappManifest; // use as default values
+  res.locals.app.webappManifest = webappManifest; // unchanging
   next();
 });
 
@@ -98,6 +99,12 @@ nunjucksEnv.addFilter( 'marked', marked );
 // add nunjucks to res.render
 nunjucksEnv.express( app );
 
+// add env to res.locals
+app.use( function( req, res, next ) {
+  res.locals.env = env.get();
+  next();
+});
+
 /*
   Healthcheck
  */
@@ -113,8 +120,7 @@ app.get( '/healthcheck', function( req, res ) {
   Routes
  */
 app.get( '/', function( req, res ) {
-  console.log( '/' );
-  res.send( 'load webapp' );
+  res.render( 'index.html' );
 });
 
 /**

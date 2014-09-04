@@ -35,6 +35,25 @@ module.exports = function( grunt ) {
       ]
     },
 
+    // compile less
+    // compile styles
+    less: {
+      dev: {
+        files: {
+          'public/core/css/core.min.css': 'public/core/less/core.less'
+        }
+      },
+      prod: {
+        options: {
+          cleancss: true,
+          sourceMap: true
+        },
+        files: {
+          'public/core/css/core.min.css': 'public/asset/less/core.less'
+        }
+      }
+    },
+
     // run server in dev enviroment
     express: {
       dev: {
@@ -53,11 +72,12 @@ module.exports = function( grunt ) {
         '*.js',
         '*/**.js',
         'bin/**/get*',
-        'config.json'
+        'local.json',
+        'public/core/less/**.less'
       ],
-      tasks: [ 'jshint', 'express:dev' ],
+      tasks: [ 'jshint', 'less:dev', 'express:dev' ],
       express: {
-        files: [ '*.js', '*/**.js', 'config.json' ],
+        files: [ '*.js', '*/**.js', 'local.json' ],
         tasks:  [ 'express:dev' ],
         options: {
           spawn: false
@@ -80,10 +100,11 @@ module.exports = function( grunt ) {
   });
 
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
+  grunt.loadNpmTasks( 'grunt-contrib-less' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-bump' );
 
-  grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
+  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint' ] );
 };
