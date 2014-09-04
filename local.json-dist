@@ -1,23 +1,14 @@
 {
-    "sessionSecret": "secret",
-    "sessionName": "sid",
-    "threshold": 5000,
-    "apiKey": "",
-    "apiApp": "",
-    "domain": "http://localhost:5000",
-    "gravatarPath": "/img/default_avatar.png",
-    "audience": "localhost:5000",
-    "mozilliansURL": "https://mozillians.org",
-    "googleKey": "",
-    "surveyGoogleEmail": "",
-    "surveyGooglePass": "",
-    "surveyGoogleSpreadsheet": "",
-    "surveyGoogleWorksheet": "",
-    "surveyIdle": 7200000,
-    "obrEndpoint": "",
-    "obrProgram": "",
-    "faqKey": "",
-    "bitlyLogin": "",
-    "bitlyKey": "",
-    "etherpadURL": ""
+  "GOOGLE_USER": "",
+  "GOOGLE_USER_PASS": "",
+
+  "GOOGLE_KEY": "",
+
+  "GOOGLE_DOC_FAQ": "",
+
+  "POLL_INTERVAL": 300000,
+
+  "REDIS_PREFIX": "firehug",
+
+  "PORT": 5000
 }

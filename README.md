@@ -1,5 +1,7 @@
 # Firehug <small>MozFest port</small>
 
+**THIS README IS OUT OF DATE - IGNORE IT**
+
 ## Contribute
 
 How to run:

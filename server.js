@@ -4,18 +4,23 @@ var express = require( 'express' );
 var morgan = require( 'morgan' );
 var helmet = require( 'helmet' );
 var moment = require( 'moment' );
+var marked = require( 'marked' );
+var lodash = require( 'lodash' );
 var sessions = require( './lib/sessions' );
+var documents = require( './lib/documents' );
 var shared = require( './shared' );
 var env = shared.env;
 // var debug = shared.debug;
 
 // job scheduler
 var jobs = require( './bin' );
+var jobStartTime = moment();
 
 // setup server
 var app = express();
 
 app.use( express.static( __dirname + '/public' ) );
+
 app.use( helmet.xframe( 'sameorigin' ) );
 app.use( helmet.hsts() );
 app.use( helmet.nosniff() );
@@ -27,8 +32,13 @@ if( env.get( 'debug' ) || env.get( 'DEBUG' ) ) {
 
 app.disable( 'x-powered-by' );
 
+// pretty print json
+app.set( 'json spaces', 2 );
+
 /**
  * @todo proper CSP
+ *
+ * Should allow for x-ray goggles
  */
 // Content Security Policy
 // app.use( helmet.csp( {
@@ -64,19 +74,45 @@ app.get( '/', function( req, res ) {
 });
 
 /**
- * render a page w/ help info for the app
+ * Get a specific session by its id. This should
+ * the "sid" column in the spreadsheet.
  */
-app.get( '/help', function( req, res ) {
-  res.send( 'help for app' );
+app.get( '/api/session/:id', function( req, res, next ) {
+  sessions.getSessions( function( err, sessions ) {
+    if( err ) {
+      console.error( err );
+      return next();
+    }
+
+    // variable to hold the session info + return
+    var session = {};
+
+    // dumb find id in sessions
+    for( var idx = 0, len = sessions.length; idx < len; idx++ ) {
+      if( sessions[ idx ].id === req.params.id ) {
+        session = sessions[ idx ];
+        break;
+      }
+    }
+
+    // check we have a result before response
+    if( lodash.isEmpty( session ) ) {
+      return next();
+    }
+
+    res.jsonp( session );
+  });
 });
 
 /**
- * @todo turn into full api for schedule
+ * Get all sessions, in a given theme if provided.
  */
 app.get( '/api/sessions/:theme?', function( req, res, next ) {
   if( req.params.theme ) {
-    return sessions.getSessions( req.params.theme, function(err, sessions) {
+    console.log( 'single session' );
+    return sessions.getSessions( req.params.theme, function( err, sessions ) {
       if( err ) {
+        console.error( err );
         return next();
       }
 
@@ -84,16 +120,78 @@ app.get( '/api/sessions/:theme?', function( req, res, next ) {
     });
   }
 
-  sessions.getSessions( function(err, sessions){
+  sessions.getSessions( function( err, sessions ) {
+    if( err ) {
+      console.error( err );
+      return next();
+    }
+
     res.jsonp( sessions );
   });
+});
+
+/**
+ * Get a specific document, and parse assuming the format if provided.
+ *
+ * All documents are stored as plain text.
+ *
+ * Valid formats to parse as:
+ * * html
+ * * markdown
+ */
+app.get( '/api/doc/:name/:format?', function( req, res, next ) {
+  // check doc exists
+  if( documents.getDocNames().indexOf( req.params.name ) === -1 ) {
+    return next();
+  }
+
+  documents.getDoc( req.params.name, function( err, doc ) {
+    if( err ) {
+      console.error( err );
+      return next();
+    }
+
+    switch( req.params.format ) {
+      case 'html':
+        res.type( 'text/html' );
+      break;
+      case 'markdown':
+      case 'md':
+        res.type( 'text/html' );
+        doc = marked( doc );
+      break;
+      default:
+        res.type( 'text/plain' );
+      break;
+    }
+
+    res.send( doc );
+  });
+});
+
+/**
+ * Get a listing of all documents available and the route to
+ * access them (as plain text).
+ */
+app.get( '/api/docs', function( req, res ) {
+  var docNames = documents.getDocNames();
+  var docs = [];
+
+  docNames.forEach( function( docName ) {
+    docs.push({
+      name: docName,
+      link: '/api/doc/' + docName
+    });
+  });
+
+  res.jsonp( docs );
 });
 
 /**
  * @todo render a page showing server time, time of next poll, and time remaining (tick)
  */
 app.get( '/time', function( req, res ) {
-  res.send( 'server time' );
+  res.send( jobStartTime );
 });
 
 /**

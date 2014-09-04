@@ -3,14 +3,12 @@ module.exports = function( grunt ) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON( 'package.json' ),
+
+    // hint all the things
     jshint: {
       options: {
         'globals': {
-          'module': false,
-          'angular': false,
-          'console': false,
-          'google': false,
-          'WebmakerAuthClient': false
+          'module': false
         },
         'bitwise': true,
         'browser': true,
@@ -37,11 +35,13 @@ module.exports = function( grunt ) {
       ]
     },
 
+    // run server in dev enviroment
     express: {
       dev: {
         options: {
           script: './server.js',
           args: [ '--debug' ],
+          node_env: 'development',
           port: 5000
         }
       }
@@ -49,7 +49,12 @@ module.exports = function( grunt ) {
 
     // running `grunt watch` will watch for changes
     watch: {
-      files: [ '*.js', '*/**.js', 'bin/**/get*', 'config.json' ],
+      files: [
+        '*.js',
+        '*/**.js',
+        'bin/**/get*',
+        'config.json'
+      ],
       tasks: [ 'jshint', 'express:dev' ],
       express: {
         files: [ '*.js', '*/**.js', 'config.json' ],
@@ -58,12 +63,26 @@ module.exports = function( grunt ) {
           spawn: false
         }
       }
+    },
+
+    // bump version number
+    bump: {
+      options: {
+        files: [ 'package.json' ],
+        commit: true,
+        commitMessage: 'version bump to v%VERSION%',
+        commitFiles: [ 'package.json' ],
+        createTag: true,
+        tagName: 'v%VERSION%',
+        push: false
+      }
     }
   });
 
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
+  grunt.loadNpmTasks( 'grunt-bump' );
 
   grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint' ] );
