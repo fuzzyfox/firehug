@@ -57,6 +57,8 @@ function forkBins() {
     }
   });
 }
+// run immediately on load
+forkBins();
 
 var schedule = later.parse.cron( env.get( 'JOB_SCHEDULE' ) );
 later.setInterval( forkBins, schedule );

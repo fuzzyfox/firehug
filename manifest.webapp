@@ -1,7 +1,7 @@
 {
   "name": "FireHug",
   "description": "A human-conference schedule app to guide you through the experience.",
-  "launch_path": "/#!/",
+  "launch_path": "/#",
   "icons": {
     "60": "/img/icon-60.png",
     "128": "/img/icon-128.png",

@@ -68,6 +68,12 @@ app.all( [ '/healthcheck', '/api/*' ], function( req, res, next ) {
   return next();
 });
 
+// add env to res.locals
+app.use( function( req, res, next ) {
+  res.locals.env = env.get();
+  next();
+});
+
 /*
   Generate webapp manifest
  */
@@ -81,7 +87,7 @@ webappManifest = lodash.extend( webappManifest, webappManifestOverrides );
 
 // add to res.locals
 app.use( function( req, res, next ) {
-  res.locals.app = webappManifest; // use as default values
+  res.locals.app = JSON.parse( JSON.stringify( webappManifest ) ); // use as default values
   res.locals.app.webappManifest = webappManifest; // unchanging
   next();
 });
@@ -98,12 +104,6 @@ nunjucksEnv.addFilter( 'marked', marked );
 
 // add nunjucks to res.render
 nunjucksEnv.express( app );
-
-// add env to res.locals
-app.use( function( req, res, next ) {
-  res.locals.env = env.get();
-  next();
-});
 
 /*
   Healthcheck
@@ -198,7 +198,6 @@ app.get( '/api/session/:id', function( req, res, next ) {
  */
 app.get( '/api/sessions/:theme?', function( req, res, next ) {
   if( req.params.theme ) {
-    console.log( 'single session' );
     return sessions.getSessions( req.params.theme, function( err, sessions ) {
       if( err ) {
         console.error( err );
@@ -217,6 +216,13 @@ app.get( '/api/sessions/:theme?', function( req, res, next ) {
 
     res.jsonp( sessions );
   });
+});
+
+/**
+ *  Get all themes + descriptions
+ */
+app.get( '/api/themes', function( req, res ) {
+  res.jsonp( sessions.getThemes() );
 });
 
 /**

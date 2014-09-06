@@ -35,12 +35,41 @@ module.exports = function( grunt ) {
       ]
     },
 
+    // compress + concat js
+    uglify: {
+      dev: {
+        options: {
+          sourceMap: true,
+          sourceMapName: 'public/core/js/core.min.map',
+          mangle: false,
+        },
+        files: {
+          'public/core/js/core.min.js': [
+            'public/core/js/dataStore.js',
+            'public/core/js/routes.js'
+          ],
+          'public/theme/js/app.min.js': [ 'public/theme/js/*.js' ]
+        }
+      },
+      prod: {
+        options: {
+          sourceMap: true,
+          compress: {
+            drop_console: true
+          },
+          mangle: {
+            except: [ 'nunjucks', 'Finch', 'localforage' ]
+          }
+        }
+      }
+    },
+
     // compile less
-    // compile styles
     less: {
       dev: {
         files: {
-          'public/core/css/core.min.css': 'public/core/less/core.less'
+          'public/core/css/core.min.css': 'public/core/less/core.less',
+          'public/theme/css/main.min.css': 'public/theme/less/main.less'
         }
       },
       prod: {
@@ -49,8 +78,18 @@ module.exports = function( grunt ) {
           sourceMap: true
         },
         files: {
-          'public/core/css/core.min.css': 'public/asset/less/core.less'
+          'public/core/css/core.min.css': 'public/core/less/core.less',
+          'public/theme/css/main.min.css': 'public/theme/less/main.less'
         }
+      }
+    },
+
+    // precompile nunjucks partials
+    nunjucks: {
+      precompile: {
+        baseDir: 'views/partials',
+        src: 'views/partials/*',
+        dest: 'public/theme/partials.js'
       }
     },
 
@@ -73,9 +112,13 @@ module.exports = function( grunt ) {
         '*/**.js',
         'bin/**/get*',
         'local.json',
-        'public/core/less/**.less'
+        'public/core/less/*.less',
+        'public/core/js/*.js',
+        'public/theme/less/*.less',
+        'public/theme/js/*.js',
+        'views/partials/*'
       ],
-      tasks: [ 'jshint', 'less:dev', 'express:dev' ],
+      tasks: [ 'jshint', 'less:dev', 'uglify:dev', 'nunjucks', 'express:dev' ],
       express: {
         files: [ '*.js', '*/**.js', 'local.json' ],
         tasks:  [ 'express:dev' ],
@@ -100,11 +143,13 @@ module.exports = function( grunt ) {
   });
 
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
+  grunt.loadNpmTasks( 'grunt-contrib-uglify' );
   grunt.loadNpmTasks( 'grunt-contrib-less' );
+  grunt.loadNpmTasks( 'grunt-nunjucks' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-bump' );
 
-  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
+  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'uglify:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint' ] );
 };

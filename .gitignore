@@ -63,4 +63,10 @@ local.json
 dump.rdb
 
 public/vendor
+
 public/core/css
+public/core/js/*.min.*
+
+public/theme/css
+public/theme/js/*.min.*
+public/theme/partials.js
