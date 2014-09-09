@@ -23,29 +23,30 @@
   {% block appIcons -%}
     {% block appleTouchIcons %}
     <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" sizes="152x152" href="/theme/img/icons/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/theme/img/icons/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/theme/img/icons/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/theme/img/icons/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/theme/img/icons/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/theme/img/icons/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/theme/img/icons/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="/theme/img/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/imgs/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/imgs/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/imgs/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/imgs/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/imgs/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/imgs/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/imgs/icons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/imgs/icons/apple-touch-icon-57x57.png">
     {% endblock %}
 
     {% block favicons %}
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="/theme/img/icons/favicon-196x196.png" sizes="196x196">
-    <link rel="icon" type="image/png" href="/theme/img/icons/favicon-160x160.png" sizes="160x160">
-    <link rel="icon" type="image/png" href="/theme/img/icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/theme/img/icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/theme/img/icons/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-16x16.png" sizes="16x16">
     {% endblock %}
 
     {% block windowsTileIcons %}
     <!-- Windows Tile Definition -->
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/theme/img/icons/mstile-144x144.png">
+    <meta name="msapplication-TileImage" content="/theme/imgs/icons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/imgs/icons/browserconfig.xml">
     {% endblock %}
   {%- endblock %}
 
@@ -70,7 +71,41 @@
 </head>
 <body class="{{ 'splash' if env.SPLASH }}">
   {# add a header that persists despite views #}
-  {% block appHeader %}{% endblock %}
+  {% block appHeader %}
+  <nav class="navbar navbar-default navbar-static-top" id="app-nav">
+    <div class="container">
+      <ul class="nav navbar-nav">
+          <li>
+            <a href="#">
+              <i class="fa fa-home fa-lg"></i>
+              <span class="sr-only">Home</span>
+            </a>
+          </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bars fa-lg"></i>
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#install">Install App</a>
+            </li>
+            <li>
+              <a href="/privacy">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/legal">Terms Of Service</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  {% endblock %}
 
   <!-- view target -->
   <main>
@@ -95,6 +130,8 @@
   <script src="/core/js/core.min.js"></script>
   {% endblock %}
 
-  {% block customJS %}{% endblock %}
+  {% block customJS %}
+  <script src="/vendor/bootstrap/js/dropdown.js"></script>
+  {% endblock %}
 </body>
 </html>

@@ -1,14 +1,13 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-      <h2>{{ track + ' ' if track }}Schedule</h2>
-      {% if state.debug %}<small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small>{% endif %}
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>{{ track + ' ' if track }}Schedule</h2>
+    {% if state.debug %}<small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small>{% endif %}
 
-      <ul>
-        {% for session in sessions %}
-        <li>{{ session.id + ' – ' if state.debug }}<strong>{{ session.title }}</strong> – {{ session.start | timeFormat( 'ddd HH:mm' ) }}</li>
-        {% endfor %}
-      </ul>
+    {% for session in sessions %}
+    <div class="session" data-session-id="{{ session.id }}">
+        <h4>{{ session.title }} <small>{{ session.start | timeFormat( 'ddd HH:mm' ) }}{{ ' – ' + session.id if state.debug }}</small></h4>
+        <p>{{ session.description }}</p>
     </div>
+    {% endfor %}
   </div>
 </div>

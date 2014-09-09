@@ -83,6 +83,24 @@
         $main.html( res ).attr( 'id', 'view-schedule' );
       });
     });
+
+    routie( 'doc/:name', function( docName ) {
+      var getDoc = $.ajax({
+        url: '/api/doc/' + docName + '/md',
+      });
+
+      getDoc.done( function( doc ) {
+        $main.html( doc ).attr( 'id', 'view-doc-' + docName );
+      });
+
+      getDoc.fail( function() {
+        $main.html( arguments[ 2 ] ).attr( 'id', 'doc-' + docName );
+      });
+    });
+
+    routie( '*', function() {
+      $main.html( 'route not found' ).attr( 'id', '' );
+    });
   });
 
   // fail = report error
@@ -92,7 +110,7 @@
     $main.html( 'Opps, failed to load. Try again later.' );
   });
 
-  // always close the splash screen
+  // always close the splash screen if its open
   getAppManifest.always( function() {
     if( $( 'body' ).hasClass( 'splash' ) ) {
       $( 'body' ).removeClass( 'splash' );

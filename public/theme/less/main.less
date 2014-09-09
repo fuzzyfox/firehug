@@ -1,1 +1,86 @@
 @import '../../vendor/bootstrap/less/bootstrap';
+
+@import '../../vendor/font-awesome/less/font-awesome.less';
+@fa-font-path: '../../vendor/font-awesome/fonts';
+
+@blue: #00283A;
+@navy_blue: #093D60;
+@pale_blue: #CBE8EC;
+@red: #E12526;
+@orange: #EF8847;
+@yellow: #F8CB0E;
+@background: #F9F9F9;
+
+html, body {
+  background: @background;
+}
+
+.app-logo {
+  display: block;
+  margin: 3rem auto;
+}
+
+#app {
+  &-nav {
+    background: transparent;
+    border: none;
+
+    .navbar-nav {
+      float:left;
+
+      &.navbar-right {
+        float:right;
+      }
+    }
+  }
+}
+
+main {
+  .container-fixed();
+}
+
+#view {
+  &-home {
+    li {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.btn {
+  &-blue {
+    background: @blue;
+    border-color: darken( @blue, 5% );
+    color: white;
+
+    &:hover {
+      background: darken( @blue, 5% );
+      border-color: darken( @blue, 10% );
+      color: white;
+    }
+  }
+
+  &-yellow {
+    background: @yellow;
+    border-color: darken( @yellow, 5% );
+    color: @text-color;
+
+    &:hover {
+      background: darken( @yellow, 5% );
+      border-color: darken( @yellow, 10% );
+      color: darken( @text-color, 5% );
+    }
+  }
+
+  &-red {
+    background: @red;
+    border-color: darken( @red, 5% );
+    color: white;
+
+    &:hover {
+      background: darken( @red, 5% );
+      border-color: darken( @red, 10% );
+      color: white;
+    }
+  }
+}
