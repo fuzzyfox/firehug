@@ -115,7 +115,7 @@
   {% if env.SPLASH -%}
     {% block splash %}
     <div id="splash-screen">
-      <img src="{{ app.icons[ 512 ] }}" alt="{{ app.name }}">
+      <img src="{{ app.icons[ 128 ] }}" alt="{{ app.name }}">
       <progress></progress>
     </div>
     {% endblock %}
@@ -124,6 +124,7 @@
   {% block mainJS %}
   <script src="/vendor/jquery/dist/jquery.min.js"></script>
   <script src="/vendor/moment/min/moment.min.js"></script>
+  <script src="/vendor/marked/lib/marked.js"></script>
   <script src="/vendor/routie/dist/routie.min.js"></script>
   <script src="/vendor/nunjucks/browser/nunjucks-slim.min.js"></script>
   <script src="/theme/partials.js"></script>

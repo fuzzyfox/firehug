@@ -11,8 +11,34 @@
 @yellow: #F8CB0E;
 @background: #F9F9F9;
 
-html, body {
+@border-radius-base: 0;
+@border-radius-large: 0;
+@border-radius-small: 0;
+
+body {
   background: @background;
+  border-top: 8px solid @orange;
+
+  &::before {
+    content: ' ';
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    top: 0;
+    height: 8px;
+    background: @navy_blue;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 33.333%;
+    width: 33.333%;
+    height: 8px;
+    top: 0;
+    background: @yellow;
+    border-right: 4px solid white;
+    border-left: 4px solid white;
+  }
 }
 
 .app-logo {
@@ -80,6 +106,18 @@ main {
     &:hover {
       background: darken( @red, 5% );
       border-color: darken( @red, 10% );
+      color: white;
+    }
+  }
+
+  &-orange {
+    background: @orange;
+    border-color: darken( @orange, 5% );
+    color: white;
+
+    &:hover {
+      background: darken( @orange, 5% );
+      border-color: darken( @orange, 10% );
       color: white;
     }
   }

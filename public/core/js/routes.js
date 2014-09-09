@@ -1,6 +1,6 @@
-/* global routie, nunjucks, dataStore, moment, jQuery */
+/* global routie, nunjucks, dataStore, moment, marked, jQuery */
 
-(function( window, document, routie, nunjucks, db, moment, $, undefined ) {
+(function( window, document, routie, nunjucks, db, moment, marked, $, undefined ) {
   'use strict';
 
   // quick access to where we put rendered views
@@ -15,6 +15,14 @@
 
   nunjucksEnv.addFilter( 'timeFormat', function( str, format ) {
     return moment( str ).format( format );
+  });
+
+  nunjucksEnv.addFilter( 'isArray', function( str ) {
+    return $.isArray( str );
+  });
+
+  nunjucksEnv.addFilter( 'marked', function( str ) {
+    return marked( str );
   });
 
   // get webapp manifest for app details
@@ -116,4 +124,4 @@
       $( 'body' ).removeClass( 'splash' );
     }
   });
-})( window, document, routie, nunjucks, dataStore, moment, jQuery );
+})( window, document, routie, nunjucks, dataStore, moment, marked, jQuery );

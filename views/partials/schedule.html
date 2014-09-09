@@ -4,9 +4,23 @@
     {% if state.debug %}<small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small>{% endif %}
 
     {% for session in sessions %}
-    <div class="session" data-session-id="{{ session.id }}">
+    <div class="session" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
         <h4>{{ session.title }} <small>{{ session.start | timeFormat( 'ddd HH:mm' ) }}{{ ' – ' + session.id if state.debug }}</small></h4>
         <p>{{ session.description }}</p>
+        {% if session.facilitators | isArray %}
+        <ul>
+          {% for facilitator in session.facilitators %}
+          <li>
+            {{ facilitator.name }}
+            {% if facilitator.twitter %}
+              <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>{{ session.facilitators | marked }}</p>
+        {% endif %}
     </div>
     {% endfor %}
   </div>
