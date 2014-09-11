@@ -21,6 +21,63 @@ var dataStore = (function( window, document, $, undefined ) {
   var readyFns = [];
 
   /**
+   * A simple switch between localStorage and a faked api
+   * as fallback, using an in memory object.
+   */
+  var storage = (function(){
+    // method of testing based on Modernizer
+    try {
+      localStorage.setItem( 'test', 'test' );
+      localStorage.removeItem( 'test' );
+      return localStorage;
+    }
+    catch( e ) {
+      console.warn( 'localStorage is not supported, faking the api and using in-memory storage instead' );
+
+      // This api's responses approximate that of localStorage.
+      // see for more: https://developer.mozilla.org/en/docs/Web/Guide/API/DOM/Storage
+      return {
+        _keys: [], // store keys w/ an index value
+        _data: {}, // store key:value pairs
+        length: 0, // store number of keys
+        fake: true,
+        // get item from store
+        getItem: function( key ) {
+          return this._data[ key ] || null;
+        },
+        // add item to store
+        setItem: function( key, value ) {
+          this._data[ key ] = value;
+
+          if( this._keys.indexOf( key ) === -1 ) {
+            this._keys.push( key );
+            this.length += 1;
+          }
+        },
+        // remove item from store
+        removeItem: function( key ) {
+          var index = this._keys.indexOf( key );
+          if( index > -1 ) {
+            delete this._data[ key ];
+            this._keys.splice( index, 1 );
+            this.length -= 1;
+          }
+        },
+        // get a key value by index
+        key: function( index ) {
+          return this._keys[ index ] || null;
+        },
+        // reset store to start state
+        clear: function() {
+          this.length = 0;
+          this._keys = [];
+          this._data = {};
+        }
+      };
+    }
+  })();
+
+  /**
    * Trigger functions that depend on data being ready for use
    *
    * @return {[type]} [description]
@@ -37,6 +94,11 @@ var dataStore = (function( window, document, $, undefined ) {
     }
   }
 
+  /**
+   * Main interface people will have with the dataStore.
+   *
+   * @type {Object}
+   */
   var db = {
     /**
      * Triggers callback once data session found
@@ -53,7 +115,7 @@ var dataStore = (function( window, document, $, undefined ) {
      * @return {Mixed}      The stored item
      */
     getItem: function( key ) {
-      return JSON.parse( localStorage.getItem( key ) );
+      return JSON.parse( storage.getItem( key ) );
     },
     /**
      * Get multiple items from storage
@@ -84,8 +146,8 @@ var dataStore = (function( window, document, $, undefined ) {
      * @param {Mixed} item  Any item that can be parsed to JSON
      */
     setItem: function( key, item ) {
-      this.index += 1;
-      localStorage.setItem( key, JSON.stringify( item ) );
+      storage.setItem( key, JSON.stringify( item ) );
+      this.length = storage.length;
     },
     /**
      * Extends stored object using jQuery.extend()
@@ -115,8 +177,8 @@ var dataStore = (function( window, document, $, undefined ) {
      * @param  {String} key Key for the item to remove
      */
     removeItem: function( key ) {
-      this.index -= 1;
-      return localStorage.removeItem( key );
+      storage.removeItem( key );
+      this.length = storage.length;
     },
 
     /**
@@ -142,7 +204,7 @@ var dataStore = (function( window, document, $, undefined ) {
      * @return {String}        Key for item at given index
      */
     key: function( index ) {
-      return localStorage.key( index );
+      return storage.key( index );
     },
     /**
      * Get all keys from storage
@@ -159,18 +221,27 @@ var dataStore = (function( window, document, $, undefined ) {
       return keys;
     },
     /**
-     * Number stored items
-     *
-     * @type {Integer}
-     */
-    length: localStorage.length,
-    /**
      * Empty storage
      */
     clear: function() {
       this.length = 0;
-      return localStorage.clear();
-    }
+      return storage.clear();
+    },
+    /**
+     * Number stored items.
+     *
+     * Initially set to match the same as persistant storage.
+     *
+     * @type {Integer}
+     */
+    length: storage.length,
+    /**
+     * Flag if we're using fake, non-persistant
+     * storage in place of localstorage.
+     *
+     * @type {Boolean}
+     */
+    persistant: storage.fake || false
   };
 
   // set default config for sync

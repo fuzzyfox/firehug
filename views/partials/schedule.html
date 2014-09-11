@@ -1,26 +1,70 @@
 <div class="row">
   <div class="col-sm-8 col-sm-offset-2">
-    <h2>{{ track + ' ' if track }}Schedule</h2>
+    <h2>{{ theme.name + ' <br>' if theme.name }}Schedule</h2>
     {% if state.debug %}<small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small>{% endif %}
 
-    {% for session in sessions %}
-    <div class="session" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
-        <h4>{{ session.title }} <small>{{ session.start | timeFormat( 'ddd HH:mm' ) }}{{ ' – ' + session.id if state.debug }}</small></h4>
-        <p>{{ session.description }}</p>
-        {% if session.facilitators | isArray %}
-        <ul>
-          {% for facilitator in session.facilitators %}
-          <li>
-            {{ facilitator.name }}
-            {% if facilitator.twitter %}
-              <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
-            {% endif %}
-          </li>
+    <!-- track selection -->
+    <div class="row">
+      <div class="dropdown pull-right">
+        <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="track-select" data-toggle="dropdown">
+          {{ theme.name if theme.name else 'select track' }}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {% for theme in themes %}
+          <li><a href="#schedule/{{ theme.slug }}/{{ day | lower if day != '-' else eventDays[ 0 ] | lower }}">{{ theme.name }}</a></li>
           {% endfor %}
+          <li class="divider"></li>
+          {% for eventDay in eventDays %}
+          <li><a href="#schedule/-/{{ eventDay | lower }}">Everything on {{ eventDay }}</a></li>
+          {% endfor %}
+          <li class="divider"></li>
+          <li><a href="#schedule/-/-">All-in-One</a></li>
         </ul>
-        {% else %}
-        <p>{{ session.facilitators | marked }}</p>
-        {% endif %}
+      </div>
+    </div>
+
+    {% if day != '-' %}
+    <!-- day selection -->
+    <nav class="row">
+        {% for eventDay in eventDays %}
+        <div class="day-select clearfix{{ ' hidden' if eventDay != day }}">
+          <a href="#schedule/{{ theme.slug if theme.slug else '-' }}/{{ eventDays[ loop.index0 - 1 ] | lower if eventDays[ loop.index0 - 1 ] }}" class="col-xs-1 text-center{{ ' hidden' if loop.first }}">
+            <i class="fa fa-arrow-left fa-lg"></i>
+          </a>
+
+          <h3 class="col-xs-10 text-center{{ ' col-xs-offset-1' if loop.first }}" style="margin-top:0">{{ eventDay }}</h3>
+
+          <a href="#schedule/{{ theme.slug if theme.slug else '-' }}/{{ eventDays[ loop.index0 + 1 ] | lower if eventDays[ loop.index0 + 1 ] }}" class="col-xs-1 text-center{{ ' hidden' if loop.last }}">
+            <i class="fa fa-arrow-right fa-lg"></i>
+          </a>
+        </div>
+        {% endfor %}
+    </nav>
+    {% endif %}
+
+    <!-- session listing -->
+    {% for session in sessions %}
+    <div class="session panel panel-default" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
+      <time class="pull-right text-muted">
+        <small>{% if day == '-' %}{{ session.start | timeFormat( 'ddd' ) }} {% endif %}{{ session.start | timeFormat( 'HH:mm' ) }}{{ ' – ' + session.id if state.debug }}</small>
+      </time>
+      <h4>{{ session.title }}</h4>
+      <p>{{ session.description }}</p>
+      {% if session.facilitators | isArray %}
+      <ul>
+        {% for facilitator in session.facilitators %}
+        <li>
+          {{ facilitator.name }}
+          {% if facilitator.twitter %}
+            <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>{{ session.facilitators | marked }}</p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>

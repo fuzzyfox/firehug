@@ -71,6 +71,39 @@ main {
       margin-top: 1rem;
     }
   }
+
+  &-schedule {
+    .day-select {
+      padding: 1rem 1rem 0 1rem;
+      background: @blue;
+      border: 1px solid darken( @blue, 5% );
+      color: white;
+
+      a {
+        color: white;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .session {
+      padding: 1rem;
+      margin: 1rem;
+    }
+  }
+}
+
+[id^=view-] {
+  h2 {
+    text-align: center;
+  }
+}
+
+[id^=view-doc-] {
+  .make-sm-column( 8 );
+  .make-sm-column-offset( 2 );
 }
 
 .btn {

@@ -50,9 +50,36 @@
       // get sessions + themes
       var sessions = db.getItem( 'sessions' );
       var themes = db.getItem( 'themes' );
+      var state = db.getItem( 'state' );
+
+      // get names of days the event is on
+      var eventDays = [];
+      sessions.forEach( function( session ) {
+        if( eventDays.indexOf( moment( session.start ).format( 'dddd' ) ) === -1 ) {
+          eventDays.push( moment( session.start ).format( 'dddd' ) );
+        }
+      });
+
+      // if day not provided (or stored) use first in possible
+      var fallbackDay = eventDays[ 0 ];
+
+      // figure out the start of the event (assumes sessions sorted by time)
+      var eventStart = moment( sessions[ 0 ].start );
+      // create a moment obj which starts its week on the same day the event starts
+      var offsetEventWeek = eventStart.startOf( 'week' ).isoWeekday( eventStart.isoWeekday() );
+      // if the current moment in time is within that week set the fallback week
+      // to be the current day
+      if( offsetEventWeek.isSame( moment(), 'week' ) ) {
+        fallbackDay = moment().format( 'dddd' );
+      }
+
+      // set defaults for theme + day if needed
+      // "-" is used to prevent filtering on property
+      day = day || fallbackDay;
+      theme = theme || '-';
 
       // normalize theme + day variables for comparisons
-      theme = ( theme ) ? theme.toLowerCase() : theme;
+      theme = theme.toLowerCase();
       day = ( day ) ? day.toLowerCase().replace( /^[a-z]/, function( letter ) {
         return letter.toUpperCase();
       }) : day;
@@ -79,10 +106,19 @@
         });
       }
 
+      // get full theme details for template
+      theme = themes.filter( function( themeObj ) {
+        return ( themeObj.slug === theme );
+      })[ 0 ] || {};
+
+      // render view
       nunjucksEnv.render( 'schedule.html', {
         sessions: sessions,
         themes: themes,
-        state: db.getItem( 'state' )
+        state: state,
+        eventDays: eventDays,
+        theme: theme,
+        day: day
       }, function( err, res ) {
         if( err ) {
           return console.error( err );
@@ -102,7 +138,7 @@
       });
 
       getDoc.fail( function() {
-        $main.html( arguments[ 2 ] ).attr( 'id', 'doc-' + docName );
+        $main.html( arguments[ 2 ] ).attr( 'id', 'view-doc-' + docName );
       });
     });
 

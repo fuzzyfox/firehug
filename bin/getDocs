@@ -34,6 +34,8 @@ gDocs.forEach(function( doc ) {
     url: 'https://docs.google.com/feeds/download/documents/Export?exportFormat=plaintext&format=txt&id=' + doc.key
   }, function( err, res, body ) {
     if( !err ) {
+      body = body.trim() + '\n'; // remove excess whitespace either end of the body.
+
       return redisClient.set( redisPrefix + ':' + doc.name, body, function( err ) {
         if( err ) {
           console.error( err );
