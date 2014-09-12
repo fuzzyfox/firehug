@@ -45,8 +45,14 @@ module.exports = function( grunt ) {
         },
         files: {
           'public/core/js/core.min.js': [
+            // setup scripts / custom libs
             'public/core/js/dataStore.js',
-            'public/core/js/routes.js'
+            'public/core/js/nunjucksEnv.js',
+            // routes
+            'public/core/js/routes/index.js',
+            'public/core/js/routes/*',
+            // tying it all together
+            'public/core/js/app.js'
           ],
           'public/theme/js/app.min.js': [ 'public/theme/js/*.js' ]
         }
@@ -113,7 +119,7 @@ module.exports = function( grunt ) {
         'bin/**/get*',
         'local.json',
         'public/core/less/*.less',
-        'public/core/js/*.js',
+        'public/core/js/**/*.js',
         'public/theme/less/*.less',
         'public/theme/js/*.js',
         'views/partials/*'

@@ -1,7 +1,7 @@
 /* global moment, jQuery */
 
 /**
- * Simple localStorage wrapper & data sync.
+ * @file Simple localStorage wrapper & data sync.
  *
  * What it does:
  * * Fetches session data from the server and keeps
@@ -79,8 +79,6 @@ var dataStore = (function( window, document, moment, $, undefined ) {
 
   /**
    * Trigger functions that depend on data being ready for use
-   *
-   * @return {[type]} [description]
    */
   function ready() {
     if( readyFlag ) {
@@ -241,7 +239,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
      *
      * @type {Boolean}
      */
-    persistant: storage.fake || false
+    persistant: !storage.fake
   };
 
   // set default config for sync

@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Settings{{ ' + Debug' if state.debug}}</h2>
+    {% if state.debug %}<h3>Settings</h3>{% endif %}
+    <!-- autohide -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Auto Hide <small>{{ 'On' if state.autoHide else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.autoHide" type="button" class="btn btn-{{ 'danger' if state.autoHide else 'success' }} pull-right">Turn {{ 'Off' if state.autoHide else 'On' }}</button>
+        <p>This feature automatically hides past sessions from the day in schedule view.</p>
+        <p><strong>Recommended state:</strong> On.</p>
+      </div>
+    </div>
+
+    <!-- debug mode -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Debug Mode <small>{{ 'On' if state.debug else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.debug" type="button" class="btn btn-{{ 'danger' if state.debug else 'success' }} pull-right">Turn {{ 'Off' if state.debug else 'On' }}</button>
+        <p>Shows a number of debug details in views and on this page, such as:</p>
+        <ul>
+          <li>Timezone information.</li>
+          <li>Synchronisation status</li>
+          <li>Session IDs</li>
+          <li>Offline Status</li>
+          <li>...</li>
+        </ul>
+        <p><strong>Recommended state:</strong> Off.</p>
+      </div>
+    </div>
+
+    {% if state.debug %}
+    <h3>Debug</h3>
+
+    <!-- time -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Timezones</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Local Time (UTC {{ localTime | timeFormat( 'Z', false ) }})</dt>
+          <dd>{{ localTime | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Event Time (UTC {{ eventTime | timeFormat( 'Z' ) }})</dt>
+          <dd>{{ eventTime | timeFormat( 'YYYY-MM-DD HH:mm' ) }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Synchronisation</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Last Sync</dt>
+          <dd>{{ state.lastSync | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Next Sync</dt>
+          <dd>{{ state.nextSync | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Sync Items</dt>
+          <dd>
+            <dl class="dl-horizontal">
+              {% for key, value in state.sync %}
+              <dt>{{ key }}</dt><dd>{{ value }}</dd>
+              {% endfor %}
+            </dl>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- schedule state -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Schedule Display</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Theme Filter</dt>
+          <dd>{{ state.theme if state.theme != '-' else 'no filter' }}</dd>
+          <dt>Day Filter</dt>
+          <dd>{{ state.day if state.day != '-' else 'no filter' }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- offline status -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Offline Status</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Persistant Storage</dt>
+          <dd>{{ offlineState.persistantStorage }}</dd>
+          <dt>AppCache Enabled</dt>
+          <dd>{{ offlineState.appcache.enabled }}</dd>
+          {% if offlineState.appcache.enabled %}
+          <dt>AppCache Status</dt>
+          <dd>{{ offlineState.appcache.statusText[ offlineState.appcache.status ] }}</dd>
+          {% endif %}
+          <dt>Currently Online</dt>
+          <dd>{{ offlineState.online }}</dd>
+        </dl>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
