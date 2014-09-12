@@ -120,7 +120,9 @@ app.get( '/healthcheck', function( req, res ) {
   Routes
  */
 app.get( '/', function( req, res ) {
-  res.render( 'index.html' );
+  res.render( 'index.html', {
+    timezone: env.get( 'EVENT_TIMEZONE' )
+  });
 });
 
 /**

@@ -1,4 +1,4 @@
-/* global jQuery */
+/* global moment, jQuery */
 
 /**
  * Simple localStorage wrapper & data sync.
@@ -13,7 +13,7 @@
  *
  * @license MPL-2.0
  */
-var dataStore = (function( window, document, $, undefined ) {
+var dataStore = (function( window, document, moment, $, undefined ) {
   'use strict';
 
   // couple of variables to help w/ ready state
@@ -304,7 +304,7 @@ var dataStore = (function( window, document, $, undefined ) {
 
         // update sync time
         var state = db.getItem( 'state' );
-        state.lastSync = ( new Date() ).toISOString();
+        state.lastSync = moment.tz( $( 'body' ).data( 'timezone' ) ).toISOString();
         db.setItem( 'state', state );
 
         if( !syncsInProgress ) {
@@ -320,4 +320,4 @@ var dataStore = (function( window, document, $, undefined ) {
   }());
 
   return db;
-})( window, document, jQuery );
+})( window, document, moment, jQuery );

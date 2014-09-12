@@ -69,7 +69,7 @@
 
   <title>{% block title %}{{ app.name }}{% endblock %}</title>
 </head>
-<body class="{{ 'splash' if env.SPLASH }}">
+<body class="{{ 'splash' if env.SPLASH }}" data-timezone="{{ timezone }}">
   {# add a header that persists despite views #}
   {% block appHeader %}
   <nav class="navbar navbar-default navbar-static-top" id="app-nav">
@@ -124,6 +124,7 @@
   {% block mainJS %}
   <script src="/vendor/jquery/dist/jquery.min.js"></script>
   <script src="/vendor/moment/min/moment.min.js"></script>
+  <script src="/vendor/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
   <script src="/vendor/marked/lib/marked.js"></script>
   <script src="/vendor/routie/dist/routie.min.js"></script>
   <script src="/vendor/nunjucks/browser/nunjucks-slim.min.js"></script>

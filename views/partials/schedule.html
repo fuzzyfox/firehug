@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-8 col-sm-offset-2">
     <h2>{{ theme.name + ' <br>' if theme.name }}Schedule</h2>
-    {% if state.debug %}<small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small>{% endif %}
+    {% if state.debug %}<p class="text-center"><small>Last synced {{ state.lastSync | timeFormat( 'HH:mm:ss' ) }}</small></p>{% endif %}
 
     <!-- track selection -->
     <div class="row">
@@ -47,7 +47,12 @@
     {% for session in sessions %}
     <div class="session panel panel-default" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
       <time class="pull-right text-muted">
-        <small>{% if day == '-' %}{{ session.start | timeFormat( 'ddd' ) }} {% endif %}{{ session.start | timeFormat( 'HH:mm' ) }}{{ ' – ' + session.id if state.debug }}</small>
+        <small>
+          {% if day == '-' %}
+            {{ session.start | timeFormat( 'ddd ' ) }}
+          {% endif %}
+          {{ session.start | timeFormat( 'HH:mm' ) }} - {{ session.end | timeFormat( 'HH:mm' ) }}{{ ' – ' + session.id if state.debug }}
+        </small>
       </time>
       <h4>{{ session.title }}</h4>
       <p>{{ session.description }}</p>
