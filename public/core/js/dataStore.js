@@ -149,6 +149,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
     },
     /**
      * Extends stored object using jQuery.extend()
+     *
      * @param  {String}  key  Key for item to extend
      * @param  {Object}  obj  Object to extend item with
      * @param  {Boolean} deep Deep extend flag. Defaults to true
@@ -156,7 +157,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
      */
     extendItem: function( key, obj, deep ) {
       if( !$.isPlainObject( obj ) ) {
-        return console.error( 'updateItem only works with Objects' );
+        return console.error( 'extendItem only works with Objects' );
       }
 
       // set default for deep to true
@@ -246,8 +247,10 @@ var dataStore = (function( window, document, moment, $, undefined ) {
   var config = {
     sync: {
       sessions: '/api/sessions',
-      themes: '/api/themes'
-    }
+      themes: '/api/themes',
+      'doc-faq': '/api/doc/faq/md'
+    },
+    autoHide: true
   };
   db.setItem( 'state', db.getItem( 'state' ) || config );
 
@@ -278,7 +281,6 @@ var dataStore = (function( window, document, moment, $, undefined ) {
       // create call to api
       var getRemote = $.ajax({
         url: config.sync[ key ],
-        // dataType: 'json',
         cache: false
       });
 
