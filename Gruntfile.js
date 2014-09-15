@@ -42,6 +42,8 @@ module.exports = function( grunt ) {
           sourceMap: true,
           sourceMapName: 'public/core/js/core.min.map',
           mangle: false,
+          compress: false,
+          beautify: true
         },
         files: {
           'public/core/js/core.min.js': [
