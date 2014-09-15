@@ -151,8 +151,6 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
         (function scheduleTimeout() {
           // only run for this view
           if( $main.attr( 'id' ) === 'view-schedule' ) {
-            // little bit of debug
-            console.log( 'scheduleTimeout fired' );
             // time now
             var now = moment.tz( timezone );
 

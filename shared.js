@@ -3,7 +3,14 @@
 // all the environments
 var env = require( 'nconf' ).argv()
                             .env()
-                            .file( { file: 'local.json' } );
+                            .file( { file: 'local.json' } )
+                            .defaults({
+                              'JOB_SCHEDULE': '*/5 * * * *',
+                              'REDIS_PREFIX': 'firehug',
+                              'EVENT_TIMEZONE': 'Europe/London',
+                              'SPLASH': true,
+                              'PORT': 5000
+                            });
 
 // custom debug function (console.log only when debug flag set)
 function debug() {
