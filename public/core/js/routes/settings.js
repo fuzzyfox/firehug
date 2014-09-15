@@ -12,7 +12,8 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
   // private state object
   var state = db.getItem( 'state' );
 
-  $main.on( 'click', 'button[data-toggle]', function( event ) {
+  // toggle setting/option
+  $main.on( 'click', 'button[data-toggle]', function() {
     if( $main.attr( 'id' ) === 'view-settings' ) {
       // determine what item + property to toggle
       var item = $( this ).data( 'toggle' ).split( '.' );
@@ -27,6 +28,26 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
       window.location.reload();
     }
   });
+
+  // reset storage
+  $main.on( 'click', 'button[data-reset]', function() {
+    if( $main.attr( 'id' ) === 'view-settings' && confirm( 'Are you sure you want to reset to default state?' ) ) {
+      db.clear();
+      window.location.href = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
+    }
+  });
+
+  // calculate when the next sync attempt is
+  function nextSync( lastSync ) {
+    var next = moment.tz( lastSync, timezone ).add( 2, 'minutes' );
+    var now = moment.tz( timezone );
+
+    while( next.isBefore( now ) ) {
+      next.add( 2, 'minutes' );
+    }
+
+    return next;
+  }
 
   return $.extend( routes, {
     settings: function() {
@@ -53,7 +74,7 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
           online: window.navigator.onLine
         },
         state: $.extend( state, {
-          nextSync: moment( state.lastSync ).add( 2, 'minutes' ).toISOString()
+          nextSync: nextSync( state.lastSync )
         })
       }, function( err, res ) {
         if( err ) {

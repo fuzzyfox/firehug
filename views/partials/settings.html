@@ -34,6 +34,34 @@
     </div>
 
     {% if state.debug %}
+    <!-- reset to defaults -->
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title">Factory Reset</h4>
+      </div>
+      <div class="panel-body">
+        {% if not offlineState.online %}
+        <p class="alert alert-danger"><strong>Warning:</strong> You appear to be offline. If you reset now you will not be able to load the app the again until a network connection can be made.</p>
+        {% endif %}
+
+        <button data-reset="true" type="button" class="btn btn-danger pull-right">Reset</button>
+        <p>Resets the app to its default state.</p>
+
+        <p><strong>This will:</strong></p>
+        <ul>
+          <li>Remove all locally stored schedule data.</li>
+          <li>Set all options back to defaults.</li>
+        </ul>
+
+        <p><strong>This will not:</strong></p>
+        <ul>
+          <li>Clear applicationCache (this cannot be done programatically).</li>
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if state.debug %}
     <h3>Debug</h3>
 
     <!-- time -->
