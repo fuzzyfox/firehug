@@ -1,4 +1,4 @@
-/* global nunjucksEnv, jQuery, routes:true, moment, dataStore */
+/* global nunjucksEnv, jQuery, routes:true, moment, dataStore, sync */
 
 /**
  * @file /#settings route logic + render
@@ -13,7 +13,7 @@
  * @license MPL-2.0
  */
 
-routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefined ) {
+routes = (function( window, document, routes, nunjucksEnv, $, moment, db, sync, undefined ) {
   'use strict';
 
   /*
@@ -84,7 +84,7 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
             ]
           },
           persistantStorage: db.persistant,
-          online: window.navigator.onLine
+          online: sync.isOnline()
         },
         state: $.extend( state, {
           nextSync: nextSync( state.lastSync )
@@ -104,4 +104,4 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
       });
     }
   });
-})( window, document, routes, nunjucksEnv, jQuery, moment, dataStore );
+})( window, document, routes, nunjucksEnv, jQuery, moment, dataStore, sync );

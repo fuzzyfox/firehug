@@ -1,28 +1,20 @@
-/* global moment, jQuery */
+/* global jQuery */
 /* exported dataStore */
 
 /**
  * @file Simple localStorage wrapper & data sync.
  *
  * What it does:
- * * Fetches session data from the server and keeps
- *   an up-to-date copy in localStorage.
  * * Wraps localStorage allowing adding ability to store
  *   numbers and objects as well as strings.
- * * Provides a ready check which is triggered when there
- *   is a copy of the session data in localStorage
- *
- * @todo fire events indicating online status using `syncInterval`
+ * * Allows stored Objects to be extended.
+ * * Allows easy `get` and `remove` of multiple key:values.
  *
  * @license MPL-2.0
  */
 
-var dataStore = (function( window, document, moment, $, undefined ) {
+var dataStore = (function( window, document, $, undefined ) {
   'use strict';
-
-  // couple of variables to help w/ ready state
-  var readyFlag = false;
-  var readyFns = [];
 
   /**
    * A simple switch between localStorage and a faked api
@@ -82,34 +74,11 @@ var dataStore = (function( window, document, moment, $, undefined ) {
   })();
 
   /**
-   * Trigger functions that depend on data being ready for use
-   */
-  function ready() {
-    if( readyFlag ) {
-      return;
-    }
-
-    readyFlag = true;
-
-    for( var i = 0, len = readyFns.length; i < len; i++ ) {
-      readyFns[ i ].call();
-    }
-  }
-
-  /**
    * Main interface people will have with the dataStore.
    *
    * @type {Object}
    */
-  var db = {
-    /**
-     * Triggers callback once data session found
-     *
-     * @param  {Function} fn Function to trigger when ready
-     */
-    ready: function( fn ) {
-      return ( readyFlag ) ? fn.call() : readyFns.push( fn );
-    },
+  return {
     /**
      * Get an item from storage
      *
@@ -246,82 +215,4 @@ var dataStore = (function( window, document, moment, $, undefined ) {
      */
     persistant: !storage.fake
   };
-
-  // set default config for sync
-  var config = {
-    sync: {
-      sessions: '/api/sessions',
-      themes: '/api/themes',
-      'doc-faq': '/api/doc/faq/md'
-    },
-    autoHide: true
-  };
-  db.setItem( 'state', db.getItem( 'state' ) || config );
-
-  // async loop w/ instant run
-  (function syncInterval() {
-    if( !config.sync ) {
-      return;
-    }
-    console.log( 'attempting to sync remote > local data' );
-    /*
-      Sync Session Data
-     */
-
-    // if we've not run yet check for local data
-    if( !readyFlag ) {
-      var state = db.getItem( 'state' );
-      if( state && state.lastSync ) {
-        ready();
-      }
-    }
-
-    // sync all requested things
-    var syncsInProgress = 0;
-    Object.keys( config.sync ).forEach( function( key ) {
-      // indicate sync started
-      syncsInProgress += 1;
-
-      // create call to api
-      var getRemote = $.ajax({
-        url: config.sync[ key ],
-        cache: false
-      });
-
-      // always attempt again in 2mins
-      getRemote.always( function() {
-        // indicate sync ended
-        syncsInProgress -= 1;
-
-        // if no more in progress start timer for loop
-        if( !syncsInProgress ) {
-          setTimeout( syncInterval, 120000 );
-        }
-      });
-
-      // if sucessful store locally
-      getRemote.done( function( sessions ) {
-        db.setItem( key, sessions );
-
-        // @todo replace w/ function to check for changes in schedule
-        console.log( '%s updated locally', key );
-
-        // update sync time
-        var state = db.getItem( 'state' );
-        state.lastSync = moment.tz( $( 'body' ).data( 'timezone' ) ).toISOString();
-        db.setItem( 'state', state );
-
-        if( !syncsInProgress ) {
-          ready();
-        }
-      });
-
-      // if error fail w/ console output
-      getRemote.fail( function( jqXHR, textStatus, errorThrown ) {
-        console.error( arguments );
-      });
-    });
-  }());
-
-  return db;
-})( window, document, moment, jQuery );
+})( window, document, jQuery );

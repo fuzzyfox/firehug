@@ -1,4 +1,4 @@
-/* global nunjucks, jQuery, moment, marked, dataStore */
+/* global nunjucks, jQuery, moment, marked, dataStore, sync */
 /* exported nunjucksEnv */
 
 /**
@@ -13,7 +13,7 @@
  * @license MPL-2.0
  */
 
-var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, undefined ) {
+var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, sync, undefined ) {
   'use strict';
   // get new nunjucks environment
   var nunjucksEnv = new nunjucks.Environment();
@@ -34,7 +34,7 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
       return;
     }
 
-    db.ready( function() {
+    sync.ready( function() {
       readyFlag = true;
 
       for( var i = 0, len = readyFns.length; i < len; i++ ) {
@@ -167,4 +167,4 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
     export nunjucksEnv
    */
   return nunjucksEnv;
-})( window, document, nunjucks, jQuery, moment, marked, dataStore );
+})( window, document, nunjucks, jQuery, moment, marked, dataStore, sync );

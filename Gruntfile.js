@@ -54,6 +54,7 @@ module.exports = function( grunt ) {
           'public/core/js/core.min.js': [
             // setup scripts / custom libs
             'public/core/js/dataStore.js',
+            'public/core/js/sync.js',
             'public/core/js/nunjucksEnv.js',
             // routes
             'public/core/js/routes/index.js',
@@ -78,6 +79,7 @@ module.exports = function( grunt ) {
           'public/core/js/core.min.js': [
             // setup scripts / custom libs
             'public/core/js/dataStore.js',
+            'public/core/js/sync.js',
             'public/core/js/nunjucksEnv.js',
             // routes
             'public/core/js/routes/index.js',

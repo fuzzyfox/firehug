@@ -1,6 +1,6 @@
-/* global nunjucksEnv, jQuery, routes:true, dataStore */
+/* global nunjucksEnv, jQuery, routes:true, dataStore, sync */
 
-routes = (function( window, document, routes, nunjucksEnv, db, $, undefined ) {
+routes = (function( window, document, routes, nunjucksEnv, db, sync, $, undefined ) {
   'use strict';
 
   // private + stateless utils
@@ -33,6 +33,11 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, undefined ) {
 
       getDoc.done( function( doc ) {
         $main.html( doc ).attr( 'id', 'view-doc-' + docSlug );
+
+        // if we make a connection while offline, we must be online
+        if( !sync.isOnline() ) {
+          $( window ).trigger( 'online' );
+        }
       });
 
       getDoc.fail( function() {
@@ -47,4 +52,4 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, undefined ) {
       });
     }
   });
-})( window, document, routes, nunjucksEnv, dataStore, jQuery );
+})( window, document, routes, nunjucksEnv, dataStore, sync, jQuery );

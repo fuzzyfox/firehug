@@ -28,7 +28,27 @@
     routie( 'settings', routes.settings );
 
     routie( '*', function() {
-      $main.html( 'route not found' ).attr( 'id', '' );
+      nunjucksEnv.render( 'error.html', {
+        code: 404,
+        type: 'warning',
+        message: window.location.hash + ' was not found.'
+      }, function( err, res ) {
+        if( err ) {
+          $main.html( window.location.hash + ' was not found.' );
+          return console.error( 'failed to load "error.html" partial' );
+        }
+
+        $main.html( res );
+      });
+
+      $main.attr( 'id', 'error' );
     });
+  });
+
+  /*
+    detect and handle online/offline events
+   */
+  $( window ).on( 'online offline', function( event ) {
+    console.log( event.type );
   });
 })( window, document, routie, routes, nunjucksEnv, jQuery );
