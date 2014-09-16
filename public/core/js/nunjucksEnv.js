@@ -11,6 +11,7 @@
  *
  * @license MPL-2.0
  */
+
 var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, undefined ) {
   'use strict';
   // get new nunjucks environment

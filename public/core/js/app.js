@@ -1,6 +1,17 @@
-/* global routie, nunjucksEnv, dataStore, moment, jQuery, routes */
+/* global routie, nunjucksEnv, jQuery, routes */
 
-(function( window, document, routie, routes, nunjucksEnv, db, moment, $, undefined ) {
+/**
+ * @file App wide logic
+ *
+ * Here is all the app wide logic that has no other home
+ * to go to. It includes:
+ *
+ * * route initialization
+ *
+ * @license MPL-2.0
+ */
+
+(function( window, document, routie, routes, nunjucksEnv, $, undefined ) {
   'use strict';
 
   /*
@@ -9,9 +20,6 @@
   nunjucksEnv.ready( function() {
     // quick access to where we put rendered views
     var $main = $( 'main' );
-
-    // get the timezone
-    var timezone = $( 'body' ).data( 'timezone' );
 
     // now we can render routes
     routie( '', routes.home );
@@ -23,4 +31,4 @@
       $main.html( 'route not found' ).attr( 'id', '' );
     });
   });
-})( window, document, routie, routes, nunjucksEnv, dataStore, moment, jQuery );
+})( window, document, routie, routes, nunjucksEnv, jQuery );

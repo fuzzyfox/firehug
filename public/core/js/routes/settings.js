@@ -1,5 +1,18 @@
 /* global nunjucksEnv, jQuery, routes, moment, dataStore */
 
+/**
+ * @file /#settings route logic + render
+ *
+ * /#settings is responsible for showing + toggling
+ * app settings/state. It doubles as a debug view
+ * showing infromation about clocks, sync, appcache etc...
+ * when `state.debug` is truthful. Useful for at a
+ * glance details about the state of the app + for debug
+ * toubleshooting on mobile devices.
+ *
+ * @license MPL-2.0
+ */
+
 routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefined ) {
   'use strict';
 

@@ -1,5 +1,19 @@
 /* global nunjucksEnv, dataStore, jQuery, moment, routes */
 
+/**
+ * @file /#schedule/:theme?/:day? logic + render
+ *
+ * Responsible for the display + filtering of session
+ * information to the user. Filters include theme, day,
+ * and autoHide.
+ *
+ * `theme` + `day` filters are set using the page hash, while
+ * autoHide is stored in the stored `state` object (toggle in
+ * app settings).
+ *
+ * @license MPL-2.0
+ */
+
 routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefined ) {
   'use strict';
 

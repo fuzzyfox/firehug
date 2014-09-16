@@ -6,6 +6,24 @@
   <style>
     body {
       font: 16px/1.5 'Open Sans', Arial, Sans-Serif;
+      padding: 0;
+      margin: 0;
+      background: hsl( 0, 0%, 50% );
+    }
+    #progress {
+      width: 50%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      transition: all 0.5s ease;
+      z-index: -1;
+    }
+    dl {
+      padding: 2em 4em;
+      background: white;
+      margin: 4em 0;
+      display: block;
+      box-shadow: 0 0 0.4em rgba( 0, 0, 0, 0.4 );
     }
     dt {
       font-weight: lighter;
@@ -14,6 +32,8 @@
   </style>
 </head>
 <body>
+  <div id="progress"></div>
+
   <dl>
     <dt>Current server time</dt>
     <dd><time id="time">{{ serverTime }}</time></dd>

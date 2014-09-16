@@ -11,8 +11,11 @@
  * * Provides a ready check which is triggered when there
  *   is a copy of the session data in localStorage
  *
+ * @todo fire events indicating online status using `syncInterval`
+ *
  * @license MPL-2.0
  */
+
 var dataStore = (function( window, document, moment, $, undefined ) {
   'use strict';
 
@@ -32,7 +35,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
       return localStorage;
     }
     catch( e ) {
-      console.warn( 'localStorage is not supported, faking the api and using in-memory storage instead' );
+      console.warn( 'localStorage is not supported, faking the api and using volatile storage instead' );
 
       // This api's responses approximate that of localStorage.
       // see for more: https://developer.mozilla.org/en/docs/Web/Guide/API/DOM/Storage
@@ -255,7 +258,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
   db.setItem( 'state', db.getItem( 'state' ) || config );
 
   // async loop w/ instant run
-  (function sync() {
+  (function syncInterval() {
     if( !config.sync ) {
       return;
     }
@@ -291,7 +294,7 @@ var dataStore = (function( window, document, moment, $, undefined ) {
 
         // if no more in progress start timer for loop
         if( !syncsInProgress ) {
-          setTimeout( sync, 120000 );
+          setTimeout( syncInterval, 120000 );
         }
       });
 
