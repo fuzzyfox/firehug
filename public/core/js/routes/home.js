@@ -1,4 +1,4 @@
-/* global nunjucksEnv, dataStore, jQuery, routes */
+/* global nunjucksEnv, dataStore, jQuery, routes:true */
 
 routes = (function( window, document, routes, nunjucksEnv, db, $, undefined ) {
   'use strict';

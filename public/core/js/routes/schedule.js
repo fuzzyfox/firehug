@@ -1,4 +1,4 @@
-/* global nunjucksEnv, dataStore, jQuery, moment, routes */
+/* global nunjucksEnv, dataStore, jQuery, moment, routes:true */
 
 /**
  * @file /#schedule/:theme?/:day? logic + render

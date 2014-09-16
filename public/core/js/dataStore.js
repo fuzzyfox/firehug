@@ -1,4 +1,5 @@
 /* global moment, jQuery */
+/* exported dataStore */
 
 /**
  * @file Simple localStorage wrapper & data sync.

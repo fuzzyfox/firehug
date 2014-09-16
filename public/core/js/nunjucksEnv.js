@@ -1,4 +1,5 @@
 /* global nunjucks, jQuery, moment, marked, dataStore */
+/* exported nunjucksEnv */
 
 /**
  * @file Firehug specific nunjucks environment setup

@@ -1,4 +1,4 @@
-/* global nunjucksEnv, jQuery, routes, moment, dataStore */
+/* global nunjucksEnv, jQuery, routes:true, moment, dataStore */
 
 /**
  * @file /#settings route logic + render
@@ -44,7 +44,7 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, undefi
 
   // reset storage
   $main.on( 'click', 'button[data-reset]', function() {
-    if( $main.attr( 'id' ) === 'view-settings' && confirm( 'Are you sure you want to reset to default state?' ) ) {
+    if( $main.attr( 'id' ) === 'view-settings' && window.confirm( 'Are you sure you want to reset to default state?' ) ) {
       db.clear();
       window.location.href = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
     }

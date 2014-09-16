@@ -24,14 +24,19 @@ module.exports = function( grunt ) {
         'quotmark': 'single',
         'trailing': true,
         'undef': true,
-        'unused': 'vars'
+        'unused': 'vars',
+        ignores: [
+          '**/*.min.js'
+        ],
       },
       files: [
         'Gruntfile.js',
         '*.js',
         'bin/**/*.js',
         'bin/**/get*',
-        'lib/**/*.js'
+        'lib/**/*.js',
+        'public/core/js/**/*.js',
+        'public/theme/js/**/*.js'
       ]
     },
 
@@ -66,8 +71,21 @@ module.exports = function( grunt ) {
             drop_console: true
           },
           mangle: {
-            except: [ 'nunjucks', 'Finch', 'localforage' ]
+            except: [ 'nunjucks', 'dataStore' ]
           }
+        },
+        files: {
+          'public/core/js/core.min.js': [
+            // setup scripts / custom libs
+            'public/core/js/dataStore.js',
+            'public/core/js/nunjucksEnv.js',
+            // routes
+            'public/core/js/routes/index.js',
+            'public/core/js/routes/*',
+            // tying it all together
+            'public/core/js/app.js'
+          ],
+          'public/theme/js/app.min.js': [ 'public/theme/js/*.js' ]
         }
       }
     },
@@ -158,6 +176,7 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-bump' );
 
-  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'uglify:dev', 'express:dev', 'watch' ] );
+  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'uglify:dev', 'nunjucks', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint' ] );
+  grunt.registerTask( 'build', [  'less:prod', 'uglify:prod', 'nunjucks' ] );
 };

@@ -1,9 +1,26 @@
 {
   "name": "firehug",
   "version": "0.5.1",
-  "repository": "git@github.com:fuzzyfox/firehug.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fuzzyfox/firehug.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fuzzyfox/firehug/issues"
+  },
   "private": true,
-  "license": "MPL",
+  "license": "MPL-2.0",
+  "scripts": {
+    "start": "node server.js",
+    "test": "grunt test",
+    "postinstall": "bower install && grunt build"
+  },
+  "keywords": [
+    "mozilla",
+    "schedule",
+    "festival",
+    "event"
+  ],
   "dependencies": {
     "express": "^4.8.7",
     "google-spreadsheet": "^0.2.8",
@@ -20,12 +37,6 @@
     "request": "^2.40.0",
     "shortid": "^2.0.1"
   },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "engines": {
-    "node": ">= 0.10"
-  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-bump": "0.0.15",
@@ -35,5 +46,8 @@
     "grunt-nunjucks": "^0.1.4",
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-uglify": "^0.5.1"
+  },
+  "engines": {
+    "node": ">= 0.10"
   }
 }
