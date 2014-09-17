@@ -1,4 +1,4 @@
-/* global routie, nunjucksEnv, jQuery, routes */
+/* global routie, nunjucksEnv, jQuery, routes, sync */
 
 /**
  * @file App wide logic
@@ -11,7 +11,7 @@
  * @license MPL-2.0
  */
 
-(function( window, document, routie, routes, nunjucksEnv, $, undefined ) {
+(function( window, document, routie, routes, nunjucksEnv, $, sync, undefined ) {
   'use strict';
 
   /*
@@ -51,4 +51,8 @@
   $( window ).on( 'online offline', function( event ) {
     console.log( event.type );
   });
-})( window, document, routie, routes, nunjucksEnv, jQuery );
+
+  $( sync ).on( 'change', function( event ) {
+    console.log( event, arguments );
+  });
+})( window, document, routie, routes, nunjucksEnv, jQuery, sync );

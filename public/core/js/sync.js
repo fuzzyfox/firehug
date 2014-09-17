@@ -18,6 +18,7 @@
 
 var sync = (function( window, document, db, moment, $, undefined ) {
   'use strict';
+  var exports = {};
 
   // couple of variables to help w/ ready state
   var readyFlag = false;
@@ -42,6 +43,11 @@ var sync = (function( window, document, db, moment, $, undefined ) {
   // defaults to browser's indicator
   var online = window.navigator.onLine;
 
+  // detect and handle online/offline events
+  $( window ).on( 'online offline', function( event ) {
+    online = ( event.type === 'online' );
+  });
+
   // set default config for sync
   var config = {
     sync: {
@@ -58,7 +64,10 @@ var sync = (function( window, document, db, moment, $, undefined ) {
     db.setItem( 'state', config );
   }
 
-  // async loop w/ instant run
+  /**
+   * Instant run, asynchronous interval to poll api for
+   * data every 2mins
+   */
   (function syncInterval() {
     // do not run syncInterval if not stored
     if( !db.getItem( 'state' ).sync ) {
@@ -102,11 +111,91 @@ var sync = (function( window, document, db, moment, $, undefined ) {
       });
 
       // if sucessful store locally
-      getRemote.done( function( sessions ) {
-        db.setItem( key, sessions );
+      getRemote.done( function( newData ) {
+        var oldData = db.getItem( key );
 
-        // @todo replace w/ function to check for changes in schedule
-        console.log( '%s updated locally', key );
+        // only do checks if old data exists
+        if( oldData ) {
+          // if sessions lets figure out what changes (if any) occured
+          if( key !== 'sessions' && JSON.stringify( oldData ) !== JSON.stringify( newData ) ) {
+            $( exports ).trigger( 'change.' + key, [ oldData, newData ] );
+            console.log( '%s updated locally', key );
+          }
+          else if( key === 'sessions' ) {
+            // compare function for sorting sessions by id
+            var idCompare = function ( a, b ) {
+              if( a.id > b.id ) {
+                return 1;
+              }
+
+              if( a.id < b.id ) {
+                return -1;
+              }
+
+              return 0;
+            };
+
+            oldData.sort( idCompare );
+            var sortedNewData = newData.slice( 0 );
+            sortedNewData.sort( idCompare );
+
+            var c1 = 0; // position in old data
+            var c2 = 0; // position in new data
+            var oLen = oldData.length;
+            var nLen = sortedNewData.length;
+
+            var changeset = {
+              added: [],
+              changed: [],
+              removed: []
+            };
+
+            while( c1 < oLen && c2 < nLen ) {
+              // objects same session
+              if( oldData[ c1 ].id === sortedNewData[ c2 ].id ) {
+                // check for detail changes
+                if( JSON.stringify( oldData[ c1 ] ) !== JSON.stringify( sortedNewData[ c2 ] ) ) {
+                  changeset.changed.push( oldData[ c1 ].id );
+                }
+                c1++; c2++;
+                continue;
+              }
+
+              // new session found
+              if( oldData[ c1 ].id > sortedNewData[ c2 ] ) {
+                changeset.added.push( sortedNewData[ c2 ].id );
+                c2++;
+                continue;
+              }
+
+              // session removed (old < new)
+              changeset.removed.push( oldData[ c1 ].id );
+              c1++;
+            }
+
+            // everything left in oldData has been removed
+            while( c1 < oLen ) {
+              changeset.removed.push( oldData[ c1 ].id );
+              c1++;
+            }
+
+            // everything left in sortedNewData is new
+            while( c2 < nLen ) {
+              changeset.added.push( sortedNewData[ c2 ].id );
+              c2++;
+            }
+
+            // trigger change event w/ changeset
+            $( exports ).trigger( 'change.' + key, [ oldData, newData, changeset ] );
+
+            if( changeset.added.length || changeset.changed.length || changeset.removed.length ) {
+              console.log( '%s updated locally', key );
+            }
+          }
+        }
+
+        // store new data
+        db.setItem( key, newData );
 
         // update sync time
         var state = db.getItem( 'state' );
@@ -136,19 +225,12 @@ var sync = (function( window, document, db, moment, $, undefined ) {
     });
   }());
 
-  /*
-    detect and handle online/offline events
-   */
-  $( window ).on( 'online offline', function( event ) {
-    online = ( event.type === 'online' );
-  });
-
-  return {
-    ready: function( fn ) {
-      return ( readyFlag ) ? fn.call() : readyFns.push( fn );
-    },
-    isOnline: function() {
-      return online;
-    }
+  exports.ready = function( fn ) {
+    return ( readyFlag ) ? fn.call() : readyFns.push( fn );
   };
+  exports.isOnline = function() {
+    return online;
+  };
+
+  return exports;
 })( window, document, dataStore, moment, jQuery );
