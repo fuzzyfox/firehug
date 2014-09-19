@@ -116,11 +116,11 @@ var sync = (function( window, document, db, moment, $, undefined ) {
 
         // only do checks if old data exists
         if( oldData ) {
-          // if sessions lets figure out what changes (if any) occured
           if( key !== 'sessions' && JSON.stringify( oldData ) !== JSON.stringify( newData ) ) {
             $( exports ).trigger( 'change.' + key, [ oldData, newData ] );
             console.log( '%s updated locally', key );
           }
+          // if sessions lets figure out what changes (if any) occured
           else if( key === 'sessions' ) {
             // compare function for sorting sessions by id
             var idCompare = function ( a, b ) {

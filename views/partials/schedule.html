@@ -16,8 +16,10 @@
           {% endfor %}
           <li class="divider"></li>
           <li><a href="#schedule/-/{{ day | lower }}">All Tracks</a></li>
+          <li><a href="#schedule/tracked/{{ day | lower }}">Tracked Sessions</a></li>
           <li class="divider"></li>
           <li><a href="#schedule/-/-">All Tracks, All Days</a></li>
+          <li><a href="#schedule/tracked/-">All Tracked Sessions</a></li>
         </ul>
       </div>
     </div>
@@ -44,40 +46,55 @@
     <!-- session listing -->
     {% for session in sessions %}
     <div class="session panel panel-default" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
-      <time class="pull-right text-muted">
-        <small>
-          {{ 'Event Time: ' if state.debug }}
-          {% if day == '-' %}
-            {{ session.start | timeFormat( 'ddd ' ) }}
+      <!-- session tracking -->
+      <i class="fa fa-eye{{ '-slash' if not trackedSessions | contains( session.id ) }} btn btn-default pull-right" data-tracked-session="{{ trackedSessions | contains( session.id ) }}"></i>
+
+      <h4>{{ session.title }}</h4>
+
+      <!-- session key-details -->
+      <div class="row text-muted">
+        <div class="col-sm-8">
+          {% if session.location %}
+          <strong>Location:</strong> {{ session.location }}
           {% endif %}
-          {{ session.start | timeFormat( 'HH:mm' ) }} - {{ session.end | timeFormat( 'HH:mm' ) }}{{ ' – ' + session.id if state.debug }}
+        </div>
+
+        <div class="col-sm-4 text-right">
+          <strong>{{ 'Event ' if state.debug }}Time: </strong>
+          {% if day == '-' %}
+            <time>{{ session.start | timeFormat( 'ddd ' ) }}</time>
+          {% endif %}
+          <time>{{ session.start | timeFormat( 'HH:mm' ) }}</time> - <time>{{ session.end | timeFormat( 'HH:mm' ) }}</time>{{ ' – ' + session.id if state.debug }}
 
           {% if state.debug %}
             <br>
-            Local Time:
+            <strong>Local Time:</strong>
             {% if day == '-' %}
-              {{ session.start | timeFormat( 'ddd ', false ) }}
+              <time>{{ session.start | timeFormat( 'ddd ', false ) }}</time>
             {% endif %}
-            {{ session.start | timeFormat( 'HH:mm', false ) }} - {{ session.end | timeFormat( 'HH:mm', false ) }}
+            <time>{{ session.start | timeFormat( 'HH:mm', false ) }}</time> - <time>{{ session.end | timeFormat( 'HH:mm', false ) }}</time>
           {% endif %}
-        </small>
-      </time>
-      <h4>{{ session.title }}</h4>
-      <p>{{ session.description }}</p>
-      {% if session.facilitators | isArray %}
-      <ul>
-        {% for facilitator in session.facilitators %}
-        <li>
-          {{ facilitator.name }}
-          {% if facilitator.twitter %}
-            <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p>{{ session.facilitators | marked }}</p>
-      {% endif %}
+        </div>
+      </div>
+
+      <!-- session details -->
+      <div class="session-details">
+        <p>{{ session.description }}</p>
+        {% if session.facilitators | isArray %}
+        <ul>
+          {% for facilitator in session.facilitators %}
+          <li>
+            {{ facilitator.name }}
+            {% if facilitator.twitter %}
+              <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>{{ session.facilitators | marked }}</p>
+        {% endif %}
+      </div>
     </div>
     {% endfor %}
   </div>

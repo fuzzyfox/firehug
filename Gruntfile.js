@@ -59,10 +59,15 @@ module.exports = function( grunt ) {
             // routes
             'public/core/js/routes/index.js',
             'public/core/js/routes/*',
+            // session tracking
+            'public/core/js/sessionTracking.js',
             // tying it all together
             'public/core/js/app.js'
           ],
-          'public/theme/js/app.min.js': [ 'public/theme/js/*.js' ]
+          'public/theme/js/app.min.js': [
+            'public/theme/js/*.js',
+            '!public/theme/js/app.min.js'
+          ]
         }
       },
       prod: {
@@ -84,10 +89,15 @@ module.exports = function( grunt ) {
             // routes
             'public/core/js/routes/index.js',
             'public/core/js/routes/*',
+            // session tracking
+            'public/core/js/sessionTracking.js',
             // tying it all together
             'public/core/js/app.js'
           ],
-          'public/theme/js/app.min.js': [ 'public/theme/js/*.js' ]
+          'public/theme/js/app.min.js': [
+            'public/theme/js/*.js',
+            '!public/theme/js/app.min.js'
+          ]
         }
       }
     },
@@ -143,7 +153,7 @@ module.exports = function( grunt ) {
         'public/core/less/*.less',
         'public/core/js/**/*.js',
         'public/theme/less/*.less',
-        'public/theme/js/*.js',
+        'public/theme/js/**/*.js',
         'views/partials/*'
       ],
       tasks: [ 'jshint', 'less:dev', 'uglify:dev', 'nunjucks', 'express:dev' ],

@@ -121,6 +121,17 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
     return marked( str );
   });
 
+  /**
+   * Check if input array contains string
+   *
+   * @param  {Array}  haystack  the array to test
+   * @param  {String} needle    the string to look for
+   * @return {Boolean}          true if found
+   */
+  nunjucksEnv.addFilter( 'contains', function( haystack, needle ) {
+    return ( haystack.indexOf( needle ) > -1 );
+  });
+
 
   /*
     attempt to get app details from /manifest.webapp

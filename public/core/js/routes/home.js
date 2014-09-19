@@ -9,7 +9,8 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, undefined ) {
   return $.extend( routes, {
     home: function() {
       nunjucksEnv.render( 'home.html', {
-        state: db.getItem( 'state' )
+        state: db.getItem( 'state' ),
+        trackedSessions: db.getItem( 'tracked-sessions' ) || []
       }, function( err, res ) {
         if( err ) {
           $main.html( 'Oops, an error is preventing the main menu loading.' );

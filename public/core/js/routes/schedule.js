@@ -30,6 +30,7 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
         sessions: db.getItem( 'sessions' ),
         themes: db.getItem( 'themes' ),
         state: db.getItem( 'state' ),
+        trackedSessions: db.getItem( 'tracked-sessions' ) || [],
         eventDays: []
       };
 
@@ -91,6 +92,12 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
        */
       if( theme !== '-' ) {
         context.sessions = context.sessions.filter( function( session ) {
+          // deal with track sessions special case
+          if( theme === 'tracked' && context.trackedSessions.indexOf( session.id ) > -1 ) {
+            return true;
+          }
+
+          // standard filter
           return ( session.themeSlug === theme );
         });
       }
@@ -111,17 +118,19 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
         * `now` must be after the start of the first session
         * `now` must be before the end of the last session
        */
-      var sessionsStart = moment.tz( context.sessions[ 0 ].start, timezone );
-      var sessionsEnd = moment.tz( context.sessions[ context.sessions.length - 1 ].end, timezone );
-      if( context.sessions[ 0 ] &&
-          context.state.autoHide &&
-          now.isAfter( sessionsStart ) &&
-          now.isBefore( sessionsEnd ) ) {
+      if( context.sessions.length ) {
+        var sessionsStart = moment.tz( context.sessions[ 0 ].start, timezone );
+        var sessionsEnd = moment.tz( context.sessions[ context.sessions.length - 1 ].end, timezone );
+        if( context.sessions[ 0 ] &&
+            context.state.autoHide &&
+            now.isAfter( sessionsStart ) &&
+            now.isBefore( sessionsEnd ) ) {
 
-        context.sessions = context.sessions.filter( function( session ) {
-          // give sessions 5 minutes grace before filtering out to allow for overrun
-          return moment.tz( session.end, timezone ).add( 5, 'minutes' ).isAfter( now );
-        });
+          context.sessions = context.sessions.filter( function( session ) {
+            // give sessions 5 minutes grace before filtering out to allow for overrun
+            return moment.tz( session.end, timezone ).add( 5, 'minutes' ).isAfter( now );
+          });
+        }
       }
 
       /*
@@ -130,6 +139,14 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
       context.theme = context.themes.filter( function( themeObj ) {
         return ( themeObj.slug === theme );
       })[ 0 ] || {};
+
+      // deal with special case for tracked sessions
+      if( theme === 'tracked' ) {
+        context.theme = {
+          name: 'Tracked Sessions',
+          slug: 'tracked'
+        };
+      }
 
       context.day = day;
 
@@ -150,10 +167,12 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
         $main.html( res ).attr( 'id', 'view-schedule' );
 
         // now we have the view loaded store day + theme
-        db.extendItem( 'state', {
-          day: day,
-          theme: theme
-        });
+        if( theme !== 'tracked' ) {
+          db.extendItem( 'state', {
+            day: day,
+            theme: theme
+          });
+        }
 
         /*
           timed events to run on this view's DOM
