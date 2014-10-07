@@ -22,7 +22,6 @@
         console.log( 'no longer tracking session %s', sessionId );
         trackedSessions.splice( trackedSessions.indexOf( sessionId ), 1 );
 
-        console.log( trackedSessions, sessionId );
         db.setItem( 'tracked-sessions', trackedSessions );
       }
 
@@ -36,7 +35,7 @@
     if( trackedSessions.indexOf( sessionId ) === -1 ) {
       console.log( 'now tracking session %s', sessionId );
       trackedSessions.push( sessionId );
-      console.log( trackedSessions, sessionId );
+
       db.setItem( 'tracked-sessions', trackedSessions );
     }
   });
