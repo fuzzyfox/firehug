@@ -17,6 +17,7 @@ var documents = require( './lib/documents' );
 var shared = require( './shared' );
 var env = shared.env;
 // var debug = shared.debug;
+var serverStartTime = moment();
 
 /*
   Start Recurring Jobs
@@ -75,7 +76,10 @@ app.use( function( req, res, next ) {
 });
 
 /*
-  Generate webapp manifest
+  Generates a webapp manifest
+
+  Uses the defaults in /manifest.webapp and extends them with any
+  environment set details.
  */
 var webappManifest = fs.readFileSync( 'manifest.webapp', 'utf8' );
 webappManifest = JSON.parse( webappManifest );
@@ -89,6 +93,12 @@ webappManifest = lodash.extend( webappManifest, webappManifestOverrides );
 app.use( function( req, res, next ) {
   res.locals.app = JSON.parse( JSON.stringify( webappManifest ) ); // use as default values
   res.locals.app.webappManifest = webappManifest; // unchanging
+  next();
+});
+
+// add build time to res.locals
+app.use( function( req, res, next ) {
+  res.locals.app.serverStartTime = serverStartTime.valueOf();
   next();
 });
 
@@ -139,7 +149,7 @@ app.get( '/time', function( req, res ) {
 });
 
 /**
- * @todo generate dynamically based on remote config/local env
+ * Serves the webapp manifest file
  */
 app.get( '/manifest.webapp', function( req, res ) {
   res.type( 'application/x-web-app-manifest+json' );
@@ -148,16 +158,45 @@ app.get( '/manifest.webapp', function( req, res ) {
 
 /**
  * @todo generate dynamically using `fs`
+ * @todo concat core vendor packages into a vendor.js file for easy caching
  */
 app.get( '/firehug.appcache', function( req, res ) {
   var caches = [];
   res.contentType( 'text/cache-manifest' );
 
-  if( env.get( 'NODE_ENV' ) === 'production' ) {
-    caches = [];
-  }
+  // stylesheets
+  caches = caches.concat([
+    '/core/css/core.min.css',
+    '/theme/css/main.min.css'
+  ]);
 
-  res.send( 'CACHE MANIFEST\n# Created ' + moment().format() + '\n' + caches.join( '\n' ) + '\n\nNETWORK:\n*' );
+  // fonts (font-awesome)
+  fs.readdirSync( __dirname + '/public/vendor/font-awesome/fonts' ).filter( function( file ) {
+    // return true IF not a dotfile AND not this file
+    return ( file.indexOf( '.' ) !== 0 );
+  }).forEach( function( file ) {
+    caches.push( '/vendor/font-awesome/fonts/' + file );
+  });
+
+  // javascript
+  caches = caches.concat([
+    '/vendor/jquery/dist/jquery.min.js',
+    '/vendor/moment/min/moment.min.js',
+    '/vendor/moment-timezone/builds/moment-timezone-with-data.min.js',
+    '/vendor/marked/lib/marked.js',
+    '/vendor/routie/dist/routie.min.js',
+    '/vendor/nunjucks/browser/nunjucks-slim.min.js',
+    '/theme/partials.js',
+    '/core/js/core.min.js',
+    '/theme/js/app.min.js',
+    '/vendor/bootstrap/js/dropdown.js'
+  ]);
+
+  // imgs
+  // -- to come
+
+  // send back manifest
+  res.send( 'CACHE MANIFEST\n# Created ' + serverStartTime.format() + '\n\n' + caches.join( '\n' ) + '\n\nNETWORK:\n*' );
 });
 
 /*
