@@ -38,7 +38,7 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
       notification: {
         title: title || '',
         message: message || '',
-        icon: icon || 'exclamation-circle',
+        icon: icon || 'info-circle',
         cancelable: cancelable
       },
       state: db.getItem( 'state' )
@@ -72,7 +72,7 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
       var $notification = $( '.notification-bar:last' );
       rtn._$element = $notification;
 
-      $notification.on( 'click', '.close', function() {
+      $notification.on( 'click', function() {
         rtn.close( true );
       });
 
