@@ -61,3 +61,7 @@
   {% endif %}
 </div>
 {% endfor %}
+
+{% if sessions.length == 0 %}
+<p class="lead text-center">No sessions to display.</p>
+{% endif %}

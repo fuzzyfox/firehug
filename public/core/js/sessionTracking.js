@@ -88,12 +88,12 @@
         // time changed
         else if( ( oldSession.start !== newSession.start ) &&
             ( oldSession.location === newSession.location ) ) {
-          notify( 'Update to ' + oldSession.title + '"', '"' + oldSession.title + ' now starts at ' + moment.tz( newSession.start, timezone ).format( 'HH:mm' ), 'clock-o' );
+          notify( 'Update to "' + oldSession.title + '"', '"' + oldSession.title + '" now starts at ' + moment.tz( newSession.start, timezone ).format( 'HH:mm' ), 'clock-o' );
         }
         // location changed
         else if( ( oldSession.start === newSession.start ) &&
             ( oldSession.location !== newSession.location ) ) {
-          notify( 'Update to ' + oldSession.title + '"', '"' + oldSession.title + ' is now in ' + newSession.loaction, 'clock-o' );
+          notify( 'Update to "' + oldSession.title + '"', '"' + oldSession.title + '" is now in ' + newSession.loaction, 'clock-o' );
         }
       });
     }
