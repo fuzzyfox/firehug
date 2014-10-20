@@ -323,6 +323,22 @@ app.get( '/api/docs', function( req, res ) {
   res.jsonp( docs );
 });
 
+/*
+  Some nice redirects for app
+ */
+// tag shortlink
+app.get( '/t/:tag', function( req, res ) {
+  res.redirect( '/#tag/' + req.params.tag );
+});
+// session short link
+app.get( '/s/:sessionId', function( req, res ) {
+  res.redirect( '/#session/' + req.params.sessionId );
+});
+// map short link
+app.get( '/m/:locationId', function( req, res ) {
+  res.redirect( '/#map/' + req.params.locationId );
+});
+
 var server = app.listen( env.get( 'PORT' ) || 5000, function() {
   console.log( 'Now listening on port %d', server.address().port );
 });

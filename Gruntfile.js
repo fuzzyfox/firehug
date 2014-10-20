@@ -59,6 +59,8 @@ module.exports = function( grunt ) {
             // routes
             'public/core/js/routes/index.js',
             'public/core/js/routes/*',
+            // notifications
+            'public/core/js/notify.js',
             // session tracking
             'public/core/js/sessionTracking.js',
             // tying it all together
@@ -89,6 +91,8 @@ module.exports = function( grunt ) {
             // routes
             'public/core/js/routes/index.js',
             'public/core/js/routes/*',
+            // notifications
+            'public/core/js/notify.js',
             // session tracking
             'public/core/js/sessionTracking.js',
             // tying it all together

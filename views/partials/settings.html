@@ -14,6 +14,18 @@
       </div>
     </div>
 
+    <!-- notifications -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Notifications <small>{{ 'On' if state.notifications else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.notifications" type="button" class="btn btn-{{ 'danger' if state.notifications else 'success' }} pull-right">Turn {{ 'Off' if state.notifications else 'On' }}</button>
+        <p>Shows notifications when it looses connection, a session you're tracking changes, or new sessions are added.</p>
+        <p><strong>Recommended state:</strong> On.</p>
+      </div>
+    </div>
+
     <!-- debug mode -->
     <div class="panel panel-default">
       <div class="panel-heading">

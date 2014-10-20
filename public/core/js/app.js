@@ -1,4 +1,4 @@
-/* global routie, nunjucksEnv, jQuery, routes, sync */
+/* global routie, nunjucksEnv, jQuery, routes, sync, notify */
 
 /**
  * @file App wide logic
@@ -11,7 +11,7 @@
  * @license MPL-2.0
  */
 
-(function( window, document, routie, routes, nunjucksEnv, $, sync, undefined ) {
+(function( window, document, routie, routes, nunjucksEnv, $, sync, notify, undefined ) {
   'use strict';
 
   /*
@@ -24,7 +24,9 @@
     // now we can render routes
     routie( '', routes.home );
     routie( 'schedule/:theme?/:day?', routes.schedule );
+    routie( 'session/:sessionId', routes.session );
     routie( 'doc/:name', routes.doc );
+    routie( 'tag/:tag', routes.tag );
     routie( 'settings', routes.settings );
 
     routie( '*', function() {
@@ -46,13 +48,51 @@
   });
 
   /*
+    deal with posibility to install (open web app)
+   */
+  if( window.navigator.mozApps ) {
+    // can we install the app?
+    var selfReq = window.navigator.mozApps.getSelf();
+
+    selfReq.onsuccess = function() {
+      if( !selfReq.result ) {
+        // yes we can install
+        routie( 'install', function() {
+          var manifest = window.location.origin + '/manifest.webapp';
+          var req = window.navigator.mozApps.install( manifest );
+
+          req.onsuccess = function() {
+            req.result.launch();
+          };
+
+          req.onerror = function() {
+            window.alert( 'Error: ' + this.error.name );
+          };
+        });
+      }
+      else {
+        $( '.install-app' ).remove();
+      }
+    };
+  }
+  else {
+    $( '.install-app' ).remove();
+  }
+
+  /*
     detect and handle online/offline events
    */
+  var offlineNotification = {};
   $( window ).on( 'online offline', function( event ) {
     console.log( event.type );
+    if( event.type === 'offline' ) {
+      offlineNotification = notify( 'Unable to connect to the server...', '...your copy of the schedule may be a little out of sync with the world till a connection is made again.', 'refresh fa-spin', 5, false );
+    }
+    else if( event.type === 'online' ) {
+      if( offlineNotification.close ) {
+        offlineNotification.close();
+        notify( 'Connection established', 'the latest updates to the schedule are now avaiable again.', 'check', 5, false );
+      }
+    }
   });
-
-  $( sync ).on( 'change', function( event ) {
-    console.log( event, arguments );
-  });
-})( window, document, routie, routes, nunjucksEnv, jQuery, sync );
+})( window, document, routie, routes, nunjucksEnv, jQuery, sync, notify );

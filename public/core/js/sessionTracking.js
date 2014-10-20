@@ -1,9 +1,10 @@
-/* global dataStore, jQuery, sync */
+/* global dataStore, jQuery, sync, moment, dataStore, notify */
 
-(function( window, document, db, $, sync, undefined ) {
+(function( window, document, db, $, sync, moment, notify, undefined ) {
   'use strict';
 
   var $main = $( 'main' );
+  var timezone = $( 'body' ).data( 'timezone' );
 
   /*
     toggle session tracking
@@ -40,4 +41,61 @@
     }
   });
 
-})( window, document, dataStore, jQuery, sync );
+
+  /*
+    detect changes to the sessions
+   */
+  $( sync ).on( 'change.sessions', function( event, oldData, newData, changeset ) {
+    var trackedSessions = db.getItem( 'tracked-sessions' ) || [];
+
+    console.log( changeset );
+
+    // notify of new sessions
+    if( changeset.added.length ) {
+      var newSessions = newData.filter( function( session ) {
+        return ( changeset.added.indexOf( session.id ) > -1 );
+      });
+
+      newSessions.forEach( function( session, idx ) {
+        notify( session.title + ' was added to the schedule.', undefined, 'plus', ( 3 + ( 3 * idx ) ) );
+      });
+    }
+
+    // notify of changed (tracked) sessions
+    if( changeset.changed.length ) {
+      // get list of changed tracked sessions
+      var changedSessions = changeset.changed.filter( function( sessionId ) {
+        return ( trackedSessions.indexOf( sessionId ) > -1 );
+      });
+
+      // notify for each (w/ details)
+      changedSessions.forEach( function( sessionId ) {
+        // get old session details
+        var oldSession = oldData.filter( function( session ) {
+          return ( session.id === sessionId );
+        })[ 0 ];
+        // get update details
+        var newSession = newData.filter( function( session ) {
+          return ( session.id === sessionId );
+        })[ 0 ];
+
+        // work out if it was location OR time (don't care about anything else).
+        // both time + location changed
+        if( ( oldSession.start !== newSession.start ) &&
+            ( oldSession.location !== newSession.location ) ) {
+          notify( 'Update to "' + oldSession.title + '"', '"' + oldSession.title + '" now starts at ' + moment.tz( newSession.start, timezone ).format( 'HH:mm' ) + ' in ' + newSession.location, 'clock-o' );
+        }
+        // time changed
+        else if( ( oldSession.start !== newSession.start ) &&
+            ( oldSession.location === newSession.location ) ) {
+          notify( 'Update to ' + oldSession.title + '"', '"' + oldSession.title + ' now starts at ' + moment.tz( newSession.start, timezone ).format( 'HH:mm' ), 'clock-o' );
+        }
+        // location changed
+        else if( ( oldSession.start === newSession.start ) &&
+            ( oldSession.location !== newSession.location ) ) {
+          notify( 'Update to ' + oldSession.title + '"', '"' + oldSession.title + ' is now in ' + newSession.loaction, 'clock-o' );
+        }
+      });
+    }
+  });
+})( window, document, dataStore, jQuery, sync, moment, notify );

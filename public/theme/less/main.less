@@ -3,7 +3,7 @@
 @import '../../vendor/font-awesome/less/font-awesome.less';
 @fa-font-path: '../../vendor/font-awesome/fonts';
 
-@blue: #00283A;
+@blue: #91cfd6;
 @navy_blue: #093D60;
 @pale_blue: #CBE8EC;
 @red: #E12526;
@@ -77,10 +77,10 @@ main {
       padding: 1rem 1rem 0 1rem;
       background: @blue;
       border: 1px solid darken( @blue, 5% );
-      color: white;
+      color: @text-color;
 
       a {
-        color: white;
+        color: @text-color;
 
         &:hover {
           text-decoration: none;
@@ -114,12 +114,12 @@ main {
   &-blue {
     background: @blue;
     border-color: darken( @blue, 5% );
-    color: white;
+    color: @text-color;
 
     &:hover {
       background: darken( @blue, 5% );
       border-color: darken( @blue, 10% );
-      color: white;
+      color: darken( @text-color, 5% );
     }
   }
 
@@ -150,12 +150,35 @@ main {
   &-orange {
     background: @orange;
     border-color: darken( @orange, 5% );
-    color: white;
+    color: @text-color;
 
     &:hover {
       background: darken( @orange, 5% );
       border-color: darken( @orange, 10% );
-      color: white;
+      color: darken( @text-color, 5% );
     }
+  }
+}
+
+.notification-bar {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  box-shadow: 0 0 4px rgba( 0, 0, 0, 0.4 );
+  position: fixed;
+  bottom: 0;
+  background: white;
+
+  .icon {
+    font-size: 3em;
+    line-height: 1.4em;
+  }
+}
+
+.session-title > a {
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
   }
 }

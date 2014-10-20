@@ -1,0 +1,12 @@
+<div class="notification-bar">
+  {% if notification.cancelable %}<i class="fa fa-times close"></i>{% endif %}
+  <div class="row">
+    <div class="col-sm-1 text-center">
+      <i class="fa fa-lg fa-{{ notification.icon }} icon"></i>
+    </div>
+    <div class="col-sm-11 details">
+      {{ '<h4>' + notification.title + '</h4>' if notification.title }}
+      <p>{{ notification.message }}</p>
+    </div>
+  </div>
+</div>

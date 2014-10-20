@@ -186,9 +186,8 @@ var sync = (function( window, document, db, moment, $, undefined ) {
             }
 
             // trigger change event w/ changeset
-            $( exports ).trigger( 'change.' + key, [ oldData, newData, changeset ] );
-
             if( changeset.added.length || changeset.changed.length || changeset.removed.length ) {
+              $( exports ).trigger( 'change.' + key, [ oldData, newData, changeset ] );
               console.log( '%s updated locally', key );
             }
           }
