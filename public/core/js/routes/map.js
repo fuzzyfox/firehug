@@ -32,8 +32,6 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, undefined ) {
             svg: svg,
             locationId: locationId
           }, function( err, res ) {
-
-            // $( '#currentMap' ).html( svg );
             $main.html( res );
           });
         });

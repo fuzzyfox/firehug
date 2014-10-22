@@ -27,7 +27,7 @@
     routie( 'session/:sessionId', routes.session );
     routie( 'doc/:name', routes.doc );
     routie( 'tag/:tag', routes.tag );
-    routie( 'map/:location', routes.map );
+    routie( 'map/:location?', routes.map );
     routie( 'settings', routes.settings );
 
     /*

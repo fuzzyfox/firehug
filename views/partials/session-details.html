@@ -38,7 +38,7 @@
         <h4>Description</h4>
         <p>{{ session.description }}</p>
 
-        <p><a href="http://festival.etherpad.mozilla.org/{{ session.id }}">Session Etherpad</a></p>
+        <p><strong><a href="http://festival.etherpad.mozilla.org/{{ session.id }}">Session Etherpad</a></strong></p>
 
         {% if session.goals %}
         <h4>Goals</h4>
@@ -62,7 +62,7 @@
           </li>
           {% endfor %}
         </ul>
-        {% else %}
+        {% elif session.facilitators %}
         <h4>Facilitators</h4>
         <p>{{ session.facilitators | marked }}</p>
         {% endif %}
