@@ -72,9 +72,11 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
       var $notification = $( '.notification-bar:last' );
       rtn._$element = $notification;
 
-      $notification.on( 'click', function() {
-        rtn.close( true );
-      });
+      if( cancelable ) {
+        $notification.on( 'click', function() {
+          rtn.close( true );
+        });
+      }
 
       // if a ttl is set fade notification out after time
       if( ttl ) {

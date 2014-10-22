@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>{% if locationId != 'm' %}Floor {{ locationId }}{% else %}Mezzanine Floor{% endif %}</h2>
+
+    <div id="currentMap">
+      {{ svg }}
+    </div>
+  </div>
+</div>

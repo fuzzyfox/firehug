@@ -27,28 +27,13 @@
     routie( 'session/:sessionId', routes.session );
     routie( 'doc/:name', routes.doc );
     routie( 'tag/:tag', routes.tag );
+    routie( 'map/:location', routes.map );
     routie( 'settings', routes.settings );
-
-    routie( '*', function() {
-      nunjucksEnv.render( 'error.html', {
-        code: 404,
-        type: 'warning',
-        message: window.location.hash + ' was not found.'
-      }, function( err, res ) {
-        if( err ) {
-          $main.html( window.location.hash + ' was not found.' );
-          return console.error( 'failed to load "error.html" partial' );
-        }
-
-        $main.html( res );
-      });
-
-      $main.attr( 'id', 'error' );
-    });
 
     /*
       deal with posibility to install (open web app)
      */
+    var installApp = function() {}; // stub till we know for sure if we can install
     if( window.navigator.mozApps ) {
       // can we install the app?
       var selfReq = window.navigator.mozApps.getSelf();
@@ -56,8 +41,9 @@
       selfReq.onsuccess = function() {
         if( !selfReq.result ) {
           // yes we can install
-          routie( 'install', function() {
+          installApp = function() {
             var manifest = window.location.origin + '/manifest.webapp';
+            console.log( manifest );
             var req = window.navigator.mozApps.install( manifest );
 
             req.onsuccess = function() {
@@ -67,16 +53,22 @@
             req.onerror = function() {
               window.alert( 'Error: ' + this.error.name );
             };
-          });
+          };
         }
         else {
           $( '.install-app' ).remove();
         }
       };
+      selfReq.onerror = function() {
+        $( '.install-app' ).remove();
+      };
     }
     else {
       $( '.install-app' ).remove();
     }
+    routie( 'install', function() {
+      installApp();
+    });
 
     /*
       detect and handle online/offline events
@@ -102,5 +94,25 @@
       db.extendItem( 'state', { firstRun: true } );
       notify( 'Welcome to the Mozilla Festival app.', 'This app aims to help you through you\'re festival experience and keep you up-to-date on schedule changes.</p><p>Tap this message to dismiss it, or, visit the <a href="#settings">settings</a> to disable notifications.' );
     }
+
+    /*
+      handle missing views/404s
+     */
+    routie( '*', function() {
+      nunjucksEnv.render( 'error.html', {
+        code: 404,
+        type: 'warning',
+        message: window.location.hash + ' was not found.'
+      }, function( err, res ) {
+        if( err ) {
+          $main.html( window.location.hash + ' was not found.' );
+          return console.error( 'failed to load "error.html" partial' );
+        }
+
+        $main.html( res );
+      });
+
+      $main.attr( 'id', 'error' );
+    });
   });
 })( window, document, routie, routes, nunjucksEnv, jQuery, sync, notify, dataStore );
