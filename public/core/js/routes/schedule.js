@@ -147,6 +147,26 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
           slug: 'tracked'
         };
       }
+      if( theme === 'tracked' && day === '-' ) {
+        context.theme = {
+          name: 'All Tracked Sessions',
+          slug: 'tracked'
+        };
+      }
+
+      // deal with all track view and all days view
+      if( theme === '-' ) {
+        context.theme = {
+          name: 'All Tracks',
+          slug: '-'
+        };
+      }
+      if( theme === '-' && day === '-' ) {
+        context.theme = {
+          name: 'All Tracks, All Days',
+          slug: '-/-'
+        };
+      }
 
       context.day = day;
 

@@ -15,11 +15,11 @@
           <li><a href="#schedule/{{ theme.slug }}/{{ day | lower if day != '-' else eventDays[ 0 ] | lower }}">{{ theme.name }}</a></li>
           {% endfor %}
           <li class="divider"></li>
-          <li><a href="#schedule/-/{{ day | lower }}">All Tracks</a></li>
-          <li><a href="#schedule/tracked/{{ day | lower }}">Tracked Sessions</a></li>
-          <li class="divider"></li>
-          <li><a href="#schedule/-/-">All Tracks, All Days</a></li>
+          <li><a href="#schedule/tracked/{{ day | lower if day != '-' }}">Tracked Sessions (by day)</a></li>
           <li><a href="#schedule/tracked/-">All Tracked Sessions</a></li>
+          <li class="divider"></li>
+          <li><a href="#schedule/-/{{ day | lower if day != '-' }}">All Tracks</a></li>
+          <li><a href="#schedule/-/-">All Tracks, All Days</a></li>
         </ul>
       </div>
     </div>

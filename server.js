@@ -171,12 +171,19 @@ app.get( '/firehug.appcache', function( req, res ) {
   ]);
 
   // fonts (font-awesome)
-  fs.readdirSync( __dirname + '/public/vendor/font-awesome/fonts' ).filter( function( file ) {
-    // return true IF not a dotfile AND not this file
-    return ( file.indexOf( '.' ) !== 0 );
-  }).forEach( function( file ) {
-    caches.push( '/vendor/font-awesome/fonts/' + file );
-  });
+  // fs.readdirSync( __dirname + '/public/vendor/font-awesome/fonts' ).filter( function( file ) {
+  //   // return true IF not a dotfile AND not this file
+  //   return ( file.indexOf( '.' ) !== 0 );
+  // }).forEach( function( file ) {
+  //   caches.push( '/vendor/font-awesome/fonts/' + file );
+  // });
+  caches = caches.concat([
+    '/vendor/font-awesome/fonts/fontawesome-webfont.eot?v=4.2.0',
+    '/vendor/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0',
+    '/vendor/font-awesome/fonts/fontawesome-webfont.woff?v=4.2.0',
+    '/vendor/font-awesome/fonts/fontawesome-webfont.ttf?v=4.2.0',
+    '/vendor/font-awesome/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular',
+  ]);
 
   // javascript
   caches = caches.concat([
