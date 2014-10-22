@@ -199,8 +199,21 @@ app.get( '/firehug.appcache', function( req, res ) {
     '/vendor/bootstrap/js/dropdown.js'
   ]);
 
-  // imgs
-  // -- to come
+  // imgs + maps
+  caches = caches.concat([
+    '/theme/imgs/maps/floor_0.svg',
+    '/theme/imgs/maps/floor_1.svg',
+    '/theme/imgs/maps/floor_2.svg',
+    '/theme/imgs/maps/floor_3.svg',
+    '/theme/imgs/maps/floor_4.svg',
+    '/theme/imgs/maps/floor_5.svg',
+    '/theme/imgs/maps/floor_6.svg',
+    '/theme/imgs/maps/floor_7.svg',
+    '/theme/imgs/maps/floor_8.svg',
+    '/theme/imgs/maps/floor_9.svg',
+    '/theme/imgs/maps/floor_m.svg',
+    '/theme/imgs/logo.png'
+  ]);
 
   // send back manifest
   res.send( 'CACHE MANIFEST\n# Created ' + serverStartTime.format() + '\n\n' + caches.join( '\n' ) + '\n\nNETWORK:\n*' );
