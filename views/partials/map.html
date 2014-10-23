@@ -5,6 +5,7 @@
     <!-- map selection -->
     <div class="row">
       <div class="dropdown pull-right">
+        Show:&nbsp;
         <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="track-select" data-toggle="dropdown">
           {{ location.name }}
           <span class="caret"></span>
@@ -19,8 +20,10 @@
 
     <!-- map -->
     <div class="row">
-      <div id="currentMap">
-        {{ svg }}
+      <div class="col-md-12 col-lg-8 col-lg-offset-2">
+        <div id="currentMap">
+          {{ svg }}
+        </div>
       </div>
     </div>
   </div>

@@ -36,7 +36,8 @@
   <div class="session-details">
     <p>{{ session.description }}</p>
     {% if session.facilitators | isArray %}
-    <ul>
+    <strong>Facilitators: </strong>
+    <ul class="list-inline">
       {% for facilitator in session.facilitators %}
       <li>
         {{ facilitator.name }}
@@ -46,14 +47,15 @@
       </li>
       {% endfor %}
     </ul>
-    {% else %}
-    <p>{{ session.facilitators | marked }}</p>
+    {% elif session.facilitators %}
+    <p><strong>Facilitators:</strong> {{ session.facilitators | marked }}</p>
     {% endif %}
   </div>
 
   <!-- session tags -->
   {% if session.tags.length > 0 %}
   <div class="session-tags">
+    <strong>Tags: </strong>
     {% for tag in session.tags %}
     <a href="#tag/{{ tag }}">#{{ tag }}</a>{{ ', ' if not loop.last }}
     {% endfor %}
