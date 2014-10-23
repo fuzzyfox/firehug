@@ -30,11 +30,19 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
       return;
     }
 
-    var notificationOpts = { body: message };
+    var strippedTitle = '';
+    var strippedMessage = '';
+    var tmp = document.createElement('div');
+    tmp.innerHTML = title;
+    strippedTitle = tmp.innerText || tmp.textContent;
+    tmp.innerHTML = message;
+    strippedMessage = tmp.innerText || tmp.textContent;
+
+    var notificationOpts = { body: strippedMessage };
     // ask for device Notification permission if not already set
     // otherwise directly notify
     if (window.Notification.permission === 'granted') {
-        new window.Notification(title, notificationOpts);
+        new window.Notification(strippedTitle, notificationOpts);
     }
     else if (window.Notification.permission !== 'denied') {
       window.Notification.requestPermission(function (permission) {
@@ -44,7 +52,7 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
 
         // If the user is okay, let's create a notification
         if (permission === 'granted') {
-          new window.Notification(title, notificationOpts);
+          new window.Notification(strippedTitle, notificationOpts);
         }
       });
     }
