@@ -132,6 +132,26 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
     return ( haystack.indexOf( needle ) > -1 );
   });
 
+  /**
+   * Strip down location to only its name if in form 'ref: name'
+   * @param  {String} str location to reduce down
+   * @return {String}     location name only if in correct form, else input string
+   */
+  nunjucksEnv.addFilter( 'locationNameOnly', function( str ) {
+    console.log( str );
+    // check if valid map reference at first char
+    if( /[m0-9]/i.test( str.charAt( 0 ) ) ) {
+      console.log( 'valid floor ref' );
+      // check for notation of "ref: name"
+      if( /^(m|[0-9]+): /i.test( str ) ) {
+        console.log( 'valid form' );
+        return str.replace( /^(m|[0-9]+): /i, '' );
+      }
+    }
+
+    return str;
+  });
+
 
   /*
     attempt to get app details from /manifest.webapp
