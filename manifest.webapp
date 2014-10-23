@@ -10,5 +10,8 @@
     "name": "FireHug Development Team",
     "url": "https://github.com/fuzzyfox/firehug/graphs/contributors"
   },
-  "appcache_path": "/firehug.appcache"
+  "appcache_path": "/firehug.appcache",
+  "permissions": {
+    "desktop-notification": {}
+  }
 }
