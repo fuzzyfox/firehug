@@ -1,4 +1,4 @@
-/* global routie, nunjucksEnv, jQuery, routes, sync, notify, dataStore */
+/* global routie, nunjucksEnv, jQuery, routes, sync, notify, dataStore, analytics */
 
 /**
  * @file App wide logic
@@ -11,7 +11,7 @@
  * @license MPL-2.0
  */
 
-(function( window, document, routie, routes, nunjucksEnv, $, sync, notify, db, undefined ) {
+(function( window, document, routie, routes, nunjucksEnv, $, sync, notify, db, analytics, undefined ) {
   'use strict';
 
   /*
@@ -114,5 +114,15 @@
 
       $main.attr( 'id', 'error' );
     });
+
+    /*
+      fire tracking events on hashchange
+     */
+    $( window ).on( 'hashchange', function() {
+      if( window.location.hash.substr( 1 ) ) {
+        return analytics.virtualPageview( window.location.hash.substr( 1 ) );
+      }
+      analytics.virtualPageview( 'home' );
+    });
   });
-})( window, document, routie, routes, nunjucksEnv, jQuery, sync, notify, dataStore );
+})( window, document, routie, routes, nunjucksEnv, jQuery, sync, notify, dataStore, analytics );

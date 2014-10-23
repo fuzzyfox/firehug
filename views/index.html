@@ -64,6 +64,25 @@
   {% endblock %}
 
   <title>{% block title %}{{ app.name }}{% endblock %}</title>
+
+  {% block ga %}
+  <!-- todo, get ga code from server config -->
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-35433268-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript';
+      ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+  {% endblock %}
 </head>
 <body class="{{ 'splash' if env.SPLASH }}" data-timezone="{{ timezone }}">
   {# add a header that persists despite views #}
@@ -121,12 +140,15 @@
   {%- endif %}
 
   {% block mainJS %}
+  <!-- vendor code -->
   <script src="/vendor/jquery/dist/jquery.min.js"></script>
   <script src="/vendor/moment/min/moment.min.js"></script>
   <script src="/vendor/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
   <script src="/vendor/marked/lib/marked.js"></script>
   <script src="/vendor/routie/dist/routie.min.js"></script>
   <script src="/vendor/nunjucks/browser/nunjucks-slim.min.js"></script>
+  <script src="/vendor/webmaker-analytics/analytics.js"></script>
+  <!-- app code -->
   <script src="/theme/partials.js"></script>
   <script src="/core/js/core.min.js"></script>
   {% endblock %}

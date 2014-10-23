@@ -28,6 +28,7 @@
     "routie": "~0.3.2",
     "font-awesome": "~4.2.0",
     "marked": "~0.3.2",
-    "moment-timezone": "~0.2.2"
+    "moment-timezone": "~0.2.2",
+    "webmaker-analytics": "~0.1.7"
   }
 }
