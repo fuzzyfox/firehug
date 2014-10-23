@@ -18,7 +18,10 @@ routes = (function( window, document, routes, nunjucksEnv, db, sync, moment, $, 
       };
 
       context.sessions = context.sessions.filter( function( session ) {
-        return ( session.tags && session.tags.indexOf( tag ) > -1 );
+        session.tags = session.tags.forEach( function( t, i ) {
+          session.tags[ i ] = t.toLowerCase();
+        });
+        return ( session.tags && session.tags.indexOf( tag.toLowerCase() ) > -1 );
       });
 
       nunjucksEnv.render( 'tag.html', context, function( err, res ) {

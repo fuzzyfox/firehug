@@ -34,7 +34,7 @@
 
   <!-- session details -->
   <div class="session-details">
-    <p>{{ session.description }}</p>
+    <p>{{ session.description | marked }}</p>
     {% if session.facilitators | isArray %}
     <strong>Facilitators: </strong>
     <ul class="list-inline">
