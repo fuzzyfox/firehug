@@ -4,7 +4,7 @@
       <img src="/theme/imgs/logo.png" alt="{{ app.name }}" class="img-responsive app-logo">
 
       <ul class="list-unstyled">
-        <li><a href="#schedule/{{ state.theme if state.theme else 'plenary' }}" class="btn btn-block btn-blue btn-lg">Schedule</a></li>
+        <li><a href="#schedule/{{ state.theme if state.theme else 'overview' }}" class="btn btn-block btn-blue btn-lg">Schedule</a></li>
         {% if trackedSessions.length > 0 %}<li><a href="#schedule/tracked" class="btn btn-block btn-default btn-lg">Tracked Sessions</a></li>{% endif %}
         <li><a href="#doc/faq" class="btn btn-block btn-yellow btn-lg">Survival Guide</a></li>
         <li><a href="#map" class="btn btn-block btn-orange btn-lg">Floor Plan</a></li>
