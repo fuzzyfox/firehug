@@ -51,7 +51,7 @@
     console.log( changeset );
 
     // notify of new sessions
-    if( changeset.added.length ) {
+    if( changeset.added.length && false ) {
 
       var newSessions = newData.filter( function( session ) {
         return ( changeset.added.indexOf( session.id ) > -1 );
@@ -63,7 +63,7 @@
         });
       }
       else {
-        notify( newSessions.length + ' sessions were added to the schedule.', undefined, 'plus', ( 3 + ( 3 * idx ) ) );
+        notify( newSessions.length + ' sessions were added to the schedule.', undefined, 'plus', 3 );
       }
     }
 
