@@ -9,6 +9,8 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefi
 
   return $.extend( routes, {
     nowandnext: function( themeSlug ) {
+      var self = this;
+
       var context = {
         theme: db.getItem( 'themes' ),
         state: db.getItem( 'state' ),
@@ -17,15 +19,23 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefi
 
       var sessions = db.getItem( 'sessions' );
 
-      // select correct theme for nj
-      context.theme = context.theme.filter( function( theme ) {
-        return ( theme.slug === themeSlug );
-      })[ 0 ];
+      if( themeSlug && themeSlug !== '-' ) {
+        // select correct theme for nj
+        context.theme = context.theme.filter( function( theme ) {
+          return ( theme.slug === themeSlug );
+        })[ 0 ];
 
-      // filter sessions by theme
-      sessions = sessions.filter( function( session ) {
-        return ( session.themeSlug === themeSlug );
-      });
+        // filter sessions by theme
+        sessions = sessions.filter( function( session ) {
+          return ( session.themeSlug === themeSlug );
+        });
+      }
+      else {
+        context.theme = {
+          name: 'All Tracks',
+          slug: '-'
+        };
+      }
 
       // filter for sessions happening now
       context.now = sessions.filter( function( session ) {
@@ -54,7 +64,11 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefi
 
         $main.html( res ).attr( 'id', 'view-nowandnext' );
 
-        // todo - update in a similar manner to autohide
+        setTimeout( function() {
+          if( $main.attr( 'id' ) === 'view-nowandnext' ) {
+            self.nowandnext( themeSlug );
+          }
+        }, 60000 );
       });
     }
   });

@@ -30,7 +30,7 @@
     routie( 'map/:location?', routes.map );
     routie( 'settings', routes.settings );
     // routes not user exposed
-    routie( 'nowandnext/:theme', routes.nowandnext );
+    routie( 'nowandnext/:theme?', routes.nowandnext );
 
     /*
       deal with posibility to install (open web app)
