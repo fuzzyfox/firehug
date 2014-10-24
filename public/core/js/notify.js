@@ -30,6 +30,25 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
       return;
     }
 
+    var notificationOpts = { body: message };
+    // ask for device Notification permission if not already set
+    // otherwise directly notify
+    if (window.Notification.permission === 'granted') {
+        new window.Notification(title, notificationOpts);
+    }
+    else if (window.Notification.permission !== 'denied') {
+      window.Notification.requestPermission(function (permission) {
+        if (!('permission' in window.Notification)) {
+          window.Notification.permission = permission;
+        }
+
+        // If the user is okay, let's create a notification
+        if (permission === 'granted') {
+          new window.Notification(title, notificationOpts);
+        }
+      });
+    }
+
     if( typeof cancelable !== 'boolean' ) {
       cancelable = true;
     }
