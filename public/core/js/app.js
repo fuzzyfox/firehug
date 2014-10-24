@@ -94,7 +94,7 @@
      */
     if( typeof db.getItem( 'state' ).firstRun !== 'boolean' || !db.getItem( 'state' ).firstRun ) {
       db.extendItem( 'state', { firstRun: true } );
-      notify( 'Welcome to the Mozilla Festival app.', 'This app aims to help you through you\'re festival experience and keep you up-to-date on schedule changes.</p><p>Tap this message to dismiss it, or, visit the <a href="#settings">settings</a> to disable notifications.' );
+      notify( 'Welcome to the Mozilla Festival app.', 'This app aims to help you through youre festival experience and keep you up-to-date on schedule changes.</p><p>Tap this message to dismiss it, or, visit the <a href="#settings">settings</a> to disable notifications.' );
     }
 
     /*

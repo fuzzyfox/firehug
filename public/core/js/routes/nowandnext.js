@@ -53,6 +53,8 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefi
         }
 
         $main.html( res ).attr( 'id', 'view-nowandnext' );
+
+        // todo - update in a similar manner to autohide
       });
     }
   });
