@@ -52,13 +52,19 @@
 
     // notify of new sessions
     if( changeset.added.length ) {
+
       var newSessions = newData.filter( function( session ) {
         return ( changeset.added.indexOf( session.id ) > -1 );
       });
 
-      newSessions.forEach( function( session, idx ) {
-        notify( session.title + ' was added to the schedule.', undefined, 'plus', ( 3 + ( 3 * idx ) ) );
-      });
+      if( newSessions.length <= 5 ) {
+        newSessions.forEach( function( session, idx ) {
+          notify( session.title + ' was added to the schedule.', undefined, 'plus', ( 3 + ( 3 * idx ) ) );
+        });
+      }
+      else {
+        notify( newSessions.length + ' sessions were added to the schedule.', undefined, 'plus', ( 3 + ( 3 * idx ) ) );
+      }
     }
 
     // notify of changed (tracked) sessions
