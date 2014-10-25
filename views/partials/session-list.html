@@ -10,7 +10,7 @@
   <div class="row text-muted">
     <div class="col-sm-8">
       {% if session.location %}
-      <strong>Location:</strong> <a href="#map/{{ session.location | urlencode }}">{{ session.location | locationNameOnly }}</a>
+      <strong>Location:</strong> <a href="#map/{{ session.location | urlencode }}">{{ session.location }}</a>
       {% endif %}
     </div>
 

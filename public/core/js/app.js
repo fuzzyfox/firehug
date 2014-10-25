@@ -45,7 +45,6 @@
           // yes we can install
           installApp = function() {
             var manifest = window.location.origin + '/manifest.webapp';
-            console.log( manifest );
             var req = window.navigator.mozApps.install( manifest );
 
             req.onsuccess = function() {
