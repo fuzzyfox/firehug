@@ -16,7 +16,9 @@
 var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, sync, undefined ) {
   'use strict';
   // get new nunjucks environment
-  var nunjucksEnv = new nunjucks.Environment();
+  var nunjucksEnv = new nunjucks.Environment( undefined, {
+    watch: false
+  });
 
   /*
     prep ready function/trigger
