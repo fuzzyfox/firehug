@@ -32,7 +32,7 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
 
     var strippedTitle = '';
     var strippedMessage = '';
-    var tmp = document.createElement('div');
+    var tmp = document.createElement( 'div' );
     tmp.innerHTML = title;
     strippedTitle = tmp.innerText || tmp.textContent;
     tmp.innerHTML = message;
@@ -41,18 +41,18 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
     var notificationOpts = { body: strippedMessage };
     // ask for device Notification permission if not already set
     // otherwise directly notify
-    if (window.Notification.permission === 'granted') {
-        new window.Notification(strippedTitle, notificationOpts);
+    if( window.Notification.permission === 'granted' ) {
+        new window.Notification( strippedTitle, notificationOpts );
     }
-    else if (window.Notification.permission !== 'denied') {
-      window.Notification.requestPermission(function (permission) {
-        if (!('permission' in window.Notification)) {
+    else if( window.Notification.permission !== 'denied' ) {
+      window.Notification.requestPermission( function ( permission ) {
+        if( !( 'permission' in window.Notification ) ) {
           window.Notification.permission = permission;
         }
 
         // If the user is okay, let's create a notification
-        if (permission === 'granted') {
-          new window.Notification(strippedTitle, notificationOpts);
+        if( permission === 'granted' ) {
+          new window.Notification( strippedTitle, notificationOpts );
         }
       });
     }
