@@ -1,9 +1,7 @@
-# Firehug <small>MozFest port</small>
+# Firehug
 
 ## Notes
 * For favicon creation use <http://realfavicongenerator.net/>.
-
-**THIS README IS OUT OF DATE - IGNORE IT**
 
 ## Contribute
 
@@ -11,24 +9,11 @@ How to run:
 
     cp local.json-dist local.json
     npm install
-    npm start
+    npm install -g bower
+    npm install -g grunt
+    grunt
 
-Open an issue if you need API keys for `local.json`.
-
-## Deploy to heroku
-
-	heroku create
-	git push heroku master
-	heroku addons:add redistogo
-	heroku config:set NODE_ENV=production
-	heroku config:set sessionSecret=secret
-	heroku config:set sessionName=sid
-	heroku config:set googleKey=yourGoogleSpreadsheetKey
-	heroku config:set faqKey=yourGoogleDocKeyForFAQContent
-	heroku config:set threshhold=5000
-	heroku config:set obrEndpoint="http://badger.example.com"
-	heroku config:set obrProgram=some-obr-program
-	heroku open
+Install a local Redis server and start it before using `grunt`. Open an issue if you need API keys for `local.json`. The application won't start if you don't have these keys or the Redis server is missing.
 
 ## License
 
