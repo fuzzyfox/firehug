@@ -1,5 +1,10 @@
 # Firehug <small>MozFest port</small>
 
+## Notes
+* For favicon creation use <http://realfavicongenerator.net/>.
+
+**THIS README IS OUT OF DATE - IGNORE IT**
+
 ## Contribute
 
 How to run:

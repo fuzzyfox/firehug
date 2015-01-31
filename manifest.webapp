@@ -1,0 +1,17 @@
+{
+  "name": "FireHug",
+  "description": "A human-conference schedule app to guide you through the experience.",
+  "launch_path": "/#",
+  "icons": {
+    "128": "/theme/imgs/icons/favicon-128x128.png",
+    "512": "/theme/imgs/icons/favicon-512x512.png"
+  },
+  "developer": {
+    "name": "FireHug Development Team",
+    "url": "https://github.com/fuzzyfox/firehug/graphs/contributors"
+  },
+  "appcache_path": "/firehug.appcache",
+  "permissions": {
+    "desktop-notification": {}
+  }
+}

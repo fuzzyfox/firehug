@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Settings{{ ' + Debug' if state.debug}}</h2>
+    {% if state.debug %}<h3>Settings</h3>{% endif %}
+    <!-- autohide -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Auto Hide <small>{{ 'On' if state.autoHide else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.autoHide" type="button" class="btn btn-{{ 'danger' if state.autoHide else 'success' }} pull-right">Turn {{ 'Off' if state.autoHide else 'On' }}</button>
+        <p>This feature automatically hides past sessions from the day in schedule view.</p>
+        <p><strong>Recommended state:</strong> On.</p>
+      </div>
+    </div>
+
+    <!-- notifications -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Notifications <small>{{ 'On' if state.notifications else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.notifications" type="button" class="btn btn-{{ 'danger' if state.notifications else 'success' }} pull-right">Turn {{ 'Off' if state.notifications else 'On' }}</button>
+        <p>Shows notifications when it looses connection, a session you're tracking changes, or new sessions are added.</p>
+        <p><strong>Recommended state:</strong> On.</p>
+      </div>
+    </div>
+
+    <!-- debug mode -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Debug Mode <small>{{ 'On' if state.debug else 'Off' }}</small></h4>
+      </div>
+      <div class="panel-body">
+        <button data-toggle="state.debug" type="button" class="btn btn-{{ 'danger' if state.debug else 'success' }} pull-right">Turn {{ 'Off' if state.debug else 'On' }}</button>
+        <p>Shows a number of debug details in views and on this page, such as:</p>
+        <ul>
+          <li>Timezone information.</li>
+          <li>Synchronisation status</li>
+          <li>Session IDs</li>
+          <li>Offline Status</li>
+          <li>...</li>
+        </ul>
+        <p><strong>Recommended state:</strong> Off.</p>
+      </div>
+    </div>
+
+    {% if state.debug %}
+    <!-- reset to defaults -->
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title">Factory Reset</h4>
+      </div>
+      <div class="panel-body">
+        {% if not offlineState.online %}
+        <p class="alert alert-danger"><strong>Warning:</strong> You appear to be offline. If you reset now you will not be able to load the app the again until a network connection can be made.</p>
+        {% endif %}
+
+        <button data-reset="true" type="button" class="btn btn-danger pull-right">Reset</button>
+        <p>Resets the app to its default state.</p>
+
+        <p><strong>This will:</strong></p>
+        <ul>
+          <li>Remove all locally stored schedule data.</li>
+          <li>Set all options back to defaults.</li>
+        </ul>
+
+        <p><strong>This will not:</strong></p>
+        <ul>
+          <li>Clear applicationCache (this cannot be done programatically).</li>
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if state.debug %}
+    <h3>Debug</h3>
+
+    <!-- time -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Timezones</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Local Time (UTC {{ localTime | timeFormat( 'Z', false ) }})</dt>
+          <dd>{{ localTime | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Event Time (UTC {{ eventTime | timeFormat( 'Z' ) }})</dt>
+          <dd>{{ eventTime | timeFormat( 'YYYY-MM-DD HH:mm' ) }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Synchronisation</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Last Sync</dt>
+          <dd>{{ state.lastSync | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Next Sync</dt>
+          <dd>{{ state.nextSync | timeFormat( 'YYYY-MM-DD HH:mm', false ) }}</dd>
+          <dt>Sync Items</dt>
+          <dd>
+            <dl class="dl-horizontal">
+              {% for key, value in state.sync %}
+              <dt>{{ key }}</dt><dd>{{ value }}</dd>
+              {% endfor %}
+            </dl>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- schedule state -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Schedule Display</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Theme Filter</dt>
+          <dd>{{ state.theme if state.theme != '-' else 'no filter' }}</dd>
+          <dt>Day Filter</dt>
+          <dd>{{ state.day if state.day != '-' else 'no filter' }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- offline status -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Offline Status</h4>
+      </div>
+      <div class="panel-body">
+        <dl>
+          <dt>Persistant Storage</dt>
+          <dd>{{ offlineState.persistantStorage }}</dd>
+          <dt>AppCache Enabled</dt>
+          <dd>{{ offlineState.appcache.enabled }}</dd>
+          {% if offlineState.appcache.enabled %}
+          <dt>AppCache Status</dt>
+          <dd>{{ offlineState.appcache.statusText[ offlineState.appcache.status ] }}</dd>
+          {% endif %}
+          <dt>Currently Online</dt>
+          <dd>{{ offlineState.online }}</dd>
+        </dl>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>

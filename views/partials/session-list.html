@@ -1,0 +1,69 @@
+<!-- session listing -->
+{% for session in sessions %}
+<div class="session panel panel-default" data-session-id="{{ session.id }}" data-session-start="{{ session.start }}" data-session-end="{{ session.end }}">
+  <!-- session tracking -->
+  <i class="fa fa-star{{ '-o' if not trackedSessions | contains( session.id ) }} btn btn-default pull-right" data-tracked-session="{{ trackedSessions | contains( session.id ) }}"></i>
+
+  <h4 class="session-title"><a href="#session/{{ session.id }}">{{ session.title }}</a></h4>
+
+  <!-- session key-details -->
+  <div class="row text-muted">
+    <div class="col-sm-8">
+      {% if session.location %}
+      <strong>Location:</strong> <a href="#map/{{ session.location | urlencode }}">{{ session.location }}</a>
+      {% endif %}
+    </div>
+
+    <div class="col-sm-4 text-right">
+      <strong>{{ 'Event ' if state.debug }}Time: </strong>
+      {% if day == '-' %}
+        <time>{{ session.start | timeFormat( 'ddd ' ) }}</time>
+      {% endif %}
+      <time>{{ session.start | timeFormat( 'HH:mm' ) }}</time> - <time>{{ session.end | timeFormat( 'HH:mm' ) }}</time>{{ ' – ' + session.id if state.debug }}
+
+      {% if state.debug %}
+        <br>
+        <strong>Local Time:</strong>
+        {% if day == '-' %}
+          <time>{{ session.start | timeFormat( 'ddd ', false ) }}</time>
+        {% endif %}
+        <time>{{ session.start | timeFormat( 'HH:mm', false ) }}</time> - <time>{{ session.end | timeFormat( 'HH:mm', false ) }}</time>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- session details -->
+  <div class="session-details">
+    <p>{{ session.description | marked }}</p>
+    {% if session.facilitators | isArray %}
+    <strong>Facilitators: </strong>
+    <ul class="list-inline">
+      {% for facilitator in session.facilitators %}
+      <li>
+        {{ facilitator.name }}
+        {% if facilitator.twitter %}
+          <a href="https://twitter.com/{{ facilitator.twitter | replace( '@', '' ) }}">{{ facilitator.twitter }}</a>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% elif session.facilitators %}
+    <p><strong>Facilitators:</strong> {{ session.facilitators | marked }}</p>
+    {% endif %}
+  </div>
+
+  <!-- session tags -->
+  {% if session.tags.length > 0 %}
+  <div class="session-tags">
+    <strong>Tags: </strong>
+    {% for tag in session.tags %}
+    <a href="#tag/{{ tag }}">#{{ tag }}</a>{{ ', ' if not loop.last }}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% if sessions.length == 0 %}
+<p class="lead text-center">No sessions to display.</p>
+{% endif %}

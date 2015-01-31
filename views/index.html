@@ -1,55 +1,163 @@
-<!doctype html>
-<html ng-csp ng-app="summit" ng-controller="AppCtrl as app" ng-class="{'state-ready': ready}" manifest="/firehug.appcache">
+<!DOCTYPE html>
+<html lang="en" manifest="firehug.appcache">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<link rel="icon" type="image/png" href="/img/icon-32.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="/img/icon-152.png">
-	<meta name="og:type" content="website">
-	<meta name="og:image" content="/img/icon-152.png">
-	<meta name="og:title" content="Mozilla Summit">
-	<meta name="og:description" content="The Summit is a human conference. A meet-up of grand proportions. A full 72 hours/4,320 minutes/259,200 seconds of magic, wholly dedicated to our awesome community (that's you).">
-	<title>Mozilla Festival 2013</title>
-	<meta name="fragment" content="!">
-	{{{css}}}
+  <meta charset="utf-8">
+  {% block viewport %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scaleable=no">
+  {% endblock %}
+
+  <!-- App Name -->
+  <meta name="application-name" content="{{ app.name }}">
+
+  {% block appleMobileWebApp %}
+  <!-- Apple Mobile Web App Compat -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="{{ app.name }}">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  {% endblock %}
+
+  {% block appIcons -%}
+    {% block appleTouchIcons %}
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/imgs/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/imgs/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/imgs/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/imgs/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/imgs/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/imgs/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/imgs/icons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/imgs/icons/apple-touch-icon-57x57.png">
+    {% endblock %}
+
+    {% block favicons %}
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/imgs/icons/favicon-16x16.png" sizes="16x16">
+    {% endblock %}
+
+    {% block windowsTileIcons %}
+    <!-- Windows Tile Definition -->
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/theme/imgs/icons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/imgs/icons/browserconfig.xml">
+    {% endblock %}
+  {%- endblock %}
+
+
+  {% block openGraph %}
+  <!-- Open Graph details -->
+  <meta name="og:type" content="website">
+  <meta name="og:image" content="{{ app.icons[ 512 ] }}">
+  <meta name="og:title" content="{{ app.name }}">
+  <meta name="og:description" content="{{ app.description }}">
+  {% endblock %}
+
+  <!-- Stylesheets -->
+  {% block mainCSS %}
+  <link rel="stylesheet" href="/core/css/core.min.css">
+  {% endblock %}
+  {% block customCSS %}
+  <link rel="stylesheet" href="/theme/css/main.min.css">
+  {% endblock %}
+
+  <title>{% block title %}{{ app.name }}{% endblock %}</title>
+
+  {% block ga %}
+  <!-- todo, get ga code from server config -->
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-35433268-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript';
+      ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+  {% endblock %}
 </head>
-<body data-payload='{{{jsonPayload}}}'>
-	<header class="container" role="banner">
-		<nav class="row">
-			<div class="col-sm-8 col-sm-offset-2">
-				<a href="#!/" class="menu-icn menu-back" ng-show="canGoBack"></a>
-				<ul>
-					<li>
-						<a href="#" class="menu-icn menu-dropdown"></a>
-						<ul>
-							<li>
-								<a href="#!/" ng-show="canInstall" ng-click="install()">Install App</a>
-							</li>
-							<li>
-								<a href="https://www.mozilla.org/en-US/privacy/policies/websites/" target="_blank">Privacy Policy</a>
-							</li>
-							<li>
-								<a href="https://www.mozilla.org/about/legal.html" target="_blank">Terms of Service</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</header>
-	<main class="container" role="main">
-		<div ng-view></div>
-	</main>
-	<div id="splash-screen">
-		<img src="/img/logo-home.png" alt="Splash">
-		<progress></progress>
-	</div>
-	<div id="eu-cookie-law" class="active">
-		<a href="#!/" class="dismiss">&times;</a>
-		<p>This webapp uses cookies and localStorage to enhance user experience. By continuing to use this app you agree to our usage of cookies and localStorage as outlined in our <a href="https://www.mozilla.org/en-US/privacy/policies/websites/" target="_blank">Privacy Policy</a>.</p>
-	</div>
-	{{{js}}}
+<body class="{{ 'splash' if env.SPLASH }}" data-timezone="{{ timezone }}">
+  {# add a header that persists despite views #}
+  {% block appHeader %}
+  <nav class="navbar navbar-default navbar-static-top" id="app-nav">
+    <div class="container">
+      <ul class="nav navbar-nav">
+          <li>
+            <a href="#">
+              <i class="fa fa-home fa-lg"></i>
+              <span class="sr-only">Home</span>
+            </a>
+          </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bars fa-lg"></i>
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+
+          <ul class="dropdown-menu">
+            <li class="install-app">
+              <a href="#install">Install</a>
+            </li>
+            <li>
+              <a href="#settings">Settings</a>
+            </li>
+            <li>
+              <a href="http://2014.mozillafestival.org/guidelines/">Participation Guidelines</a>
+            </li>
+            <!-- <li>
+              <a href="/legal">Terms Of Service</a>
+            </li> -->
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  {% endblock %}
+
+  <!-- view target -->
+  <main>
+    {% block mainContents %}{% endblock %}
+  </main>
+
+  {% if env.SPLASH -%}
+    {% block splash %}
+    <div id="splash-screen">
+      <img src="{{ app.icons[ 128 ] }}" alt="{{ app.name }}">
+      <progress></progress>
+    </div>
+    {% endblock %}
+  {%- endif %}
+
+  {% block mainJS %}
+  <!-- vendor code -->
+  <script src="/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="/vendor/moment/min/moment.min.js"></script>
+  <script src="/vendor/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+  <script src="/vendor/marked/lib/marked.js"></script>
+  <script src="/vendor/routie/dist/routie.min.js"></script>
+  <script src="/vendor/nunjucks/browser/nunjucks-slim.min.js"></script>
+  <script src="/vendor/webmaker-analytics/analytics.js"></script>
+  <script src="/vendor/visionmedia/debug/dist/debug.js"></script>
+
+  <!-- app code -->
+  <script src="/theme/partials.js"></script>
+  <script src="/core/js/core.min.js"></script>
+  {% endblock %}
+
+  {% block customJS %}
+  <script src="/theme/js/app.min.js"></script>
+  <script src="/vendor/bootstrap/js/dropdown.js"></script>
+  {% endblock %}
 </body>
 </html>

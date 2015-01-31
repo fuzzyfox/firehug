@@ -1,0 +1,195 @@
+@import '../../vendor/bootstrap/less/bootstrap';
+
+@import '../../vendor/font-awesome/less/font-awesome.less';
+@fa-font-path: '../../vendor/font-awesome/fonts';
+
+@blue: #91cfd6;
+@navy_blue: #093D60;
+@pale_blue: #CBE8EC;
+@red: #E12526;
+@orange: #EF8847;
+@yellow: #F8CB0E;
+@background: #f6f4ec;
+
+@border-radius-base: 0;
+@border-radius-large: 0;
+@border-radius-small: 0;
+
+body {
+  background: @background;
+  border-top: 8px solid @orange;
+
+  &::before {
+    content: ' ';
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    top: 0;
+    height: 8px;
+    background: @navy_blue;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 33.333%;
+    width: 33.333%;
+    height: 8px;
+    top: 0;
+    background: @yellow;
+    border-right: 4px solid white;
+    border-left: 4px solid white;
+  }
+}
+
+.app-logo {
+  display: block;
+  margin: 3rem auto;
+}
+
+#app {
+  &-nav {
+    background: transparent;
+    border: none;
+
+    .navbar-nav {
+      float:left;
+
+      &.navbar-right {
+        float:right;
+      }
+    }
+  }
+}
+
+main {
+  .container-fixed();
+}
+
+#view {
+  &-home {
+    li {
+      margin-top: 1rem;
+    }
+  }
+
+  &-schedule {
+    .day-select {
+      padding: 1rem 1rem 0 1rem;
+      background: @blue;
+      border: 1px solid darken( @blue, 5% );
+      color: @text-color;
+
+      a {
+        color: @text-color;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+[id^=view-] {
+  h2 {
+    text-align: center;
+  }
+
+  .session {
+    padding: 1rem;
+    margin: 1rem;
+
+    [data-tracked-session] {
+      // font-size: 1.4em;
+    }
+  }
+}
+
+[id^=view-doc-] {
+  .make-sm-column( 8 );
+  .make-sm-column-offset( 2 );
+}
+
+.btn {
+  &-blue {
+    background: @blue;
+    border-color: darken( @blue, 5% );
+    color: @text-color;
+
+    &:hover {
+      background: darken( @blue, 5% );
+      border-color: darken( @blue, 10% );
+      color: darken( @text-color, 5% );
+    }
+  }
+
+  &-yellow {
+    background: @yellow;
+    border-color: darken( @yellow, 5% );
+    color: @text-color;
+
+    &:hover {
+      background: darken( @yellow, 5% );
+      border-color: darken( @yellow, 10% );
+      color: darken( @text-color, 5% );
+    }
+  }
+
+  &-red {
+    background: @red;
+    border-color: darken( @red, 5% );
+    color: white;
+
+    &:hover {
+      background: darken( @red, 5% );
+      border-color: darken( @red, 10% );
+      color: white;
+    }
+  }
+
+  &-orange {
+    background: @orange;
+    border-color: darken( @orange, 5% );
+    color: @text-color;
+
+    &:hover {
+      background: darken( @orange, 5% );
+      border-color: darken( @orange, 10% );
+      color: darken( @text-color, 5% );
+    }
+  }
+}
+
+.notification-bar {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  box-shadow: 0 0 4px rgba( 0, 0, 0, 0.4 );
+  position: fixed;
+  bottom: 0;
+  background: white;
+
+  .icon {
+    font-size: 3em;
+    line-height: 1.4em;
+  }
+
+  .details {
+    & > h4 {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+}
+
+.session-title > a {
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+body > nav:first-child .fa-lg {
+  font-size: 2em;
+}

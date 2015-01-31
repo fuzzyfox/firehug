@@ -1,0 +1,35 @@
+{
+  "name": "firehug",
+  "version": "1.0.0",
+  "homepage": "https://github.com/fuzzyfox/firehug",
+  "description": "A human-conference schedule app to guide you through the experience.",
+  "keywords": [
+    "mozilla",
+    "festival",
+    "event",
+    "webapp",
+    "schedule"
+  ],
+  "license": "MPL-2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "later": "*",
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.2.0",
+    "nunjucks": "~1.0.7",
+    "moment": "~2.8.3",
+    "routie": "~0.3.2",
+    "font-awesome": "~4.2.0",
+    "marked": "~0.3.2",
+    "moment-timezone": "~0.2.2",
+    "webmaker-analytics": "~0.1.7",
+    "visionmedia/debug": "~2.1.1"
+  }
+}

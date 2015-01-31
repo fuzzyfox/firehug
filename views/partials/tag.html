@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Sessions tagged "{{ tag }}"</h2>
+    {% if state.debug %}<p class="text-center"><small>Last synced <time datetime="{{ state.lastSync }}" rel="lastSync">{{ state.lastSync | timeFormat( 'HH:mm:ss', false ) }}</time> local time</small></p>{% endif %}
+
+    {% include 'session-list.html' %}
+  </div>
+</div>

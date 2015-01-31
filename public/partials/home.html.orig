@@ -1,0 +1,56 @@
+<div class="row" id="view-home">
+  <article class="col-sm-8 col-sm-offset-2 text-center">
+    <img src="/img/logo-home.png" alt="Mozilla Festival 2013" />
+
+    <div class="friday-info" ng-class="{ hide : displayFridayInfo() }">
+      <ul>
+        <li>
+          <a href="#!/friday">Friday: Opening Night</a>
+        </li>
+      </ul>
+      <hr>
+    </div>
+
+    <ul>
+      <li>
+        <a href="#!/schedule">Schedule</a>
+      </li>
+
+      <li>
+        <a href="#!/around">Survival Guide</a>
+      </li>
+
+
+      <li>
+        <a href="#!/maps">Floor Plan <i class="icon-online"></i></a>
+      </li>
+
+      <li>
+        <a href="#!/badges">Get Badges <i class="icon-online"></i></a>
+      </li>
+
+      <!-- <li>
+        <a href="#!/dialog">Healthy Dialog <i class="icon-lock" ng-hide="user.activeDay"></i></a>
+      </li>
+
+      <li>
+        <a href="#!/questions">3 Questions <i class="icon-lock" ng-hide="user.activeDay"></i></a>
+      </li> -->
+    </ul>
+
+    <!-- <p class="text-center text-muted" ng-hide="user">
+      <i class="icon-lock"></i>: requires login with your Mozillian email address and is only available Friday to Sunday.
+    </p>
+
+    <p class="text-center text-muted" ng-hide="!user || user.activeDay">
+      <em>"Healthy Dialog"</em> and <em>"3 Questions"</em> are only available Friday to Sunday.
+    </p> -->
+
+    <p class="text-center text-muted">
+      Offline support provided where possible.<br>
+      <i class="icon-online"></i>: requires an internet connection.<br>
+      Hack the schedule on <a href="https://github.com/fuzzyfox/firehug">GitHub</a>.
+    </p>
+
+  </article>
+</div>
