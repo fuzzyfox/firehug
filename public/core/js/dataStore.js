@@ -16,6 +16,8 @@
 var dataStore = (function( window, document, $, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'dataStore' );
+
   /**
    * A simple switch between localStorage and a faked api
    * as fallback, using an in memory object.
@@ -28,7 +30,7 @@ var dataStore = (function( window, document, $, undefined ) {
       return localStorage;
     }
     catch( e ) {
-      console.warn( 'localStorage is not supported, faking the api and using volatile storage instead' );
+      debug( 'localStorage is not supported, faking the api and using volatile storage instead' );
 
       // This api's responses approximate that of localStorage.
       // see for more: https://developer.mozilla.org/en/docs/Web/Guide/API/DOM/Storage
@@ -95,7 +97,7 @@ var dataStore = (function( window, document, $, undefined ) {
      */
     getItems: function( keys ) {
       if( keys && !$.isArray( keys ) ) {
-        return console.error( 'expected array found %s', typeof keys );
+        return debug( 'expected array found %s', typeof keys );
       }
 
       if( !keys ) {
@@ -130,7 +132,7 @@ var dataStore = (function( window, document, $, undefined ) {
      */
     extendItem: function( key, obj, deep ) {
       if( !$.isPlainObject( obj ) ) {
-        return console.error( 'extendItem only works with Objects' );
+        return debug( 'extendItem only works with Objects' );
       }
 
       // set default for deep to true

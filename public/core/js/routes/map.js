@@ -3,6 +3,8 @@
 routes = (function( window, document, routes, nunjucksEnv, $, db, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:map' );
+
   // private + stateless utils
   var $main = $( 'main' );
 
@@ -80,21 +82,24 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, undefined ) {
         context.location.name = context.location.lookup[ context.location.id ].name;
 
         // load map
+        debug( 'Loading map %s', context.location.id );
         var loadMap = $.ajax({
           url: '/theme/imgs/maps/floor_' + context.location.id + '.svg',
           dataType: 'html'
         });
 
         loadMap.done( function( svg ) {
+          debug( 'Map %s loaded', context.location.id );
           context.svg = svg;
 
           nunjucksEnv.render( 'map.html', context, function( err, res ) {
             $main.html( res );
+            debug( 'map rendered' );
           });
         });
 
         loadMap.fail( function() {
-          console.log( 'failed to load map' );
+          debug( 'Failed to load map %s', context.location.id );
         });
       }
       // if not a valid start character to generate a map throw 404 error to use
@@ -106,11 +111,12 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, undefined ) {
         }, function( err, res ) {
           if( err ) {
             $main.html( window.location.hash + ' was not found.' );
-            return console.error( 'failed to load "error.html" partial' );
+            return debug( 'failed to load "error.html" partial' );
           }
 
           $main.html( res );
           $main.attr( 'id', 'error' );
+          debug( 'map 404 rendered' );
         });
       }
     }

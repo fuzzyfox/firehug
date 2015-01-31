@@ -15,6 +15,9 @@
 
 var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, sync, undefined ) {
   'use strict';
+
+  var debug = window.debug( 'nunjucks' );
+
   // get new nunjucks environment
   var nunjucksEnv = new nunjucks.Environment( undefined, {
     watch: false
@@ -35,6 +38,8 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
     if( readyFlag ) {
       return;
     }
+
+    debug( 'nunjucks ready' );
 
     sync.ready( function() {
       readyFlag = true;
@@ -63,6 +68,8 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
   /*
     nunjucks setup
    */
+
+  debug( 'adding custom nunjucks filters' );
 
   /**
    * Convert dateString to relative time from now
@@ -158,6 +165,7 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
 
     fallback to localstorage copy if exists
    */
+  debug( 'getting app details from /manifest.webapp' );
   var getAppManifest = $.ajax({
     url: '/manifest.webapp',
     dataType: 'json'
@@ -166,6 +174,7 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
   // successfully loaded manifest
   // set as global for nunjucks and trigger ready (once db ready too)
   getAppManifest.done( function( appManifest ) {
+    debug( 'adding details to nunjucks environment' );
     nunjucksEnv.addGlobal( 'app', appManifest );
     ready();
 
@@ -177,6 +186,7 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
   // fallback or error if nothing found
   getAppManifest.fail( function() {
     if( !db.getItem( 'app' ) ) {
+      debug( 'ERROR: Failed to load app details' );
       console.error( arguments );
 
       $main.html( '<div class="panel panel-danger"><div class="panel-heading">Load Error</div><p class="panel-body">Oops, failed to load "/manifest.webapp" and no local copy found. Try again later.</p></div>' );
@@ -185,6 +195,7 @@ var nunjucksEnv = (function( window, document, nunjucks, $, moment, marked, db, 
       return;
     }
 
+    debug( 'WARNING: Failed to load details, falling back on localstorage copy' );
     nunjucksEnv.addGlobal( 'app', db.getItem( 'app' ) );
     ready();
   });

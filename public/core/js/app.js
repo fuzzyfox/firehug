@@ -14,10 +14,14 @@
 (function( window, document, routie, routes, nunjucksEnv, $, sync, notify, db, analytics, undefined ) {
   'use strict';
 
+  // setup debug
+  var debug = window.debug( 'app' );
+
   /*
     load + handle routes
    */
   nunjucksEnv.ready( function() {
+    debug( 'initializing app routes' );
     // quick access to where we put rendered views
     var $main = $( 'main' );
 
@@ -42,17 +46,22 @@
 
       selfReq.onsuccess = function() {
         if( !selfReq.result ) {
+          debug( 'providing install option' );
           // yes we can install
           installApp = function() {
+            debug( 'attempting install' );
             var manifest = window.location.origin + '/manifest.webapp';
             var req = window.navigator.mozApps.install( manifest );
 
             req.onsuccess = function() {
+              debug( 'install successful' );
               req.result.launch();
             };
 
             req.onerror = function() {
-              window.alert( 'Error: ' + this.error.name );
+              debug( 'ERROR: Failed to install' );
+              debug( this.error );
+              window.alert( 'Sorry, failed to install successfully.' );
             };
           };
         }
@@ -76,7 +85,7 @@
      */
     var offlineNotification = {};
     $( window ).on( 'online offline', function( event ) {
-      console.log( event.type );
+      debug( '%s event detected', event.type );
       if( event.type === 'offline' ) {
         offlineNotification = notify( 'Unable to connect to the server...', '...your copy of the schedule may be a little out of sync with the world till a connection is made again.', 'refresh fa-spin', 5, false );
       }
@@ -92,6 +101,7 @@
       trigger first run notification
      */
     if( typeof db.getItem( 'state' ).firstRun !== 'boolean' || !db.getItem( 'state' ).firstRun ) {
+      debug( 'display first run notification' );
       db.extendItem( 'state', { firstRun: true } );
       notify( 'Welcome to the Mozilla Festival app.', 'This app aims to help you through youre festival experience and keep you up-to-date on schedule changes.</p><p>Tap this message to dismiss it, or, visit the <a href="#settings">settings</a> to disable notifications.' );
     }
@@ -107,7 +117,7 @@
       }, function( err, res ) {
         if( err ) {
           $main.html( window.location.hash + ' was not found.' );
-          return console.error( 'failed to load "error.html" partial' );
+          return debug( 'failed to load "error.html" partial' );
         }
 
         $main.html( res );
@@ -119,6 +129,7 @@
     /*
       fire tracking events on hashchange
      */
+    debug( 'setting up analytics capture based on hashchange events' );
     $( window ).on( 'hashchange', function() {
       if( window.location.hash.substr( 1 ) ) {
         return analytics.virtualPageview( window.location.hash.substr( 1 ) );

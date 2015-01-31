@@ -18,6 +18,9 @@
 
 var sync = (function( window, document, db, moment, $, undefined ) {
   'use strict';
+
+  var debug = window.debug( 'sync' );
+
   var exports = {};
 
   // couple of variables to help w/ ready state
@@ -31,6 +34,7 @@ var sync = (function( window, document, db, moment, $, undefined ) {
     if( readyFlag ) {
       return;
     }
+    debug( 'sync ready' );
 
     readyFlag = true;
 
@@ -61,6 +65,7 @@ var sync = (function( window, document, db, moment, $, undefined ) {
 
   // if no local config stored use default
   if( ! db.getItem( 'state' ) ) {
+    debug( 'using default config' );
     db.setItem( 'state', config );
   }
 
@@ -71,13 +76,14 @@ var sync = (function( window, document, db, moment, $, undefined ) {
   (function syncInterval() {
     // do not run syncInterval if not stored
     if( !db.getItem( 'state' ).sync ) {
+      debug( 'cancelling sync' );
       return;
     }
 
     /*
       Sync Session Data
      */
-    console.log( 'attempting to sync remote > local data' );
+    debug( 'attempting to sync remote > local data' );
 
     // if we've not run yet check for local data
     if( !readyFlag ) {
@@ -118,7 +124,7 @@ var sync = (function( window, document, db, moment, $, undefined ) {
         if( oldData ) {
           if( key !== 'sessions' && JSON.stringify( oldData ) !== JSON.stringify( newData ) ) {
             $( exports ).trigger( 'change.' + key, [ oldData, newData ] );
-            console.log( '%s updated locally', key );
+            debug( '%s updated locally', key );
           }
           // if sessions lets figure out what changes (if any) occured
           else if( key === 'sessions' ) {
@@ -188,7 +194,7 @@ var sync = (function( window, document, db, moment, $, undefined ) {
             // trigger change event w/ changeset
             if( changeset.added.length || changeset.changed.length || changeset.removed.length ) {
               $( exports ).trigger( 'change.' + key, [ oldData, newData, changeset ] );
-              console.log( '%s updated locally', key );
+              debug( '%s updated locally', key );
             }
           }
         }
@@ -214,7 +220,8 @@ var sync = (function( window, document, db, moment, $, undefined ) {
 
       // if error fail w/ console output
       getRemote.fail( function( jqXHR, textStatus, errorThrown ) {
-        console.error( arguments );
+        debug( 'WARNING: Failed to fetch data from remote' );
+        debug( arguments );
 
         // if we're online we now know we're not
         if( online ) {

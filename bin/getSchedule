@@ -7,6 +7,7 @@
 var shortid = require( 'shortid' );
 var shared = require( '../shared' );
 var env = shared.env;
+var debug = shared.debug( 'bin:getSchedule' );
 var redisClient = shared.redisClient;
 var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
 var redisPrefix = redisPrefix + ':sheets';
@@ -25,12 +26,14 @@ var emailRegex = new RegExp('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\
 var doc = new GoogleSpreadsheet( env.get( 'GOOGLE_KEY' ) );
 doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( error ) {
   if( error ) {
+    debug( 'FATAL ERROR: Failed to authenticate with Google.' );
     console.error( error );
     process.exit( 1 );
   }
 
   doc.getInfo( function( error, rawData ) {
     if( error ) {
+      debug( 'FATAL ERROR: Failed to get schedule information from Google.' );
       console.error( error );
       process.exit( 1 );
     }
@@ -41,7 +44,9 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
     var savesInProgress = 0;
 
     // process worksheets
+    debug( 'Found %d worksheets to process', rawData.worksheets.length );
     rawData.worksheets.forEach( function( sheet, idx ) {
+      debug( 'Processing sheet "%s"', sheet.title );
       // setup sane usage
       worksheets[ sheet.title ] = sheet;
       sheet = worksheets[ sheet.title ];
@@ -52,6 +57,7 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
       // get rows headings
       sheet.getRows( function( error, rowData ) {
         if( error ) {
+          debug( 'FATAL ERROR: Failed to get rows from sheet "%s"', sheet.title );
           console.error( error );
           process.exit( 1 );
         }
@@ -66,7 +72,6 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
 
         // now deal w/ row data
         sheet.data = [];
-
         rowData.forEach( function( row ) {
           var tmp = {};
 
@@ -119,6 +124,7 @@ doc.setAuth( env.get( 'GOOGLE_USER' ), env.get( 'GOOGLE_USER_PASS' ), function( 
 
     (function exitLoop() {
       if( processedSheets === rawData.worksheets.length && !savesInProgress ) {
+        debug( 'All schedule data processed' );
         // done all the things, exit now
         return process.exit( 0 );
       }

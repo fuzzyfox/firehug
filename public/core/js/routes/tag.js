@@ -3,11 +3,14 @@
 routes = (function( window, document, routes, nunjucksEnv, db, sync, moment, $, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:tag' );
+
   // private + stateless utils
   var $main = $( 'main' );
 
   return $.extend( routes, {
     tag: function( tag ) {
+      debug( 'displaying tag %s', tag );
       var context = {
         sessions: db.getItem( 'sessions' ),
         state: db.getItem( 'state' ),
@@ -33,10 +36,11 @@ routes = (function( window, document, routes, nunjucksEnv, db, sync, moment, $, 
             $main.append( err );
           }
 
-          return console.error( err );
+          return debug( err );
         }
 
         $main.html( res ).attr( 'id', 'view-schedule' );
+        debug( 'view rendered' );
       });
     }
   });

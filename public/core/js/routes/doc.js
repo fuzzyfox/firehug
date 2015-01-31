@@ -3,6 +3,8 @@
 routes = (function( window, document, routes, nunjucksEnv, db, sync, $, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:docs' );
+
   // private + stateless utils
   var $main = $( 'main' );
 
@@ -27,11 +29,13 @@ routes = (function( window, document, routes, nunjucksEnv, db, sync, $, undefine
 
   return $.extend( routes, {
     doc: function( docSlug ) {
+      debug( 'Fetching doc %s from api', docSlug );
       var getDoc = $.ajax({
         url: '/api/doc/' + docSlug + '/md'
       });
 
       getDoc.done( function( doc ) {
+        debug( 'Got doc %s', docSlug );
         $main.html( doc ).attr( 'id', 'view-doc-' + docSlug );
 
         // if we make a connection while offline, we must be online
@@ -41,14 +45,16 @@ routes = (function( window, document, routes, nunjucksEnv, db, sync, $, undefine
       });
 
       getDoc.fail( function() {
+        debug( 'Failed to get doc %s', docSlug );
         // if a live load fails attempt a local load
         if( localDocs()[ docSlug ] ) {
+          debug( 'Loading doc %s from localstorage', docSlug );
           $main.html( localDocs()[ docSlug ] ).attr( 'id', 'view-doc-' + docSlug );
-          return;
+          return debug( 'doc rendered' );
         }
 
-
         $main.html( arguments[ 2 ] ).attr( 'view-doc-' + docSlug );
+        debug( arguments );
       });
     }
   });

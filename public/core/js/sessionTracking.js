@@ -3,6 +3,8 @@
 (function( window, document, db, $, sync, moment, notify, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'sessions:tracking' );
+
   var $main = $( 'main' );
   var timezone = $( 'body' ).data( 'timezone' );
 
@@ -20,7 +22,7 @@
 
       // remove session from tracked array
       if( trackedSessions.indexOf( sessionId ) > -1 ) {
-        console.log( 'no longer tracking session %s', sessionId );
+        debug( 'no longer tracking session %s', sessionId );
         trackedSessions.splice( trackedSessions.indexOf( sessionId ), 1 );
 
         db.setItem( 'tracked-sessions', trackedSessions );
@@ -34,7 +36,7 @@
 
     // add session to tracked array
     if( trackedSessions.indexOf( sessionId ) === -1 ) {
-      console.log( 'now tracking session %s', sessionId );
+      debug( 'now tracking session %s', sessionId );
       trackedSessions.push( sessionId );
 
       db.setItem( 'tracked-sessions', trackedSessions );
@@ -48,7 +50,7 @@
   $( sync ).on( 'change.sessions', function( event, oldData, newData, changeset ) {
     var trackedSessions = db.getItem( 'tracked-sessions' ) || [];
 
-    console.log( changeset );
+    debug( changeset );
 
     // notify of new sessions
     if( changeset.added.length && false ) {

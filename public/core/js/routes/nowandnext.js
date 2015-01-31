@@ -3,12 +3,15 @@
 routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:now-next' );
+
   // private + stateless utils
   var $main = $( 'main' );
   // var timezone = $( 'body' ).data( 'timezone' );
 
   return $.extend( routes, {
     nowandnext: function( themeSlug ) {
+      debug( 'displaying for %s', themeSlug );
       var self = this;
 
       var context = {
@@ -59,12 +62,17 @@ routes = (function( window, document, routes, nunjucksEnv, $, db, moment, undefi
             $main.append( err );
           }
 
-          return console.error( err );
+          return debug( err );
         }
 
-        $main.html( res ).attr( 'id', 'view-nowandnext' );
+        // attempt to clear any running scoped timeouts
+        clearTimeout( window.scopedTimeout );
 
-        setTimeout( function() {
+        $main.html( res ).attr( 'id', 'view-nowandnext' );
+        debug( 'view rendered' );
+
+        debug( 'updating view in 60 seconds' );
+        window.scopedTimeout = setTimeout( function() {
           if( $main.attr( 'id' ) === 'view-nowandnext' ) {
             self.nowandnext( themeSlug );
           }

@@ -17,11 +17,14 @@
 routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:session' );
+
   // private + stateless utils
   var $main = $( 'main' );
 
   return $.extend( routes, {
     session: function( sessionId ) {
+      debug( 'displaying session %s', sessionId );
       /*
         start to populate context for nunjucks
        */
@@ -47,12 +50,13 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
         }, function( err, res ) {
           if( err ) {
             $main.html( 'Session was not found.' );
-            return console.error( 'failed to load "error.html" partial' );
+            return debug( 'Failed to load "error.html" partial' );
           }
 
           $main.html( res );
         });
         $main.attr( 'id', 'error' );
+        debug( 'session 404 rendered' );
         return;
       }
 
@@ -67,10 +71,11 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
             $main.append( err );
           }
 
-          return console.error( err );
+          return debug( err );
         }
 
         $main.html( res ).attr( 'id', 'view-schedule' );
+        debug( 'view rendered' );
       });
     }
   });

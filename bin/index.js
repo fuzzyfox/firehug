@@ -6,12 +6,13 @@ var later = require( 'later' );
 var fork = require( 'child_process' ).fork;
 var shared = require( '../shared' );
 var env = shared.env;
-var debug = shared.debug;
+var debug = shared.debug( 'bin:management' );
 
 // get scripts in ./bin to run
 var bins = {};
 
 // get all files in the same dir as this
+debug( 'Loading bins from %s', __dirname );
 fs.readdirSync( __dirname ).filter( function( file ) {
   // filter out dotfiles, and this file
   return ( ( file.indexOf( '.' ) !== 0 ) && ( file !== 'index.js' ) );
@@ -23,6 +24,8 @@ fs.readdirSync( __dirname ).filter( function( file ) {
     ref: null
   };
 });
+
+debug( 'Found bins: %s', Object.keys( bins ).join( ', ' ) );
 
 /**
  * Fork all bins
@@ -47,7 +50,7 @@ function forkBins() {
           bins[ bin ].status = 'crashed';
         }
 
-        debug( 'Job: %s exited w/ code %d - signal %d', bin, code, signal );
+        debug( '%s exited w/ code %d - signal %d', bin, code, signal );
       });
     }
     else {
@@ -60,6 +63,7 @@ function forkBins() {
 // run immediately on load
 forkBins();
 
+debug( 'bin schedule: %s', env.get( 'JOB_SCHEDULE' ) );
 var schedule = later.parse.cron( env.get( 'JOB_SCHEDULE' ) );
 later.setInterval( forkBins, schedule );
 

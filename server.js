@@ -1,5 +1,3 @@
-'use strict';
-
 /*
   Get Libs
  */
@@ -16,7 +14,7 @@ var sessions = require( './lib/sessions' );
 var documents = require( './lib/documents' );
 var shared = require( './shared' );
 var env = shared.env;
-// var debug = shared.debug;
+var debug = shared.debug( 'env' );
 var serverStartTime = moment();
 
 /*
@@ -37,8 +35,9 @@ app.use( helmet.hsts() );
 app.use( helmet.nosniff() );
 app.use( helmet.xssFilter() );
 
-if( env.get( 'debug' ) || env.get( 'DEBUG' ) ) {
-  app.use( morgan( 'dev' ) );
+if( shared.debug( 'http' ).enabled ) {
+  debug( 'using morgan for \033[0;37mhttp\033[0m debug notices' );
+  app.use( morgan( '  \033[0;37mhttp\033[0m :method :url :status +:response-time ms - :res[content-length] bytes' ) );
 }
 
 app.disable( 'x-powered-by' );
@@ -81,6 +80,7 @@ app.use( function( req, res, next ) {
   Uses the defaults in /manifest.webapp and extends them with any
   environment set details.
  */
+debug( 'generating webapp manifest file' );
 var webappManifest = fs.readFileSync( 'manifest.webapp', 'utf8' );
 webappManifest = JSON.parse( webappManifest );
 
@@ -88,6 +88,7 @@ var webappManifestOverrides = env.get( 'WEBAPP_MANIFEST' ) || '{}';
 webappManifestOverrides = JSON.parse( webappManifestOverrides );
 
 webappManifest = lodash.extend( webappManifest, webappManifestOverrides );
+debug( '↳ completed generation of webapp manifest' );
 
 // add to res.locals
 app.use( function( req, res, next ) {

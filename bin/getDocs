@@ -4,6 +4,7 @@
 var request = require( 'request' );
 var shared = require( '../shared' );
 var env = shared.env;
+var debug = shared.debug( 'bin:getDocs' );
 var redisClient = shared.redisClient;
 var redisPrefix = env.get( 'REDIS_PREFIX' ) || 'firehug';
 redisPrefix = redisPrefix + ':docs';
@@ -15,6 +16,7 @@ var gDocs = [];
 var gDocEnvKeys = Object.keys( env.get() ).filter( function( key ) {
   return ( /^google_doc_/i.test( key ) );
 });
+debug( 'Getting docs: %s', gDocEnvKeys );
 
 // get sheet names from end of key, and populate
 // `gDocs` object
@@ -38,8 +40,8 @@ gDocs.forEach(function( doc ) {
 
       return redisClient.set( redisPrefix + ':' + doc.name, body, function( err ) {
         if( err ) {
+          debug( 'ERROR: Failed to cache doc %s', doc.name );
           console.error( err );
-
         }
 
         docsFetched += 1;
@@ -50,6 +52,7 @@ gDocs.forEach(function( doc ) {
       });
     }
 
+    debug( 'ERROR: Failed to get doc %s', doc.name );
     console.error( err );
     process.exit( 1 );
   });

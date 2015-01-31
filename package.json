@@ -22,6 +22,7 @@
     "event"
   ],
   "dependencies": {
+    "debug": "^2.1.1",
     "express": "^4.8.7",
     "google-spreadsheet": "^0.2.8",
     "helmet": "^0.4.1",

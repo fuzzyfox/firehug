@@ -17,12 +17,15 @@
 routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:schedule' );
+
   // private + stateless utils
   var $main = $( 'main' );
   var timezone = $( 'body' ).data( 'timezone' );
 
   return $.extend( routes, {
     schedule: function( theme, day ) {
+      debug( 'displaying for %s on %s', theme, day );
       /*
         start to populate context for nunjucks
        */
@@ -181,10 +184,11 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
             $main.append( err );
           }
 
-          return console.error( err );
+          return debug( err );
         }
 
         $main.html( res ).attr( 'id', 'view-schedule' );
+        debug( 'view rendered' );
 
         // now we have the view loaded store day + theme
         if( theme !== 'tracked' ) {
@@ -216,7 +220,7 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
             if( context.state.autoHide &&
                 now.isAfter( sessionsStart ) &&
                 now.isBefore( sessionsEnd ) ) {
-
+              debug( 'hiding finished sessions' );
               $( '.session' ).each( function() {
                 if( moment.tz( $( this ).data( 'session-end' ), timezone ).add( 5, 'minutes' ).isBefore( now ) ) {
                   $( this ).slideUp( function() {
@@ -227,7 +231,8 @@ routes = (function( window, document, routes, nunjucksEnv, db, $, moment, undefi
             }
 
             // loop back in 1min
-            window.scopedTimeout = setTimeout( scheduleTimeout, 30000 );
+            debug( 'updating view in 60 seconds' );
+            window.scopedTimeout = setTimeout( scheduleTimeout, 60000 );
           }
         }());
       });

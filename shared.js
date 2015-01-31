@@ -1,5 +1,3 @@
-'use strict';
-
 // all the environments
 var env = require( 'nconf' ).argv()
                             .env()
@@ -12,14 +10,11 @@ var env = require( 'nconf' ).argv()
                               'PORT': 5000
                             });
 
-// custom debug function (console.log only when debug flag set)
-function debug() {
-  if( env.get( 'debug' ) || env.get( 'DEBUG' ) ) {
-    return console.log.apply( null, arguments );
-  }
-
-  return;
-}
+// setup debugging
+var debug = require( 'debug' );
+process.env.DEBUG_COLORS = true;
+debug.enable( env.get( 'DEBUG' ) );
+debug.useColors();
 
 // get redis client
 var redis = require( 'redis' );

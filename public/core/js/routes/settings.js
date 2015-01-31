@@ -16,6 +16,8 @@
 routes = (function( window, document, routes, nunjucksEnv, $, moment, db, sync, undefined ) {
   'use strict';
 
+  var debug = window.debug( 'route:settings' );
+
   /*
     private + stateless utils
    */
@@ -37,6 +39,13 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, sync, 
       var storedItem = db.getItem( item );
       storedItem[ property ] = !storedItem[ property ];
       db.setItem( item, storedItem );
+
+      if( db.getItem( 'state' ).debug ) {
+        window.debug.enable( '*' );
+      }
+      else {
+        window.debug.disable( '*' );
+      }
 
       window.location.reload();
     }
@@ -97,10 +106,11 @@ routes = (function( window, document, routes, nunjucksEnv, $, moment, db, sync, 
             $main.append( err );
           }
 
-          return console.error( err );
+          return debug( err );
         }
 
         $main.html( res ).attr( 'id', 'view-settings' );
+        debug( 'view rendered' );
       });
     }
   });
