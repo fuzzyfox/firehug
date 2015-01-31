@@ -10,5 +10,15 @@
 
   "REDIS_PREFIX": "firehug",
 
+  "JOB_SCHEDULE": "*/5 * * * *",
+
+  "REDIS_PREFIX": "firehug",
+
+  "WEBAPP_MANIFEST": "{\"name\":\"Mozilla Festival App\"}",
+
+  "EVENT_TIMEZONE": "Europe/London",
+
+  "SPLASH": true,
+
   "PORT": 5000
 }

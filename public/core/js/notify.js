@@ -34,7 +34,7 @@ var notify = (function( window, document, nunjucksEnv, $, db, undefined ) {
 
     var strippedTitle = '';
     var strippedMessage = '';
-    var tmp = document.createElement('div');
+    var tmp = document.createElement( 'div' );
     tmp.innerHTML = title;
     strippedTitle = tmp.innerText || tmp.textContent;
     tmp.innerHTML = message;

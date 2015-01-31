@@ -53,7 +53,7 @@
     debug( changeset );
 
     // notify of new sessions
-    if( changeset.added.length && false ) {
+    if( changeset.added.length ) {
 
       var newSessions = newData.filter( function( session ) {
         return ( changeset.added.indexOf( session.id ) > -1 );
